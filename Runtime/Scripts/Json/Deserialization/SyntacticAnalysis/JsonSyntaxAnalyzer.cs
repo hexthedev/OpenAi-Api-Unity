@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenAiApi
 {
-    public static class SyntaxAnalyzer
+    public static class JsonSyntaxAnalyzer
     {
         public static JsonObject Parse(string[] syntax)
         {

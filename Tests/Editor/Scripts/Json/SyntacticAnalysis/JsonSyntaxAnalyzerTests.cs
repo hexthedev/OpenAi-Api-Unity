@@ -14,7 +14,7 @@ namespace OpenAiApi
                 "{", "key", ":", "value", "}"
             };
 
-            JsonObject obj = SyntaxAnalyzer.Parse(syntax);
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
 
             obj.AssertRootIsObject();
             obj.NestedValues.AssertIsValidJsonObjectArray(1);
@@ -30,7 +30,7 @@ namespace OpenAiApi
                 "[", "li1", ",", "li2", "]"
             };
 
-            JsonObject obj = SyntaxAnalyzer.Parse(syntax);
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
 
             obj.AssertRootIsList();
             obj.AssertListWithSimpleValues(null, "li1", "li2");
@@ -44,7 +44,7 @@ namespace OpenAiApi
                 "[", "{", "key0", ":", "val0", "}", ",", "{", "key1", ":", "val1", "}", "]"
             };
 
-            JsonObject obj = SyntaxAnalyzer.Parse(syntax);
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
 
             obj.AssertRootIsList();
             obj.NestedValues.AssertIsValidJsonObjectArray(2);
@@ -70,7 +70,7 @@ namespace OpenAiApi
                 "{", "key1", ":", "[", "li1", ",", "li2", "]", "}"
             };
 
-            JsonObject obj = SyntaxAnalyzer.Parse(syntax);
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
 
             obj.AssertRootIsObject();
             obj.NestedValues.AssertIsValidJsonObjectArray(1);
@@ -88,7 +88,7 @@ namespace OpenAiApi
                 "{", "id", ":", "cmpl - uqkvlQyYK7bGYrRHQ0eXlWi7", ",", "object", ":", "text_completion", ",", "created", ":", "1589478378", ",", "model", ":", "davinci:2020-05-03", ",", "choices", ":", "[", "{", "text", ":", " there was a girl who", ",", "index", ":", "0", ",", "logprobs", ":", "null", ",", "finish_reason", ":", "length", "}", "]", "}"
             };
 
-            JsonObject obj = SyntaxAnalyzer.Parse(syntax);
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
 
             // Root
             obj.AssertRootIsObject();
