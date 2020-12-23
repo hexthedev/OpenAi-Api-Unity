@@ -1,0 +1,51 @@
+using System;
+using UnityEngine;
+
+namespace OpenAiApi
+{
+    public class CompletionChoiceV1 : MonoBehaviour
+    {
+        public string text;
+        public int index;
+        public string logprobs;
+        public string finish_reason;
+
+        public string ToJson()
+        {
+            JsonBuilder jb = new JsonBuilder();
+
+            jb.StartObject();
+            jb.Add(nameof(text), text);
+            jb.Add(nameof(index), index);
+            jb.Add(nameof(logprobs), logprobs);
+            jb.Add(nameof(finish_reason), finish_reason);
+            jb.EndObject();
+
+            return jb.ToString();
+        }
+
+        public void FromJson(JsonObject jsonObj)
+        {
+            if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
+
+            foreach (JsonObject jo in jsonObj.NestedValue)
+            {
+                switch (jo.Name)
+                {
+                    case nameof(text):
+                        text = jo.StringValue;
+                        break;
+                    case nameof(index):
+                        index = int.Parse(jo.StringValue);
+                        break;
+                    case nameof(logprobs):
+                        logprobs = jo.StringValue;
+                        break;
+                    case nameof(finish_reason):
+                        finish_reason = jo.StringValue;
+                        break;
+                }
+            }
+        }
+    }
+}
