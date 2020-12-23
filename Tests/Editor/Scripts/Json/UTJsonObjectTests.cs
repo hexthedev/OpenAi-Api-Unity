@@ -10,7 +10,7 @@ namespace OpenAiApi
         /// Asserts that a JsonObject is the root, and is an object type
         /// </summary>
         /// <param name="obj"></param>
-        public static void AssertIsObjectRoot(this JsonObject obj)
+        public static void AssertRootIsObject(this JsonObject obj)
         {
             Assert.IsNotNull(obj);
             Assert.That(obj.Name == null);
@@ -21,7 +21,7 @@ namespace OpenAiApi
         /// Asserts that a JsonObject is the root, and is a list type
         /// </summary>
         /// <param name="obj"></param>
-        public static void AssertIsListRoot(this JsonObject obj)
+        public static void AssertRootIsList(this JsonObject obj)
         {
             Assert.IsNotNull(obj);
             Assert.That(obj.Name == null);
@@ -45,6 +45,20 @@ namespace OpenAiApi
         }
 
         /// <summary>
+        /// Asserts that the object is a list of a certain size, but does not check the element values
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static void AssertList(this JsonObject obj, int count)
+        {
+            Assert.IsNotNull(obj);
+            Assert.That(obj.Type == EJsonType.List);
+            obj.NestedValues.AssertIsValidJsonObjectArray(count);
+        }
+
+        /// <summary>
         /// Asserts that a JsonObject is a list of values, and verifies the name of the object
         /// and the value of each list member
         /// </summary>
@@ -52,17 +66,17 @@ namespace OpenAiApi
         /// <param name="name"></param>
         /// <param name="val"></param>
         /// <returns></returns>
-        public static void AssertValueList(this JsonObject obj, string name, params string[] vals)
+        public static void AssertListWithSimpleValues(this JsonObject obj, string name, params string[] vals)
         {
             Assert.IsNotNull(obj);
             Assert.That(obj.Type == EJsonType.List);
             Assert.That(obj.Name == name);
 
-            for (int i = 0; i < obj.NestedValue.Count; i++)
+            for (int i = 0; i < obj.NestedValues.Count; i++)
             {
-                Assert.IsNotNull(obj.NestedValue[i]);
-                Assert.That(obj.NestedValue[i].Type == EJsonType.Value);
-                Assert.That(vals[i] == obj.NestedValue[i].StringValue);
+                Assert.IsNotNull(obj.NestedValues[i]);
+                Assert.That(obj.NestedValues[i].Type == EJsonType.Value);
+                Assert.That(vals[i] == obj.NestedValues[i].StringValue);
             }
         }
 
@@ -74,14 +88,14 @@ namespace OpenAiApi
         /// <param name="name"></param>
         /// <param name="val"></param>
         /// <returns></returns>
-        public static void AssertListObject(this JsonObject obj)
+        public static void AssertListElementIsObject(this JsonObject obj)
         {
             Assert.IsNotNull(obj);
             Assert.That(obj.Type == EJsonType.Object);
         }
 
         /// <summary>
-        /// Asserts that a JsonObject is the root, and is a list type
+        /// Asserts that a JsonObject array is not null and of a certain size
         /// </summary>
         /// <param name="obj"></param>
         public static void AssertIsValidJsonObjectArray(this List<JsonObject> objs, int count)

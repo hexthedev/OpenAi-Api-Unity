@@ -8,6 +8,6 @@ namespace OpenAiApi
         public string Name;
 
         public string StringValue;
-        public List<JsonObject> NestedValue;
+        public List<JsonObject> NestedValues;
     }
 }
