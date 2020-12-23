@@ -55,6 +55,7 @@ namespace OpenAiApi
                             n.FromJson(jo.NestedValues[i]);
                             choiceArray[i] = n;
                         }
+                        choices = choiceArray;
                         break;
 
                 }

@@ -10,10 +10,13 @@ namespace OpenAiApi
     {
         private string _endpoint;
         public override string Endpoint => _endpoint;
-    
+
+        public CompletionsResourceV1 Completions { get; private set; }
+
         public EngineResource(EnginesResource parent, string engineId) : base(parent)
         {
             _endpoint = $"/{engineId}";
+            Completions = new CompletionsResourceV1(this);
         }
     }
 }

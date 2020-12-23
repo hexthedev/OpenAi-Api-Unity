@@ -23,7 +23,15 @@ namespace OpenAiApi
 
         public void Add(string name, int? val) => AddSimpleObject(name, val);
         public void Add(string name, float? val) => AddSimpleObject(name, val);
-        public void Add(string name, bool? val) => AddSimpleObject(name, val);
+        public void Add(string name, bool? val)
+        {
+            if (val != null)
+            {
+                string valString = val == true ? "true" : "false";
+                _sb.Append($"{_prefix}\"{name}\":{valString}");
+                _shouldAddComma = true;
+            }
+        }
 
         public void AddSimpleObject(string name, object val)
         {
@@ -59,6 +67,7 @@ namespace OpenAiApi
                 }
 
                 _sb.Append($"{_prefix}\"{name}\":{valString}");
+                _shouldAddComma = true;
             }
         }
 

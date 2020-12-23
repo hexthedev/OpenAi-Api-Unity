@@ -49,6 +49,7 @@ namespace OpenAiApi
 
             request.stream = false;
 
+            string body = request.ToJson();
             StringContent stringContent = new StringContent(request.ToJson(), UnicodeEncoding.UTF8, "application/json");
 
             var response = await client.PostAsync(Url, stringContent);

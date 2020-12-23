@@ -18,9 +18,12 @@ namespace OpenAiApi
 
         public string Url => Endpoint;
 
+        public EnginesResource Engines { get; private set; }
+
         public OpenAiApiV1(string authKey)
         {
             _authKey = authKey;
+            Engines = new EnginesResource(this);
         }
 
         public void ConstructEndpoint(StringBuilder sb)
