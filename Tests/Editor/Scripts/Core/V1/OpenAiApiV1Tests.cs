@@ -5,6 +5,8 @@ using System.IO;
 using System.Security.Authentication;
 using System.Text;
 
+using UnityEngine;
+
 namespace OpenAiApi
 {
     /// <summary>
@@ -16,15 +18,40 @@ namespace OpenAiApi
 
 
         [Test]
-        public async void OpenAiApiV1TestCompletions()
+        public async void OpenAiApiV1TestCompletionsCreate()
         {
             string key = GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            CompletionResponseV1 res =  await api.Engines.Engine("davinci").Completions.CreateCompletionAsync(
-                new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
+            CompletionModelV1 res =  await api.Engines.Engine("davinci").Completions.Create(
+                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8 }
             );
 
+            Assert.IsNotNull(res);
+        }
+
+        [Test]
+        public async void OpenAiApiV1TestCompletionsCreateStream()
+        {
+            string key = GetAndValidateAuthKey();
+            OpenAiApiV1 api = new OpenAiApiV1(key);
+
+            await api.Engines.Engine("davinci").Completions.Create(
+                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8, stream = true }, (i, c) => Debug.Log(c.id)
+            );
+        }
+
+        /// <summary>
+        /// This will only work if you have a secret key as the environment variable OPENAI_PRIVATE_KEY
+        /// </summary>
+        [Test]
+        public async void OpenAiApiV1TestEnginesList()
+        {
+            string key = GetAndValidateAuthKey();
+
+            OpenAiApiV1 api = new OpenAiApiV1(key);
+            EnginesListModelV1 res = await api.Engines.List();
+            
             Assert.IsNotNull(res);
         }
 
@@ -32,13 +59,13 @@ namespace OpenAiApi
         /// This will only work if you have a secret key as the environment variable OPENAI_PRIVATE_KEY
         /// </summary>
         [Test]
-        public async void OpenAiApiV1TestEngines()
+        public async void OpenAiApiV1TestEngineRetrieve()
         {
             string key = GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            EnginesListResponseV1 res = await api.Engines.List();
-            
+            EngineModelV1 res = await api.Engines.Engine("ada").Retrieve();
+
             Assert.IsNotNull(res);
         }
 

@@ -63,7 +63,7 @@ namespace OpenAiApi
 
             StringContent stringContent = new StringContent(body, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(Url, stringContent);
+            HttpResponseMessage response = await client.PostAsync(Url, stringContent);
             if (response.IsSuccessStatusCode)
             {
                 string resultAsString = await response.Content.ReadAsStringAsync();
@@ -113,5 +113,7 @@ namespace OpenAiApi
 
 
         public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
+
+        public void PopulateAuthHeaders(HttpRequestMessage message) => ParentResource.PopulateAuthHeaders(message);
     }
 }

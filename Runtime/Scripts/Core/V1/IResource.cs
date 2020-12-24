@@ -35,5 +35,11 @@ namespace OpenAiApi
         /// </summary>
         /// <returns></returns>
         public void PopulateAuthHeaders(HttpClient client);
+
+        /// <summary>
+        /// Populates a HttpClient with the appropriate auth headers
+        /// </summary>
+        /// <returns></returns>
+        public void PopulateAuthHeaders(HttpRequestMessage message);
     }
 }

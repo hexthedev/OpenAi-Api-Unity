@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 using UnityEngine;
@@ -33,8 +34,14 @@ namespace OpenAiApi
 
         public void PopulateAuthHeaders(HttpClient client)
         {
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authKey);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authKey);
             //client.DefaultRequestHeaders.Add("User-Agent", "okgodoit/dotnet_openai_api");
+        }
+
+        public void PopulateAuthHeaders(HttpRequestMessage message)
+        {
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authKey);
+            //client.Headers.Add("User-Agent", "okgodoit/dotnet_openai_api");
         }
     }
 }

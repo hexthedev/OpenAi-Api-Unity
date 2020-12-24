@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -18,5 +19,7 @@ namespace OpenAiApi
             _endpoint = $"/{engineId}";
             Completions = new CompletionsResourceV1(this);
         }
+
+        public async Task<EngineModelV1> Retrieve() => await GetAsync<EngineModelV1>();
     }
 }
