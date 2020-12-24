@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -14,5 +15,10 @@ namespace OpenAiApi
 
         public EngineResource Engine(string engineId) => new EngineResource(this, engineId);
 
+
+        public async Task<EnginesListResponseV1> List()
+        {
+            return await GetAsync<EnginesListResponseV1>();
+        }
     }
 }
