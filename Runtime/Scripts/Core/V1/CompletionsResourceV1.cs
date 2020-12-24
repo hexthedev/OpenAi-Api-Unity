@@ -44,39 +44,8 @@ namespace OpenAiApi
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
         public async Task<CompletionResponseV1> CreateCompletionAsync(CompletionRequestV1 request)
         {
-            HttpClient client = new HttpClient();
-            ParentResource.PopulateAuthHeaders(client);
-
             request.stream = false;
-
-            string body = request.ToJson();
-            StringContent stringContent = new StringContent(request.ToJson(), UnicodeEncoding.UTF8, "application/json");
-
-            var response = await client.PostAsync(Url, stringContent);
-            if (response.IsSuccessStatusCode)
-            {
-                string resultAsString = await response.Content.ReadAsStringAsync();
-                //UnityEngine.Debug.Log(resultAsString);
-
-                JsonObject obj = JsonDeserializer.FromJson(resultAsString);
-                CompletionResponseV1 res = new CompletionResponseV1();
-                res.FromJson(obj);
-
-                //try
-                //{
-                //    res.Organization = response.Headers.GetValues("Openai-Organization").FirstOrDefault();
-                //    res.RequestId = response.Headers.GetValues("X-Request-ID").FirstOrDefault();
-                //    res.ProcessingTime = TimeSpan.FromMilliseconds(int.Parse(response.Headers.GetValues("Openai-Processing-Ms").First()));
-                //}
-                //catch (Exception) { }
-
-
-                return res;
-            }
-            else
-            {
-                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
-            }
+            return await PostAsync<CompletionResponseV1>(request.ToJson());
         }
 
 

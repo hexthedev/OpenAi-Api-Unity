@@ -13,5 +13,6 @@ namespace OpenAiApi
         public EnginesResource(OpenAiApiV1 parent) : base(parent) { }
 
         public EngineResource Engine(string engineId) => new EngineResource(this, engineId);
+
     }
 }

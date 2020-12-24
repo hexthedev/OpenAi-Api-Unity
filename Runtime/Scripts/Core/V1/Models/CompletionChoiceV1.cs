@@ -3,14 +3,15 @@ using UnityEngine;
 
 namespace OpenAiApi
 {
-    public class CompletionChoiceV1 : MonoBehaviour
+    public class CompletionChoiceV1 : AModelV1
     {
         public string text;
         public int index;
         public string logprobs;
         public string finish_reason;
 
-        public string ToJson()
+        /// <inheritdoc />
+        public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();
 
@@ -24,7 +25,8 @@ namespace OpenAiApi
             return jb.ToString();
         }
 
-        public void FromJson(JsonObject jsonObj)
+        /// <inheritdoc />
+        public override void FromJson(JsonObject jsonObj)
         {
             if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
 

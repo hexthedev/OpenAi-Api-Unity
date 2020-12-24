@@ -2,7 +2,7 @@
 
 namespace OpenAiApi
 {
-    public class CompletionRequestV1
+    public class CompletionRequestV1 : AModelV1
     {
         public StringOrArray prompt;
         public int? max_tokens;
@@ -17,7 +17,14 @@ namespace OpenAiApi
         public float? frequence_penalty;
         public int? best_of;
 
-        public string ToJson()
+        /// <inheritdoc />
+        public override void FromJson(JsonObject json)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();
 

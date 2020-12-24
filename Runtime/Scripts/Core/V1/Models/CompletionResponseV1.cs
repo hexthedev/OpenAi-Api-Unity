@@ -3,16 +3,16 @@ using System.Text;
 
 namespace OpenAiApi
 {
-    public class CompletionResponseV1
+    public class CompletionResponseV1 : AModelV1
     {
         public string id;
         public string obj;
         public int created;
         public string model;
         public CompletionChoiceV1[] choices;
-        
 
-        public string ToJson()
+        /// <inheritdoc />
+        public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();
 
@@ -21,13 +21,14 @@ namespace OpenAiApi
             jb.Add("object", obj);
             jb.Add(nameof(created), created);
             jb.Add(nameof(model), model);
-            jb.AddList(nameof(choices), choices, (c) => c.ToJson());
+            jb.AddList(nameof(choices), choices);
             jb.EndObject();
 
             return jb.ToString();
         }
 
-        public void FromJson(JsonObject jsonObj)
+        /// <inheritdoc />
+        public override void FromJson(JsonObject jsonObj)
         {
             if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
 

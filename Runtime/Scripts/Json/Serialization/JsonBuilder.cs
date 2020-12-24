@@ -71,7 +71,7 @@ namespace OpenAiApi
             }
         }
 
-        public void AddList<T>(string name, T[] value, Func<T, string> extract)
+        public void AddList<T>(string name, T[] value) where T: IJsonable
         {
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
@@ -80,7 +80,7 @@ namespace OpenAiApi
             string[] strings = new string[value.Length];
             for(int i = 0; i<value.Length; i++)
             {
-                strings[i] = extract(value[i]);
+                strings[i] = value[i].ToJson();
             }
             _sb.Append(string.Join(",", strings));
             EndList();
