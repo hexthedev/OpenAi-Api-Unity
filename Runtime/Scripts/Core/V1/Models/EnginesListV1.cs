@@ -1,8 +1,8 @@
 ﻿namespace OpenAiApi
 {
-    public class EnginesListModelV1 : AModelV1
+    public class EnginesListV1 : AModelV1
     {
-        public EngineModelV1[] data;
+        public EngineV1[] data;
         public string obj;
 
         public override void FromJson(JsonObject json)
@@ -15,7 +15,7 @@
                         obj = jo.StringValue;
                         break;
                     case "data":
-                        data = ArrayFromJson<EngineModelV1>(jo);
+                        data = ArrayFromJson<EngineV1>(jo);
                         break;
                 }
             }

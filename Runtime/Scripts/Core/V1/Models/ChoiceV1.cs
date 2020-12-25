@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace OpenAiApi
 {
-    public class ChoiceModelV1 : AModelV1
+    public class ChoiceV1 : AModelV1
     {
         public string text;
         public int index;

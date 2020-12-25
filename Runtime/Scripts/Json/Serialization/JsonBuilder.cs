@@ -84,6 +84,25 @@ namespace OpenAiApi
             }
             _sb.Append(string.Join(",", strings));
             EndList();
+
+            _shouldAddComma = true;
+        }
+
+        public void AddList(string name, string[] value)
+        {
+            _sb.Append(_prefix);
+            _sb.Append($"\"{name}\":");
+
+            StartList();
+            string[] strings = new string[value.Length];
+            for (int i = 0; i < value.Length; i++)
+            {
+                strings[i] = $"\"{value[i]}\"";
+            }
+            _sb.Append(string.Join(",", strings));
+            EndList();
+
+            _shouldAddComma = true;
         }
 
         public override string ToString()

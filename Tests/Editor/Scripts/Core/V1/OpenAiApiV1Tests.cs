@@ -23,8 +23,8 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            CompletionModelV1 res =  await api.Engines.Engine("davinci").Completions.Create(
-                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8 }
+            CompletionV1 res =  await api.Engines.Engine("davinci").Completions.Create(
+                new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
             );
 
             Assert.IsNotNull(res);
@@ -37,9 +37,22 @@ namespace OpenAiApi
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             await api.Engines.Engine("davinci").Completions.CreateStream(
-                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8, stream = true }, 
+                new CompletionRequestV1() { prompt = "hello", max_tokens = 8, stream = true }, 
                 (i, c) => Debug.Log($"This actaully worked {c.ToJson()}")
             );
+        }
+
+        [Test]
+        public async void OpenAiApiV1TestCompletionsSearch()
+        {
+            string key = GetAndValidateAuthKey();
+            OpenAiApiV1 api = new OpenAiApiV1(key);
+
+            SearchListV1 res = await api.Engines.Engine("davinci").Search.Search(
+                new SearchRequestV1() { documents = new string[] { "Hey baby", "I am a robot" }, query = "query?" }
+            );
+
+            Assert.IsNotNull(res);
         }
 
         /// <summary>
@@ -51,7 +64,7 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            EnginesListModelV1 res = await api.Engines.List();
+            EnginesListV1 res = await api.Engines.List();
             
             Assert.IsNotNull(res);
         }
@@ -65,7 +78,7 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            EngineModelV1 res = await api.Engines.Engine("ada").Retrieve();
+            EngineV1 res = await api.Engines.Engine("ada").Retrieve();
 
             Assert.IsNotNull(res);
         }

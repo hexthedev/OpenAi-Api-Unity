@@ -1,6 +1,6 @@
 ﻿namespace OpenAiApi
 {
-    public class EngineModelV1 : AModelV1
+    public class EngineV1 : AModelV1
     {
         public string id;
         public string obj;

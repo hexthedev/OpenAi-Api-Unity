@@ -7,7 +7,7 @@ namespace OpenAiApi
         [Test]
         public void ToJsonBase()
         {
-            CompletionRequestModelV1 crm = new CompletionRequestModelV1()
+            CompletionRequestV1 crm = new CompletionRequestV1()
             {
                 stop = new StringOrArray("\n", "a"),
                 echo = true

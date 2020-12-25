@@ -14,12 +14,15 @@ namespace OpenAiApi
 
         public CompletionsResourceV1 Completions { get; private set; }
 
+        public SearchResourceV1 Search { get; private set; }
+
         public EngineResource(EnginesResource parent, string engineId) : base(parent)
         {
             _endpoint = $"/{engineId}";
             Completions = new CompletionsResourceV1(this);
+            Search = new SearchResourceV1(this);
         }
 
-        public async Task<EngineModelV1> Retrieve() => await GetAsync<EngineModelV1>();
+        public async Task<EngineV1> Retrieve() => await GetAsync<EngineV1>();
     }
 }

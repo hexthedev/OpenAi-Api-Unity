@@ -3,13 +3,13 @@ using System.Text;
 
 namespace OpenAiApi
 {
-    public class CompletionModelV1 : AModelV1
+    public class CompletionV1 : AModelV1
     {
         public string id;
         public string obj;
         public int created;
         public string model;
-        public ChoiceModelV1[] choices;
+        public ChoiceV1[] choices;
 
         /// <inheritdoc />
         public override string ToJson()
@@ -49,10 +49,10 @@ namespace OpenAiApi
                         model = jo.StringValue;
                         break;
                     case nameof(choices):
-                        ChoiceModelV1[] choiceArray = new ChoiceModelV1[jo.NestedValues.Count];
+                        ChoiceV1[] choiceArray = new ChoiceV1[jo.NestedValues.Count];
                         for(int i = 0; i<choiceArray.Length; i++)
                         {
-                            ChoiceModelV1 n = new ChoiceModelV1();
+                            ChoiceV1 n = new ChoiceV1();
                             n.FromJson(jo.NestedValues[i]);
                             choiceArray[i] = n;
                         }

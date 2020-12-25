@@ -26,10 +26,10 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public async Task<CompletionModelV1> Create(CompletionRequestModelV1 request)
+        public async Task<CompletionV1> Create(CompletionRequestV1 request)
         {
             request.stream = false;
-            return await PostAsync<CompletionModelV1>(request.ToJson());
+            return await PostAsync<CompletionV1>(request.ToJson());
         }
 
         #region Streaming
@@ -40,7 +40,7 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task CreateStream(CompletionRequestModelV1 request, Action<int, CompletionModelV1> resultHandler)
+        public async Task CreateStream(CompletionRequestV1 request, Action<int, CompletionV1> resultHandler)
         {
             request.stream = true;
             await PostEventStreamAsync(request.ToJson(), resultHandler);

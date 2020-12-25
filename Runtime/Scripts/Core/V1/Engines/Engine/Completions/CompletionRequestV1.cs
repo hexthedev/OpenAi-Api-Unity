@@ -2,7 +2,7 @@
 
 namespace OpenAiApi
 {
-    public class CompletionRequestModelV1 : AModelV1
+    public class CompletionRequestV1 : AModelV1
     {
         public StringOrArray prompt;
         public int? max_tokens;
