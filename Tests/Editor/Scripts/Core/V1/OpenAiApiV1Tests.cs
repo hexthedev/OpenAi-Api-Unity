@@ -36,8 +36,9 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            await api.Engines.Engine("davinci").Completions.Create(
-                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8, stream = true }, (i, c) => Debug.Log(c.id)
+            await api.Engines.Engine("davinci").Completions.CreateStream(
+                new CompletionRequestModelV1() { prompt = "hello", max_tokens = 8, stream = true }, 
+                (i, c) => Debug.Log($"This actaully worked {c.ToJson()}")
             );
         }
 

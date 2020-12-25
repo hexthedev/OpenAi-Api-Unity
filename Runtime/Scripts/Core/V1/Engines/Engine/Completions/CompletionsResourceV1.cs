@@ -40,59 +40,10 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task Create(CompletionRequestModelV1 request, Action<int, CompletionModelV1> resultHandler)
+        public async Task CreateStream(CompletionRequestModelV1 request, Action<int, CompletionModelV1> resultHandler)
         {
-            await Task.Run(async () =>
-            {
-                HttpClient client = new HttpClient();
-                ParentResource.PopulateAuthHeaders(client);
-
-                request.stream = true;
-                StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
-
-                using (HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, Url))
-                {
-                    PopulateAuthHeaders(req);
-                    req.Content = stringContent;
-
-                    HttpResponseMessage response = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        int index = 0;
-
-                        using (Stream stream = await response.Content.ReadAsStreamAsync())
-                        {
-                            using (StreamReader reader = new StreamReader(stream))
-                            {
-                                string line;
-                                while ((line = await reader.ReadLineAsync()) != null)
-                                {
-                                    if (line.StartsWith("data: ")) line = line.Substring("data: ".Length);
-
-                                    if (line == "[DONE]")
-                                    {
-                                        return;
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(line))
-                                    {
-                                        index++;
-                                        JsonObject obj = JsonDeserializer.FromJson(line.Trim());
-                                        CompletionModelV1 streamedResult = new CompletionModelV1();
-                                        streamedResult.FromJson(obj);
-
-                                        resultHandler(index, streamedResult);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + stringContent);
-                    }
-                }
-            });
+            request.stream = true;
+            await PostEventStreamAsync(request.ToJson(), resultHandler);
         }
         #endregion
     }
