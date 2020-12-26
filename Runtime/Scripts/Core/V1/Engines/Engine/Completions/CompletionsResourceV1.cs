@@ -29,7 +29,7 @@ namespace OpenAiApi
         public async Task<CompletionV1> Create(CompletionRequestV1 request)
         {
             request.stream = false;
-            return await PostAsync<CompletionV1>(request.ToJson());
+            return await PostAsync<CompletionRequestV1, CompletionV1>(request);
         }
 
         #region Streaming
@@ -43,7 +43,7 @@ namespace OpenAiApi
         public async Task CreateStream(CompletionRequestV1 request, Action<int, CompletionV1> resultHandler)
         {
             request.stream = true;
-            await PostEventStreamAsync(request.ToJson(), resultHandler);
+            await PostEventStreamAsync(request, resultHandler);
         }
         #endregion
     }

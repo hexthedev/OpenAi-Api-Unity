@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+using UnityEngine;
+
 namespace OpenAiApi
 {
     /// <summary>
@@ -57,13 +59,14 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<TModel> PostAsync<TModel>(string body) 
-            where TModel : AModelV1, new()
+        public async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
         {
             HttpClient client = new HttpClient();
             ParentResource.PopulateAuthHeaders(client);
 
-            StringContent stringContent = new StringContent(body, Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await client.PostAsync(Url, stringContent);
             if (response.IsSuccessStatusCode)
@@ -71,7 +74,7 @@ namespace OpenAiApi
                 string resultAsString = await response.Content.ReadAsStringAsync();
 
                 JsonObject obj = JsonDeserializer.FromJson(resultAsString);
-                TModel res = new TModel();
+                TResponse res = new TResponse();
                 res.FromJson(obj);
 
                 return res;
@@ -82,28 +85,39 @@ namespace OpenAiApi
             }
         }
 
+        public void PostCoroutine<TRequest, TResponse>(TRequest request, MonoBehaviour monoProvider, Action<TResponse> callback)
+        {
+
+        }
+
+
+
+
+
+
         /// <summary>
         /// PostAsync receiving a text stream in return. The text stream will stream back an entire object as the text is generated. 
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task PostEventStreamAsync<TModel>(string json, Action<int, TModel> resultHandler)
-            where TModel : AModelV1, new()
+        public async Task PostEventStreamAsync<TRequest, TResponse>(TRequest request, Action<int, TResponse> resultHandler)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
         {
             await Task.Run(async () =>
             {
                 HttpClient client = new HttpClient();
                 ParentResource.PopulateAuthHeaders(client);
 
-                StringContent stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage res = await client.PostAsync(Url, stringContent);
+                HttpResponseMessage response = await client.PostAsync(Url, stringContent);
 
-                if (res.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
                     int index = 0;
 
-                    using (Stream stream = await res.Content.ReadAsStreamAsync())
+                    using (Stream stream = await response.Content.ReadAsStreamAsync())
                     {
                         using (StreamReader reader = new StreamReader(stream))
                         {
@@ -120,7 +134,7 @@ namespace OpenAiApi
                                 {
                                     index++;
                                     JsonObject obj = JsonDeserializer.FromJson(line.Trim());
-                                    TModel streamedResult = new TModel();
+                                    TResponse streamedResult = new TResponse();
                                     streamedResult.FromJson(obj);
 
                                     resultHandler(index, streamedResult);
@@ -131,7 +145,7 @@ namespace OpenAiApi
                 }
                 else
                 {
-                    throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + res.StatusCode.ToString() + ". Request body: " + stringContent);
+                    throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + stringContent);
                 }
             });
         }

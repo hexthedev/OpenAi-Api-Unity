@@ -8,6 +8,6 @@ namespace OpenAiApi
 
         public SearchResourceV1(EngineResource parent) : base(parent) { }
 
-        public async Task<SearchListV1> Search(SearchRequestV1 request) => await PostAsync<SearchListV1>(request.ToJson());
+        public async Task<SearchListV1> Search(SearchRequestV1 request) => await PostAsync<SearchRequestV1, SearchListV1>(request);
     }
 }
