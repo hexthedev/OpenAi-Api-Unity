@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -53,6 +54,37 @@ namespace OpenAiApi
 
 
 
+        private HttpClient PrepareClient()
+        {
+            HttpClient client = new HttpClient();
+            ParentResource.PopulateAuthHeaders(client);
+            return client;
+        }
+
+        private async Task<HttpResponseMessage> Post<TRequest>(TRequest request)
+            where TRequest : AModelV1, new()
+        {
+            HttpClient client = PrepareClient();
+            StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(Url, stringContent);
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> Get()
+        {
+            HttpClient client = PrepareClient();
+            HttpResponseMessage response = await client.GetAsync(Url);
+            return response;
+        }
+
+        private TModel UnpackResponseObject<TModel>(string content)
+            where TModel : AModelV1, new()
+        {
+            JsonObject obj = JsonDeserializer.FromJson(content);
+            TModel res = new TModel();
+            res.FromJson(obj);
+            return res;
+        }
 
         /// <summary>
         /// Performs an asyncronous post request
@@ -63,21 +95,12 @@ namespace OpenAiApi
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
-            HttpClient client = new HttpClient();
-            ParentResource.PopulateAuthHeaders(client);
+            HttpResponseMessage response = await Post(request);
 
-            StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PostAsync(Url, stringContent);
             if (response.IsSuccessStatusCode)
             {
                 string resultAsString = await response.Content.ReadAsStringAsync();
-
-                JsonObject obj = JsonDeserializer.FromJson(resultAsString);
-                TResponse res = new TResponse();
-                res.FromJson(obj);
-
-                return res;
+                return UnpackResponseObject<TResponse>(resultAsString);
             }
             else
             {
@@ -85,11 +108,30 @@ namespace OpenAiApi
             }
         }
 
-        public void PostCoroutine<TRequest, TResponse>(TRequest request, MonoBehaviour monoProvider, Action<TResponse> callback)
+
+
+        public IEnumerator PostCoroutine<TRequest, TResponse>(TRequest request, Action<TResponse> callback)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
         {
+            Task<HttpResponseMessage> responseTask = Post(request);
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            
+            HttpResponseMessage response = responseTask.Result;
 
-        }
+            if (response.IsSuccessStatusCode)
+            {
+                Task<string> resultAsStringTask = response.Content.ReadAsStringAsync();
+                while (!resultAsStringTask.IsCompleted) yield return new WaitForEndOfFrame();
 
+                string resultAsString = resultAsStringTask.Result;
+                callback(UnpackResponseObject<TResponse>(resultAsString));
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
+            }
+        } 
 
 
 
@@ -106,12 +148,7 @@ namespace OpenAiApi
         {
             await Task.Run(async () =>
             {
-                HttpClient client = new HttpClient();
-                ParentResource.PopulateAuthHeaders(client);
-
-                StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync(Url, stringContent);
+                HttpResponseMessage response = await Post(request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -145,7 +182,7 @@ namespace OpenAiApi
                 }
                 else
                 {
-                    throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + stringContent);
+                    throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString());
                 }
             });
         }
@@ -155,32 +192,20 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<T> GetAsync<T>()
-            where T : AModelV1, new()
+        public async Task<TResponse> GetAsync<TResponse>()
+            where TResponse : AModelV1, new()
         {
-            HttpClient client = new HttpClient();
-            ParentResource.PopulateAuthHeaders(client);
-
-            var response = await client.GetAsync(Url);
+            HttpResponseMessage response = await Get();
             if (response.IsSuccessStatusCode)
             {
                 string resultAsString = await response.Content.ReadAsStringAsync();
-
-                JsonObject obj = JsonDeserializer.FromJson(resultAsString);
-                T res = new T();
-                res.FromJson(obj);
-
-                return res;
+                return UnpackResponseObject<TResponse>(resultAsString);
             }
             else
             {
                 throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
             }
         }
-
-
-
-
 
         public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
 
