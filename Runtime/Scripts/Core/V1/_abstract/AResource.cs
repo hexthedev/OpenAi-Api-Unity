@@ -24,6 +24,10 @@ namespace OpenAiApi
         /// <inheritdoc />
         public abstract string Endpoint { get; }
 
+        public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
+
+        public void PopulateAuthHeaders(HttpRequestMessage message) => ParentResource.PopulateAuthHeaders(message);
+
         /// <inheritdoc />
         public string Url
         {
@@ -50,6 +54,200 @@ namespace OpenAiApi
             ParentResource.ConstructEndpoint(sb);
             sb.Append(Endpoint);
         }
+
+        /// <summary>
+        /// Performs an asyncronous post request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
+        {
+            HttpResponseMessage response = await Post(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string resultAsString = await response.Content.ReadAsStringAsync();
+                return UnpackResponseObject<TResponse>(resultAsString);
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
+            }
+        }
+
+        public IEnumerator PostCoroutine<TRequest, TResponse>(TRequest request, Action<TResponse> onResult)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
+        {
+            Task<HttpResponseMessage> responseTask = Post(request);
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            
+            HttpResponseMessage response = responseTask.Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                Task<string> resultAsStringTask = response.Content.ReadAsStringAsync();
+                while (!resultAsStringTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+                string resultAsString = resultAsStringTask.Result;
+                onResult(UnpackResponseObject<TResponse>(resultAsString));
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
+            }
+        } 
+
+
+
+
+
+        /// <summary>
+        /// PostAsync receiving a text stream in return. The text stream will stream back an entire object as the text is generated. 
+        /// </summary>
+        /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
+        /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
+        public async Task PostEventStreamAsync<TRequest, TResponse>(TRequest request, Action<int, TResponse> resultHandler)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
+        {
+            HttpResponseMessage response = await Post(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                int index = 0;
+
+                using (Stream stream = await response.Content.ReadAsStreamAsync())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string line;
+                        while ((line = await reader.ReadLineAsync()) != null)
+                        {
+                            if (line.StartsWith("data: ")) line = line.Substring("data: ".Length);
+
+                            if (line == "[DONE]")
+                            {
+                                return;
+                            }
+                            else if (!string.IsNullOrWhiteSpace(line))
+                            {
+                                index++;
+                                JsonObject obj = JsonDeserializer.FromJson(line.Trim());
+                                TResponse streamedResult = new TResponse();
+                                streamedResult.FromJson(obj);
+
+                                resultHandler(index, streamedResult);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString());
+            }
+        }
+
+        public IEnumerator PostEventStreamCoroutine<TRequest, TResponse>(TRequest request, Action<int, TResponse> onResult)
+            where TRequest : AModelV1, new()
+            where TResponse : AModelV1, new()
+        {
+            Task<HttpResponseMessage> responseTask = Post(request);
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            HttpResponseMessage response = responseTask.Result;
+            if (response.IsSuccessStatusCode)
+            {
+                int index = 0;
+
+                Task<Stream> streamTask = response.Content.ReadAsStreamAsync();
+                while (!streamTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+                using (Stream stream = streamTask.Result)
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        Task<string> lineTask = reader.ReadLineAsync();
+                        while (!lineTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+                        string line = lineTask.Result;
+                        while (line != null)
+                        {
+                            if (line.StartsWith("data: ")) line = line.Substring("data: ".Length);
+
+                            if (line == "[DONE]")
+                            {
+                                break;
+                            }
+                            else if (!string.IsNullOrWhiteSpace(line))
+                            {
+                                index++;
+                                JsonObject obj = JsonDeserializer.FromJson(line.Trim());
+                                TResponse streamedResult = new TResponse();
+                                streamedResult.FromJson(obj);
+
+                                onResult(index, streamedResult);
+                            }
+
+                            lineTask = reader.ReadLineAsync();
+                            while (!lineTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+                            line = lineTask.Result;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Performs an asyncronous get request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<TResponse> GetAsync<TResponse>()
+            where TResponse : AModelV1, new()
+        {
+            HttpResponseMessage response = await Get();
+            if (response.IsSuccessStatusCode)
+            {
+                string resultAsString = await response.Content.ReadAsStringAsync();
+                return UnpackResponseObject<TResponse>(resultAsString);
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
+            }
+        }
+
+        public IEnumerator GetCoroutine<TResponse>(Action<TResponse> onResult)
+            where TResponse : AModelV1, new()
+        {
+            Task<HttpResponseMessage> responseTask = Get();
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            HttpResponseMessage response = responseTask.Result;
+            if (response.IsSuccessStatusCode)
+            {
+                Task<string> resultTask = response.Content.ReadAsStringAsync();
+                while (!resultTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+                string result = resultTask.Result;
+                onResult(UnpackResponseObject<TResponse>(result));
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
+            }
+        }
+
+
 
 
 
@@ -85,130 +283,5 @@ namespace OpenAiApi
             res.FromJson(obj);
             return res;
         }
-
-        /// <summary>
-        /// Performs an asyncronous post request
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request)
-            where TRequest : AModelV1, new()
-            where TResponse : AModelV1, new()
-        {
-            HttpResponseMessage response = await Post(request);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string resultAsString = await response.Content.ReadAsStringAsync();
-                return UnpackResponseObject<TResponse>(resultAsString);
-            }
-            else
-            {
-                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
-            }
-        }
-
-
-
-        public IEnumerator PostCoroutine<TRequest, TResponse>(TRequest request, Action<TResponse> callback)
-            where TRequest : AModelV1, new()
-            where TResponse : AModelV1, new()
-        {
-            Task<HttpResponseMessage> responseTask = Post(request);
-            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
-            
-            HttpResponseMessage response = responseTask.Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                Task<string> resultAsStringTask = response.Content.ReadAsStringAsync();
-                while (!resultAsStringTask.IsCompleted) yield return new WaitForEndOfFrame();
-
-                string resultAsString = resultAsStringTask.Result;
-                callback(UnpackResponseObject<TResponse>(resultAsString));
-            }
-            else
-            {
-                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
-            }
-        } 
-
-
-
-
-
-        /// <summary>
-        /// PostAsync receiving a text stream in return. The text stream will stream back an entire object as the text is generated. 
-        /// </summary>
-        /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
-        /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task PostEventStreamAsync<TRequest, TResponse>(TRequest request, Action<int, TResponse> resultHandler)
-            where TRequest : AModelV1, new()
-            where TResponse : AModelV1, new()
-        {
-            await Task.Run(async () =>
-            {
-                HttpResponseMessage response = await Post(request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    int index = 0;
-
-                    using (Stream stream = await response.Content.ReadAsStreamAsync())
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            string line;
-                            while ((line = await reader.ReadLineAsync()) != null)
-                            {
-                                if (line.StartsWith("data: ")) line = line.Substring("data: ".Length);
-
-                                if (line == "[DONE]")
-                                {
-                                    return;
-                                }
-                                else if (!string.IsNullOrWhiteSpace(line))
-                                {
-                                    index++;
-                                    JsonObject obj = JsonDeserializer.FromJson(line.Trim());
-                                    TResponse streamedResult = new TResponse();
-                                    streamedResult.FromJson(obj);
-
-                                    resultHandler(index, streamedResult);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString());
-                }
-            });
-        }
-
-        /// <summary>
-        /// Performs an asyncronous get request
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public async Task<TResponse> GetAsync<TResponse>()
-            where TResponse : AModelV1, new()
-        {
-            HttpResponseMessage response = await Get();
-            if (response.IsSuccessStatusCode)
-            {
-                string resultAsString = await response.Content.ReadAsStringAsync();
-                return UnpackResponseObject<TResponse>(resultAsString);
-            }
-            else
-            {
-                throw new HttpRequestException("Error calling OpenAi API to get completion.  HTTP status code: " + response.StatusCode.ToString() + ". Request body: " + response);
-            }
-        }
-
-        public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
-
-        public void PopulateAuthHeaders(HttpRequestMessage message) => ParentResource.PopulateAuthHeaders(message);
     }
 }
