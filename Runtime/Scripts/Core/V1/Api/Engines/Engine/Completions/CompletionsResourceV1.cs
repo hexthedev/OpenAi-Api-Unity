@@ -15,7 +15,7 @@ namespace OpenAiApi
     /// <summary>
     /// Text generation is the core function of the API. You give the API a prompt, and it generates a completion. The way you “program” the API to do a task is by simply describing the task in plain english or providing a few written examples. This simple approach works for a wide range of use cases, including summarization, translation, grammar correction, question answering, chatbots, composing emails, and much more (see the prompt library for inspiration).
     /// </summary>
-    public class CompletionsResourceV1 : AResource<EngineResource>
+    public class CompletionsResourceV1 : AApiResource<EngineResource>
     {
         public override string Endpoint => "/completions";
 
@@ -26,7 +26,7 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public async Task<CompletionV1> Create(CompletionRequestV1 request)
+        public async Task<ApiResult<CompletionV1>> Create(CompletionRequestV1 request)
         {
             request.stream = false;
             return await PostAsync<CompletionRequestV1, CompletionV1>(request);

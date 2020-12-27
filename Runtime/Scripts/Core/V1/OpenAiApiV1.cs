@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace OpenAiApi
 {
-    public class OpenAiApiV1 : IResource
+    public class OpenAiApiV1 : IApiResource
     {
         private string _authKey;
 
-        public IResource ParentResource => null;
+        public IApiResource ParentResource => null;
 
         public string Endpoint => "https://api.openai.com/v1";
 

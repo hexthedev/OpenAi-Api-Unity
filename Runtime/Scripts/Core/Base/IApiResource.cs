@@ -6,12 +6,12 @@ namespace OpenAiApi
     /// <summary>
     /// Represents an API endpoint
     /// </summary>
-    public interface IResource
+    public interface IApiResource
     {
         /// <summary>
         /// The parent reosurce object.
         /// </summary>
-        IResource ParentResource { get; }
+        IApiResource ParentResource { get; }
 
         /// <summary>
         /// The endpoint of the resource. For an api call www.api.com/resource, the Endpoint

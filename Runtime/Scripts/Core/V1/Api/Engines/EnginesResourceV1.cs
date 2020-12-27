@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace OpenAiApi
 {
-    public class EnginesResource : AResource<OpenAiApiV1>
+    public class EnginesResource : AApiResource<OpenAiApiV1>
     {
         public override string Endpoint => "/engines";
 

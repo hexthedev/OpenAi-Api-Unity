@@ -23,11 +23,11 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            CompletionV1 res =  await api.Engines.Engine("davinci").Completions.Create(
+            ApiResult<CompletionV1> res =  await api.Engines.Engine("davinci").Completions.Create(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
             );
 
-            Assert.IsNotNull(res);
+            Assert.IsNotNull(res.IsSuccess);
         }
 
         [Test]
@@ -48,11 +48,11 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            SearchListV1 res = await api.Engines.Engine("davinci").Search.Search(
+            ApiResult<SearchListV1> res = await api.Engines.Engine("davinci").Search.Search(
                 new SearchRequestV1() { documents = new string[] { "Hey baby", "I am a robot" }, query = "query?" }
             );
 
-            Assert.IsNotNull(res);
+            Assert.IsNotNull(res.IsSuccess);
         }
 
         /// <summary>
