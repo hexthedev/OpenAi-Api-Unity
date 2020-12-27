@@ -1,10 +1,10 @@
 {
     "name": "openai.api.unity.editor.tests",
-    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "openai.api.unity"
+        "openai.api.unity",
+        "openai.api.unity.tests"
     ],
     "includePlatforms": [
         "Editor"

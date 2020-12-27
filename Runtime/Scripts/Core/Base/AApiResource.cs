@@ -68,19 +68,24 @@ namespace OpenAiApi
             return await PackResultAsync<TResponse>(response);
         }
 
-        public IEnumerator GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
+        public Coroutine GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
             where TResponse : AModelV1, new()
         {
-            HttpResponseMessage response = null;
-            yield return mono.StartCoroutine(GetRequestCoroutine((res) => response = res));
-            if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
+            return mono.StartCoroutine(GetRoutine());
+
+            IEnumerator GetRoutine()
+            {
+                HttpResponseMessage response = null;
+                yield return mono.StartCoroutine(GetRequestCoroutine((res) => response = res));
+                if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
 
-            ApiResult<TResponse> result = null;
-            yield return mono.StartCoroutine(PackResponseCoroutine<TResponse>(response, (res) => result = res));
+                ApiResult<TResponse> result = null;
+                yield return mono.StartCoroutine(PackResponseCoroutine<TResponse>(response, (res) => result = res));
 
-            if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
-            else onResult(result);
+                if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
+                else onResult(result);
+            }
         }
         #endregion
 
@@ -135,20 +140,25 @@ namespace OpenAiApi
             if (response.IsSuccessStatusCode) await ReadEventStreamAsync(response, onPartialResult);
         }
 
-        public IEnumerator PostEventStreamCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult)
+        public Coroutine PostEventStreamCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
-            HttpResponseMessage response = null;
-            yield return mono.StartCoroutine(PostRequestCoroutine(request, (res) => response = res));
+            return mono.StartCoroutine(PostEventStreamRoutine());
 
-            if (response == null) onRequestStatus(new ApiResult<TResponse>() { IsSuccess = false });
-            else onRequestStatus(new ApiResult<TResponse>() { IsSuccess = response.IsSuccessStatusCode, HttpResponse = response });
-
-            if (response != null && response.IsSuccessStatusCode)
+            IEnumerator PostEventStreamRoutine()
             {
-                Task ReadStreamTask = ReadEventStreamAsync(response, onPartialResult);
-                while (!ReadStreamTask.IsCompleted) yield return new WaitForEndOfFrame();
+                HttpResponseMessage response = null;
+                yield return mono.StartCoroutine(PostRequestCoroutine(request, (res) => response = res));
+
+                if (response == null) onRequestStatus(new ApiResult<TResponse>() { IsSuccess = false });
+                else onRequestStatus(new ApiResult<TResponse>() { IsSuccess = response.IsSuccessStatusCode, HttpResponse = response });
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    Task ReadStreamTask = ReadEventStreamAsync(response, onPartialResult);
+                    while (!ReadStreamTask.IsCompleted) yield return new WaitForEndOfFrame();
+                }
             }
         }
         #endregion
