@@ -16,6 +16,6 @@ namespace OpenAiApi
         public EngineResource Engine(string engineId) => new EngineResource(this, engineId);
 
 
-        public async Task<EnginesListV1> List() => await GetAsync<EnginesListV1>();
+        public async Task<ApiResult<EnginesListV1>> List() => await GetAsync<EnginesListV1>();
     }
 }

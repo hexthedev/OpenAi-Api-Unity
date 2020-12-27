@@ -23,6 +23,6 @@ namespace OpenAiApi
             Search = new SearchResourceV1(this);
         }
 
-        public async Task<EngineV1> Retrieve() => await GetAsync<EngineV1>();
+        public async Task<ApiResult<EngineV1>> Retrieve() => await GetAsync<EngineV1>();
     }
 }

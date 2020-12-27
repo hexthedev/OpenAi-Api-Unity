@@ -40,10 +40,10 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <param name="resultHandler">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task CreateStream(CompletionRequestV1 request, Action<int, CompletionV1> resultHandler)
+        public async Task CreateStream(CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult)
         {
             request.stream = true;
-            await PostEventStreamAsync(request, resultHandler);
+            await PostEventStreamAsync(request, onRequestStatus, onPartialResult);
         }
         #endregion
     }

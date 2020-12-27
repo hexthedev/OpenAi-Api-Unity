@@ -37,9 +37,10 @@ namespace OpenAiApi
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             await api.Engines.Engine("davinci").Completions.CreateStream(
-                new CompletionRequestV1() { prompt = "hello", max_tokens = 8, stream = true }, 
+                new CompletionRequestV1() { prompt = "hello", max_tokens = 8, stream = true },
+                (r) => Debug.Log(r),
                 (i, c) => Debug.Log($"This actaully worked {c.ToJson()}")
-            );
+            ); ;
         }
 
         [Test]
@@ -64,7 +65,7 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            EnginesListV1 res = await api.Engines.List();
+            ApiResult<EnginesListV1> res = await api.Engines.List();
             
             Assert.IsNotNull(res);
         }
@@ -78,7 +79,7 @@ namespace OpenAiApi
             string key = GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            EngineV1 res = await api.Engines.Engine("ada").Retrieve();
+            ApiResult<EngineV1> res = await api.Engines.Engine("ada").Retrieve();
 
             Assert.IsNotNull(res);
         }
