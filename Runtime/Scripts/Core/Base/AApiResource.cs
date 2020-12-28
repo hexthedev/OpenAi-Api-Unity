@@ -128,7 +128,7 @@ namespace OpenAiApi
         /// </summary>
         /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
         /// <param name="onPartialResult">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task PostEventStreamAsync<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult)
+        public async Task PostAsync_EventStream<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
@@ -137,10 +137,10 @@ namespace OpenAiApi
             ApiResult<TResponse> status = new ApiResult<TResponse>() { IsSuccess = response.IsSuccessStatusCode, HttpResponse = response };
             onRequestStatus(status);
             
-            if (response.IsSuccessStatusCode) await ReadEventStreamAsync(response, onPartialResult);
+            if (response.IsSuccessStatusCode) await ReadEventStreamAsync(response, onPartialResult, onCompletion);
         }
 
-        public Coroutine PostEventStreamCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult)
+        public Coroutine PostCoroutine_EventStream<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
@@ -156,7 +156,7 @@ namespace OpenAiApi
 
                 if (response != null && response.IsSuccessStatusCode)
                 {
-                    Task ReadStreamTask = ReadEventStreamAsync(response, onPartialResult);
+                    Task ReadStreamTask = ReadEventStreamAsync(response, onPartialResult, onCompletion);
                     while (!ReadStreamTask.IsCompleted) yield return new WaitForEndOfFrame();
                 }
             }
@@ -187,7 +187,7 @@ namespace OpenAiApi
             return response;
         }
 
-        private async Task ReadEventStreamAsync<TResponse>(HttpResponseMessage response, Action<int, TResponse> onPartialResult)
+        private async Task ReadEventStreamAsync<TResponse>(HttpResponseMessage response, Action<int, TResponse> onPartialResult, Action onCompletion)
             where TResponse : AModelV1, new()
         {
             using (Stream stream = await response.Content.ReadAsStreamAsync())
@@ -203,6 +203,7 @@ namespace OpenAiApi
 
                         if (line == "[DONE]")
                         {
+                            if(onCompletion != null) onCompletion();
                             return;
                         }
                         else if (!string.IsNullOrWhiteSpace(line))

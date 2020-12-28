@@ -1,4 +1,7 @@
+using System;
 using System.Threading.Tasks;
+
+using UnityEngine;
 
 namespace OpenAiApi
 {
@@ -8,6 +11,7 @@ namespace OpenAiApi
 
         public SearchResourceV1(EngineResource parent) : base(parent) { }
 
-        public async Task<ApiResult<SearchListV1>> Search(SearchRequestV1 request) => await PostAsync<SearchRequestV1, SearchListV1>(request);
+        public async Task<ApiResult<SearchListV1>> SearchAsync(SearchRequestV1 request) => await PostAsync<SearchRequestV1, SearchListV1>(request);
+        public Coroutine SearchCoroutine(MonoBehaviour mono, SearchRequestV1 request, Action<ApiResult<SearchListV1>> onResult) => PostCoroutine(mono, request, onResult);
     }
 }

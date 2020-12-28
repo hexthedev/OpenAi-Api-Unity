@@ -16,7 +16,7 @@ namespace OpenAiApi
             string key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            ApiResult<CompletionV1> res =  await api.Engines.Engine("davinci").Completions.Create(
+            ApiResult<CompletionV1> res =  await api.Engines.Engine("davinci").Completions.CreateAsync(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
             );
 
@@ -29,7 +29,7 @@ namespace OpenAiApi
             string key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            await api.Engines.Engine("davinci").Completions.CreateStream(
+            await api.Engines.Engine("davinci").Completions.CreateAsync_EventStream(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8, stream = true },
                 (r) => Debug.Log(r),
                 (i, c) => Debug.Log($"This actaully worked {c.ToJson()}")
@@ -42,7 +42,7 @@ namespace OpenAiApi
             string key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
-            ApiResult<SearchListV1> res = await api.Engines.Engine("davinci").Search.Search(
+            ApiResult<SearchListV1> res = await api.Engines.Engine("davinci").Search.SearchAsync(
                 new SearchRequestV1() { documents = new string[] { "Hey baby", "I am a robot" }, query = "query?" }
             );
 
@@ -72,7 +72,7 @@ namespace OpenAiApi
             string key = UTTestAuth.GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
-            ApiResult<EngineV1> res = await api.Engines.Engine("ada").Retrieve();
+            ApiResult<EngineV1> res = await api.Engines.Engine("ada").RetrieveAsync();
 
             Assert.IsNotNull(res);
         }

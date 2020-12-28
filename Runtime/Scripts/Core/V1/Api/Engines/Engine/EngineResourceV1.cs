@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,8 @@ namespace OpenAiApi
             Search = new SearchResourceV1(this);
         }
 
-        public async Task<ApiResult<EngineV1>> Retrieve() => await GetAsync<EngineV1>();
+        public async Task<ApiResult<EngineV1>> RetrieveAsync() => await GetAsync<EngineV1>();
+
+        public Coroutine RetrieveCoroutine(MonoBehaviour mono, Action<ApiResult<EngineV1>> onResult) => GetCoroutine(mono, onResult);
     }
 }
