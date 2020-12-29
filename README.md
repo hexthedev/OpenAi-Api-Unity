@@ -1,8 +1,26 @@
-# RepoTemplate-UnityPackage
-This is a template for Unity packages. 
+# OpenAi Api Unity
+A Simple OpenAi API wrapper for Unity. 
 
-It follows https://docs.unity3d.com/Manual/CustomPackages.html
+## Quick Start
+This wrapper has been designed to follow the [OpenAI API Reference](https://beta.openai.com/docs/api-reference) as closely as possible in syntax. 
 
-For folder structure see: https://docs.unity3d.com/Manual/cus-layout.html
+Save your [Secret API Key](https://beta.openai.com/docs/developer-quickstart) as the file `~/.openai/key.txt` (Linux/Mac) or `%USERPROFILE%/.openai/key.txt` (Windows)
 
-Licenses from: https://spdx.org/licenses/
+TO DO: Add the mono behviour
+
+TO DO: Make a call to the api
+
+
+## Docs
+
+### Authentication
+The OpenAi Api is currently in beta and requires special access to use it. You can [Sign Up for Access](https://openai.com/)
+
+Access to the API is managed using your [Secret API Key](https://beta.openai.com/docs/developer-quickstart)
+
+You have two options to authenticate the api in Unity. 
+  1. Copy/Paste in Scriptable Object (Not recommended for projects commited to public repos, as this will reveal your key to the public)
+  2. Save in `key.txt` file
+
+TO DO: Sort this out in the library
+
