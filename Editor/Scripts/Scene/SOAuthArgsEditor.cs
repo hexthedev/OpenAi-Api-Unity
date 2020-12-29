@@ -1,17 +1,22 @@
 ﻿using UnityEditor;
 
+using static OpenAi.Api.V1.SOAuthArgs;
+
 namespace OpenAi.Api.V1
 {
-    [CustomEditor(typeof(OpenAiApiAuthArgs))]
+    [CustomEditor(typeof(SOAuthArgs))]
     public class OpenAiApiAuthArgsEditor : Editor
     {
         SerializedProperty AuthType;
         SerializedProperty PrivateApiKey;
+        SerializedProperty Organization;
+
 
         void OnEnable()
         {
             AuthType = serializedObject.FindProperty("AuthType");
             PrivateApiKey = serializedObject.FindProperty("PrivateApiKey");
+            Organization = serializedObject.FindProperty("Organization");
         }
 
         public override void OnInspectorGUI()
@@ -27,6 +32,7 @@ namespace OpenAi.Api.V1
                     break;
                 case EAuthType.String:
                     EditorGUILayout.PropertyField(PrivateApiKey);
+                    EditorGUILayout.PropertyField(Organization);
                     break;
             }
 

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OpenAi.Api.V1;
+using OpenAi.Json;
+
+using System;
 using System.IO;
 using System.Security.Authentication;
 using System.Text;
@@ -9,23 +12,28 @@ namespace OpenAi.Api.Test
     {
         private const string cOpenAiKeyName = "OPENAI_PRIVATE_KEY";
 
-        public static string GetAndValidateAuthKey()
+        public static SAuthArgs GetAndValidateAuthKey()
         {
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string authPath = $"{userPath}/.openai/key.txt";
+            string authPath = $"{userPath}/.openai/auth.json";
             FileInfo fi = new FileInfo(authPath);
 
             if (!fi.Exists) throw new AuthenticationException($"No authentication file exists at {authPath}");
 
-            string key = null;
+            string json = null;
             using (FileStream fs = fi.OpenRead())
             {
                 byte[] buffer = new byte[fs.Length];
                 fs.Read(buffer, 0, (int)fs.Length);
-                key = Encoding.UTF8.GetString(buffer);
+                json = Encoding.UTF8.GetString(buffer);
             }
 
-            return key;
+            JsonObject des = JsonDeserializer.FromJson(json);
+            
+            SAuthArgs authArgs = new SAuthArgs();
+            authArgs.FromJson(des);
+
+            return authArgs;
         }
     }
 }

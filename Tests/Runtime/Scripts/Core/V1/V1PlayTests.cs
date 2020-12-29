@@ -16,7 +16,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EnginesListCoroutine()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
@@ -47,7 +47,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EnginesListAsync()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
             Task<ApiResult<EnginesListV1>> resTask = api.Engines.ListAsync();
@@ -66,7 +66,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EngineRetrieveCoroutine()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
@@ -85,7 +85,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EngineRetrieveAsync()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
 
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
@@ -105,7 +105,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
@@ -126,7 +126,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateAsync()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             Task<ApiResult<CompletionV1>> resTask = api.Engines.Engine("ada").Completions.CreateAsync(
@@ -145,7 +145,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine_EventStream()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
@@ -181,7 +181,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateAsync_EventStream()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             ApiResult<CompletionV1> result = null;
@@ -208,7 +208,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator SearchSearchCoroutine()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
@@ -228,7 +228,7 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator SearchSearchAsync()
         {
-            string key = UTTestAuth.GetAndValidateAuthKey();
+            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
             OpenAiApiV1 api = new OpenAiApiV1(key);
 
             Task<ApiResult<SearchListV1>> resTask = api.Engines.Engine("davinci").Search.SearchAsync(

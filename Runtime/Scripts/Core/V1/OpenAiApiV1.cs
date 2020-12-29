@@ -11,7 +11,7 @@ namespace OpenAi.Api.V1
 {
     public class OpenAiApiV1 : IApiResource
     {
-        private string _authKey;
+        private SAuthArgs _authArgs;
 
         public IApiResource ParentResource => null;
 
@@ -21,9 +21,9 @@ namespace OpenAi.Api.V1
 
         public EnginesResource Engines { get; private set; }
 
-        public OpenAiApiV1(string authKey)
+        public OpenAiApiV1(SAuthArgs authArgs)
         {
-            _authKey = authKey;
+            _authArgs = authArgs;
             Engines = new EnginesResource(this);
         }
 
@@ -34,14 +34,16 @@ namespace OpenAi.Api.V1
 
         public void PopulateAuthHeaders(HttpClient client)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authKey);
-            //client.DefaultRequestHeaders.Add("User-Agent", "okgodoit/dotnet_openai_api");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authArgs.private_auth_key);
+            client.DefaultRequestHeaders.Add("User-Agent", "hexthedev/openai_api_unity");
+            if(_authArgs.organization != null) client.DefaultRequestHeaders.Add("OpenAI-Organization", _authArgs.organization);
         }
 
         public void PopulateAuthHeaders(HttpRequestMessage message)
         {
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authKey);
-            //client.Headers.Add("User-Agent", "okgodoit/dotnet_openai_api");
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authArgs.private_auth_key);
+            message.Headers.Add("User-Agent", "hexthedev/openai_api_unity");
+            if (_authArgs.organization != null) message.Headers.Add("OpenAI-Organization", _authArgs.organization);
         }
     }
 }
