@@ -59,8 +59,8 @@ namespace OpenAiApi
             JsonObject val = new JsonObject();
             val.Name = syntax[index];
 
-            if (parent.NestedValue == null) parent.NestedValue = new List<JsonObject>();
-            parent.NestedValue.Add(val);
+            if (parent.NestedValues == null) parent.NestedValues = new List<JsonObject>();
+            parent.NestedValues.Add(val);
 
             switch (syntax[index + 2]) 
             {
@@ -83,8 +83,8 @@ namespace OpenAiApi
             // Validate
             JsonObject val = new JsonObject();
 
-            if (parent.NestedValue == null) parent.NestedValue = new List<JsonObject>();
-            parent.NestedValue.Add(val);
+            if (parent.NestedValues == null) parent.NestedValues = new List<JsonObject>();
+            parent.NestedValues.Add(val);
 
             switch (syntax[index])
             {

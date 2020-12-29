@@ -28,7 +28,7 @@ namespace OpenAiApi
         {
             if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
 
-            foreach (JsonObject jo in jsonObj.NestedValue)
+            foreach (JsonObject jo in jsonObj.NestedValues)
             {
                 switch (jo.Name)
                 {

@@ -31,7 +31,7 @@ namespace OpenAiApi
         {
             if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
 
-            foreach(JsonObject jo in jsonObj.NestedValue)
+            foreach(JsonObject jo in jsonObj.NestedValues)
             {
                 switch (jo.Name)
                 {
@@ -48,11 +48,11 @@ namespace OpenAiApi
                         model = jo.StringValue;
                         break;
                     case nameof(choices):
-                        CompletionChoiceV1[] choiceArray = new CompletionChoiceV1[jo.NestedValue.Count];
+                        CompletionChoiceV1[] choiceArray = new CompletionChoiceV1[jo.NestedValues.Count];
                         for(int i = 0; i<choiceArray.Length; i++)
                         {
                             CompletionChoiceV1 n = new CompletionChoiceV1();
-                            n.FromJson(jo.NestedValue[i]);
+                            n.FromJson(jo.NestedValues[i]);
                             choiceArray[i] = n;
                         }
                         break;
