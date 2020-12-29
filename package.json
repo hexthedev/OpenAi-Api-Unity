@@ -1,23 +1,18 @@
 {
-    "name": "com.unity.example",
-    "version": "1.2.3",
-    "displayName": "Package Example",
-    "description": "This is an example package",
-    "unity": "2019.1",
-    "unityRelease": "0b5",
-    "dependencies": {
-      "com.unity.some-package": "1.0.0",
-      "com.unity.other-package": "2.0.0"
-   },
+    "name": "com.openai.api.unity",
+    "version": "0.1.0",
+    "displayName": "OpenAi Api Unity",
+    "description": "An OpenAi Api for the Unity Engine",
+    "unity": "2019.4",
+    "unityRelease": "0f1",
+    "dependencies": { },
    "keywords": [
-      "keyword1",
-      "keyword2",
-      "keyword3"
+      "OpenAi"
     ],
     "author": {
-      "name": "Unity",
-      "email": "unity@example.com",
-      "url": "https://www.unity3d.com"
+      "name": "James McCafferty",
+      "email": "jamesmccafferty@live.ca",
+      "url": "https://github.com/hexthedev/OpenAi-Api-Unity"
     }
   }
   
