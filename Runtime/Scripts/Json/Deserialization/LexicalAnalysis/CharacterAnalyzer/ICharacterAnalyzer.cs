@@ -1,10 +1,10 @@
-﻿namespace OpenAiApi
+﻿namespace OpenAi.Json
 {
     /// <summary>
     /// Analyzes a character
     /// </summary>
     public interface ICharacterAnalyzer
     {
-        public ECharacterAnalyzerResponse Analyze(char c, out ICharacterAnalyzer engage);
+        ECharacterAnalyzerResponse Analyze(char c, out ICharacterAnalyzer engage);
     }
 }

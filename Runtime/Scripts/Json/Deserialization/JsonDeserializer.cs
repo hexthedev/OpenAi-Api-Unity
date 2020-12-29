@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     public static class JsonDeserializer
     {
         public static JsonObject FromJson(string json)
         {
             string[] tokens = JsonLexer.Lex(json);
-            return SyntaxAnalyzer.Parse(tokens);
+            return JsonSyntaxAnalyzer.Parse(tokens);
         }
     }
 }

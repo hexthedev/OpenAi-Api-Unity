@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     public enum EJsonType
     {

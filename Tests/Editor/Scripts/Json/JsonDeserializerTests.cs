@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 
+using OpenAi.Json;
+
 using UnityEngine.TestTools;
 
 namespace OpenAiApi

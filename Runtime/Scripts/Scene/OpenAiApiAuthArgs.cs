@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     /// <summary>
     /// The Authentication arguments required to authenticate an OpenAI Api request. This file should not be populated and exposed to the public, as the private key secret, and revealed to the public breaches the OpenAi terms and conditions. 
     /// </summary>
-    [CreateAssetMenu(fileName = "OpenAiApiAuthArgs", menuName = "OpenAi/Api/AuthArgs")]
+    [CreateAssetMenu(fileName = "OpenAi.ApiAuthArgs", menuName = "OpenAi/Api/AuthArgs")]
     public class OpenAiApiAuthArgs : ScriptableObject
     {
         /// <summary>

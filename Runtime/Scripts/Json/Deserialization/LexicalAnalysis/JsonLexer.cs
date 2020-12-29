@@ -3,7 +3,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     /// <summary>
     /// Simple single pass lexical analysis of a JSON object

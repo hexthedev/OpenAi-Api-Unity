@@ -1,4 +1,4 @@
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class OpenAiApi : AMonoSingleton<OpenAiApi>
     {
