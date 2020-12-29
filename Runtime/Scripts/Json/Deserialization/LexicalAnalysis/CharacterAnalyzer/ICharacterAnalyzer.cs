@@ -1,4 +1,4 @@
-﻿namespace OpenAiApi
+﻿namespace OpenAi.Json
 {
     /// <summary>
     /// Analyzes a character

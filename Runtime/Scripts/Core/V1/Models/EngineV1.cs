@@ -1,4 +1,6 @@
-﻿namespace OpenAiApi
+﻿using OpenAi.Json;
+
+namespace OpenAi.Api.V1
 {
     public class EngineV1 : AModelV1
     {

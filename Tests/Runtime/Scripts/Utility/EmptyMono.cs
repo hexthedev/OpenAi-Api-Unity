@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
-public class EmptyMono : MonoBehaviour 
+namespace OpenAi.Api.Test
 {
-    public void DestroySelf() => Destroy(gameObject);
+    public class EmptyMono : MonoBehaviour
+    {
+        public void DestroySelf() => Destroy(gameObject);
+    }
 }

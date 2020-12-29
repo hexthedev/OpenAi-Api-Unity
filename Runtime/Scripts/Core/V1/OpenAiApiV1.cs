@@ -7,7 +7,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class OpenAiApiV1 : IApiResource
     {

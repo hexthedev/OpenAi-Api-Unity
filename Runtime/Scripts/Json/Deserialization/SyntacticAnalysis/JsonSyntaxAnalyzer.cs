@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     public static class JsonSyntaxAnalyzer
     {

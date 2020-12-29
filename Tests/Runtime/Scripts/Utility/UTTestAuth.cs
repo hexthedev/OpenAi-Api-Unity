@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Authentication;
 using System.Text;
 
-namespace OpenAiApi
+namespace OpenAi.Api.Test
 {
     public static class UTTestAuth
     {

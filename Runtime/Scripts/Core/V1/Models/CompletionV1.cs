@@ -1,7 +1,9 @@
-﻿using System;
+﻿using OpenAi.Json;
+
+using System;
 using System.Text;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class CompletionV1 : AModelV1
     {

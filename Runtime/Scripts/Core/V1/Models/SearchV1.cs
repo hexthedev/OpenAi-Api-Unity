@@ -1,6 +1,8 @@
+using OpenAi.Json;
+
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class SearchV1 : AModelV1
     {

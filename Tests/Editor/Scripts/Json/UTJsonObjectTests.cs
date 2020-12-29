@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using OpenAi.Json;
+
 using System.Collections.Generic;
 
 namespace OpenAiApi

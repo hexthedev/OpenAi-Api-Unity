@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1.Test
 {
     class CompletionRequestModelTests
     {

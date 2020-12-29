@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
 
     /// <summary>

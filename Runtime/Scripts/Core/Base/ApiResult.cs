@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class ApiResult<TResult>
     {

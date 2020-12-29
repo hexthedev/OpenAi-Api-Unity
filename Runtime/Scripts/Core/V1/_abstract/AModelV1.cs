@@ -1,4 +1,6 @@
-﻿namespace OpenAiApi
+﻿using OpenAi.Json;
+
+namespace OpenAi.Api.V1
 {
     /// <summary>
     /// A model that can be converted from json and populated from json

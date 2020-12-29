@@ -1,7 +1,9 @@
+using OpenAi.Json;
+
 using System;
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     public class ChoiceV1 : AModelV1
     {

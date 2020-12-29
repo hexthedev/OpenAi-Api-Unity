@@ -1,4 +1,6 @@
-namespace OpenAiApi
+using OpenAi.Json;
+
+namespace OpenAi.Api.V1
 {
     public class SearchListV1 : AModelV1
     {

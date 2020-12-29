@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     /// <summary>
-    /// Can be interpreted as a string (if only 1 string added) or an array, if multiple strings added. This is to facilitate arguments in the OpenAiApi
+    /// Can be interpreted as a string (if only 1 string added) or an array, if multiple strings added. This is to facilitate arguments in the OpenAi.Api
     /// </summary>
     public class StringOrArray
     {

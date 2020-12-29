@@ -1,4 +1,4 @@
-﻿namespace OpenAiApi
+﻿namespace OpenAi.Json
 {
     /// <summary>
     /// Can be converted to and from json

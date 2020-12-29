@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Text;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     /// <summary>
     /// Represents an API endpoint

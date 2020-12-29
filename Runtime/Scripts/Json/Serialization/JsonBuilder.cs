@@ -1,3 +1,6 @@
+using OpenAi.Api;
+using OpenAi.Api.V1;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +8,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     public class JsonBuilder
     {

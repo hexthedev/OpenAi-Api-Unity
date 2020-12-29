@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using OpenAi.Json;
+
 namespace OpenAiApi
 {
     public class JsonLexerTests

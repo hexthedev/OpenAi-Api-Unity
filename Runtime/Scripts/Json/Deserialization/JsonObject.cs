@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OpenAiApi
+namespace OpenAi.Json
 {
     public class JsonObject
     {

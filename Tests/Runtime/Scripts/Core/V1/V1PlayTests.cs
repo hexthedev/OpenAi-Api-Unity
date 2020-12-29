@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 
+using OpenAi.Api.V1;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace OpenAiApi
+namespace OpenAi.Api.Test
 {
     public class V1PlayTests
     {

@@ -1,3 +1,5 @@
+using OpenAi.Json;
+
 using System;
 using System.Collections;
 using System.IO;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace OpenAiApi
+namespace OpenAi.Api.V1
 {
     /// <summary>
     /// A resource
