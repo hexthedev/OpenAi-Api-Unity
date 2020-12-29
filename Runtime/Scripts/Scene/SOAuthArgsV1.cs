@@ -2,7 +2,6 @@ using OpenAi.Json;
 
 using System;
 using System.IO;
-using System.Security.Authentication;
 using System.Text;
 
 using UnityEngine;
@@ -54,7 +53,7 @@ namespace OpenAi.Api.V1
             string authPath = $"{userPath}/.openai/auth.json";
             FileInfo fi = new FileInfo(authPath);
 
-            if (!fi.Exists) throw new AuthenticationException($"No authentication file exists at {authPath}");
+            if (!fi.Exists) throw new OpenAiApiException($"No authentication file exists at {authPath}", this);
 
             string json = null;
             using (FileStream fs = fi.OpenRead())

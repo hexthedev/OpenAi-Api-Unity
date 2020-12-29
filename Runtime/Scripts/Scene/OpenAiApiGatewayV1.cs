@@ -3,7 +3,8 @@ using UnityEngine;
 namespace OpenAi.Api.V1
 {
     /// <summary>
-    /// A singleton that handles the inialization of an OpenAiApiV1 object and provides access to it.
+    /// A singleton that handles the inialization of an OpenAiApiV1 object and provides access to it. For the <see cref="Api"/> to function
+    /// it needs to be initalized.
     /// </summary>
     public class OpenAiApiGatewayV1 : AMonoSingleton<OpenAiApiGatewayV1>
     {
@@ -12,9 +13,9 @@ namespace OpenAi.Api.V1
         /// </summary>
         [Tooltip("If true, initalizes the api in Start. Otherwise requires initalization programmatically")]
         public bool InitializeOnStart = false;
-        
+
         /// <summary>
-        /// The auth arguments used to authenticate the api. Should not be changed after initalization.
+        /// The auth arguments used to authenticate the api. Should not be changed after initalization. Once the <see cref="Api"/> is initalized it must be cleared and initialized again if any changes are made to this property
         /// </summary>
         [Tooltip("Arguments used to authenticate the OpenAi Api")]
         public SOAuthArgsV1 Auth;
@@ -48,6 +49,15 @@ namespace OpenAi.Api.V1
                 Api = new OpenAiApiV1(Auth.ResolveAuth());
                 IsInitialized = true;
             }
+        }
+
+        /// <summary>
+        /// Sets the <see cref="Api"/> to null and marks <see cref="IsInitialized"/> false
+        /// </summary>
+        public void ClearApi()
+        {
+            Api = null;
+            IsInitialized = false;
         }
     }
 }
