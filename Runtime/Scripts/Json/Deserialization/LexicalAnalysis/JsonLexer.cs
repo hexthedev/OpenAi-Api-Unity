@@ -1,21 +1,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-using UnityEngine;
-
 namespace OpenAi.Json
 {
     /// <summary>
-    /// Simple single pass lexical analysis of a JSON object
+    /// Simple single pass lexical analysis of a JSON string
     /// </summary>
     public static class JsonLexer
     {
         /// <summary>
-        /// preforms a lexical analysis of a JSON string and
-        /// returns a list of tokens.
+        /// Preforms a lexical analysis of a JSON string and returns an array of tokens.
         /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
+        /// <param name="json">json string to analyze</param>
+        /// <returns>array of tokens</returns>
         public static string[] Lex(string json)
         {
             StringBuilder sb = new StringBuilder();
@@ -26,39 +23,41 @@ namespace OpenAi.Json
 
             List<string> tokens = new List<string>();
 
-            for(int i = 0; i<json.Length; i++)
+            // Analyzes each character in the string based on the currently set analyzer. 
+            // Based on analysis adds tokens to the tokens list.
+            for (int i = 0; i<json.Length; i++)
             {
                 ECharacterAnalyzerResponse res = analyzer.Peek().Analyze(json[i], out ICharacterAnalyzer engage);
 
                 switch (res)
                 {
-                    case ECharacterAnalyzerResponse.TOKEN:
+                    case ECharacterAnalyzerResponse.Token:
                         if (generatingToken) AddToken();
                         tokens.Add($"{json[i]}");
                         break;
 
-                    case ECharacterAnalyzerResponse.INCLUDE_CHARACTER:
+                    case ECharacterAnalyzerResponse.IncludeCharacter:
                         if (!generatingToken) generatingToken = true;
                         sb.Append(json[i]);
                         break;
 
-                    case ECharacterAnalyzerResponse.INCLUDE_ESCAPE_CHARACTER:
+                    case ECharacterAnalyzerResponse.IncludeEscapeCharacter:
                         if (!generatingToken) generatingToken = true;
                         sb.Append(json[i]);
                         sb.Append(json[i++]);
                         break;
 
-                    case ECharacterAnalyzerResponse.EXCLUDE_CHARACTER:
+                    case ECharacterAnalyzerResponse.ExcludeCharacter:
                         if (generatingToken) AddToken();
                         break;
 
                     // character to engage or release another analyzer
-                    case ECharacterAnalyzerResponse.ENGAGE_CHARACTER:
+                    case ECharacterAnalyzerResponse.EngageCharacter:
                         if (generatingToken) AddToken();
                         analyzer.Push(engage);
                         break;
 
-                    case ECharacterAnalyzerResponse.RELEASE_CHARACTER:
+                    case ECharacterAnalyzerResponse.ReleaseCharacter:
                         AddToken();
                         analyzer.Pop();
                         break;

@@ -8,13 +8,13 @@
         /// <summary>
         /// Convert the object to json format
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Object in json format string</returns>
         string ToJson();
 
         /// <summary>
         /// Update the objects values based on JsonObject
         /// </summary>
-        /// <param name="json"></param>
+        /// <param name="json">JsonObject representing object instance</param>
         void FromJson(JsonObject json);
     }
 }

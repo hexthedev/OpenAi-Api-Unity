@@ -22,6 +22,7 @@ namespace OpenAi.Api.V1
             }
         }
 
+
         /// <summary>
         /// Resolves the StringOrArray to the appropriate type
         /// </summary>
@@ -32,7 +33,7 @@ namespace OpenAi.Api.V1
             if (_elements.Count == 1) return _elements[0];
             return _elements.ToArray();
         }
-
+        
         /// <summary>
         /// Implicitly make a StringOrArray from a string
         /// </summary>
