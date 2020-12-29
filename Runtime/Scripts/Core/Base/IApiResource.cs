@@ -14,8 +14,7 @@ namespace OpenAi.Api.V1
         IApiResource ParentResource { get; }
 
         /// <summary>
-        /// The endpoint of the resource. For an api call www.api.com/resource, the Endpoint
-        /// is /resource
+        /// The endpoint of the resource.
         /// </summary>
         string Endpoint { get; }
 
@@ -31,7 +30,7 @@ namespace OpenAi.Api.V1
         void ConstructEndpoint(StringBuilder sb);
 
         /// <summary>
-        /// Populates a HttpClient with the appropriate auth headers
+        /// Populates a <see cref="HttpClient"/> with the appropriate auth headers
         /// </summary>
         /// <returns></returns>
         void PopulateAuthHeaders(HttpClient client);
