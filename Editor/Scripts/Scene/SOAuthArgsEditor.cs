@@ -1,10 +1,10 @@
 ﻿using UnityEditor;
 
-using static OpenAi.Api.V1.SOAuthArgs;
+using static OpenAi.Api.V1.SOAuthArgsV1;
 
 namespace OpenAi.Api.V1
 {
-    [CustomEditor(typeof(SOAuthArgs))]
+    [CustomEditor(typeof(SOAuthArgsV1))]
     public class OpenAiApiAuthArgsEditor : Editor
     {
         SerializedProperty AuthType;
@@ -25,12 +25,12 @@ namespace OpenAi.Api.V1
 
             EditorGUILayout.PropertyField(AuthType);
 
-            switch((EAuthType)AuthType.enumValueIndex)
+            switch((EAuthProvisionMethod)AuthType.enumValueIndex)
             {
-                case EAuthType.LocalFile:
-                    EditorGUILayout.HelpBox("This auth method will attempt to find the private key at `~/.openai/key.txt` (Linux/Mac) or `%USERPROFILE%/.openai/key.txt` (Windows). If this file does not exist or the key is not present, api calls will fail", MessageType.Warning);
+                case EAuthProvisionMethod.LocalFile:
+                    EditorGUILayout.HelpBox("This auth method will attempt to find the private key at `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows). If this file does not exist or the key is not present, api calls will fail", MessageType.Warning);
                     break;
-                case EAuthType.String:
+                case EAuthProvisionMethod.String:
                     EditorGUILayout.PropertyField(PrivateApiKey);
                     EditorGUILayout.PropertyField(Organization);
                     break;

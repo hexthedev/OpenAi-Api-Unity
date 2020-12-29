@@ -4,9 +4,9 @@ using System;
 
 namespace OpenAi.Api.V1
 {
-    public struct SAuthArgs : IJsonable
+    public struct SAuthArgsV1 : IJsonable
     {
-        public string private_auth_key;
+        public string private_api_key;
         public string organization;
 
         public void FromJson(JsonObject jsonObj)
@@ -17,8 +17,8 @@ namespace OpenAi.Api.V1
             {
                 switch (jo.Name)
                 {
-                    case nameof(private_auth_key):
-                        private_auth_key = jo.StringValue;
+                    case nameof(private_api_key):
+                        private_api_key = jo.StringValue;
                         break;
                     case nameof(organization):
                         organization = jo.StringValue;
@@ -32,7 +32,7 @@ namespace OpenAi.Api.V1
             JsonBuilder jb = new JsonBuilder();
 
             jb.StartObject();
-            jb.Add(nameof(private_auth_key), private_auth_key);
+            jb.Add(nameof(private_api_key), private_api_key);
             jb.Add(nameof(organization), organization);
             jb.EndObject();
 

@@ -16,10 +16,8 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EnginesListCoroutine()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
-
-            EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<EnginesListV1> result = null;
             yield return api.Engines.ListCoroutine(test, (r) => result = r);
@@ -41,15 +39,14 @@ namespace OpenAi.Api.Test
             }
 
             Assert.That(containsAda);
-            test.DestroySelf();
         }
 
         [UnityTest]
         public IEnumerator EnginesListAsync()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
-            OpenAiApiV1 api = new OpenAiApiV1(key);
             Task<ApiResult<EnginesListV1>> resTask = api.Engines.ListAsync();
 
             while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
@@ -66,10 +63,8 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EngineRetrieveCoroutine()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
-
-            EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<EngineV1> result = null;
             yield return api.Engines.Engine("ada").RetrieveCoroutine(test, (r) => result = r);
@@ -79,15 +74,13 @@ namespace OpenAi.Api.Test
 
             Assert.IsNotNull(result.Result);
             Assert.That(result.Result.id == "ada");
-            test.DestroySelf();
         }
 
         [UnityTest]
         public IEnumerator EngineRetrieveAsync()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-
-            OpenAiApiV1 api = new OpenAiApiV1(key);
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             Task<ApiResult<EngineV1>> resultTask = api.Engines.Engine("ada").RetrieveAsync();
 
@@ -105,10 +98,8 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
-
-            EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<CompletionV1> result = null;
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
@@ -120,14 +111,13 @@ namespace OpenAi.Api.Test
             Assert.IsNotNull(result.Result);
             Assert.IsNotEmpty(result.Result.choices);
             Assert.That(result.Result.choices.Length > 0);
-            test.DestroySelf();
         }
 
         [UnityTest]
         public IEnumerator CompletionsCreateAsync()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             Task<ApiResult<CompletionV1>> resTask = api.Engines.Engine("ada").Completions.CreateAsync(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
@@ -145,10 +135,8 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine_EventStream()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
-
-            EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<CompletionV1> result = null;
             List<CompletionV1> partials = new List<CompletionV1>();
@@ -175,14 +163,13 @@ namespace OpenAi.Api.Test
             Assert.IsNotNull(result);
             Assert.That(result.IsSuccess);
             Assert.IsNotEmpty(partials);
-            test.DestroySelf();
         }
 
         [UnityTest]
         public IEnumerator CompletionsCreateAsync_EventStream()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<CompletionV1> result = null;
             List<CompletionV1> completions = new List<CompletionV1>();
@@ -208,10 +195,8 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator SearchSearchCoroutine()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
-
-            EmptyMono test = new GameObject("test", typeof(EmptyMono)).GetComponent<EmptyMono>();
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<SearchListV1> result = null;
             SearchRequestV1 req = new SearchRequestV1() { documents = new string[] { "doc1", "doc2" }, query = "is this a doc"};
@@ -222,14 +207,13 @@ namespace OpenAi.Api.Test
             Assert.IsNotNull(result.Result);
             Assert.IsNotEmpty(result.Result.data);
             Assert.That(result.Result.data.Length == 2);
-            test.DestroySelf();
         }
 
         [UnityTest]
         public IEnumerator SearchSearchAsync()
         {
-            SAuthArgs key = UTTestAuth.GetAndValidateAuthKey();
-            OpenAiApiV1 api = new OpenAiApiV1(key);
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
 
             Task<ApiResult<SearchListV1>> resTask = api.Engines.Engine("davinci").Search.SearchAsync(
                 new SearchRequestV1() { documents = new string[] { "Hey baby", "I am a robot" }, query = "query?" }
