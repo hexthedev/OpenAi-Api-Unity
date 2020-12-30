@@ -31,12 +31,12 @@ namespace OpenAi.Api.V1
         /// Lists the currently available engines, and provides basic information about each one such as the owner and availability. <see href="https://beta.openai.com/docs/api-reference/list-engines"/>
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<EnginesListV1>> ListAsync() => await GetAsync<EnginesListV1>();
+        public async Task<ApiResult<EnginesListV1>> ListEnginesAsync() => await GetAsync<EnginesListV1>();
 
         /// <summary>
         /// Lists the currently available engines, and provides basic information about each one such as the owner and availability. <see href="https://beta.openai.com/docs/api-reference/list-engines"/>
         /// </summary>
         /// <returns></returns>
-        public Coroutine ListCoroutine(MonoBehaviour mono, Action<ApiResult<EnginesListV1>> onResult) => GetCoroutine(mono, onResult);
+        public Coroutine ListEnginesCoroutine(MonoBehaviour mono, Action<ApiResult<EnginesListV1>> onResult) => GetCoroutine(mono, onResult);
     }
 }

@@ -21,21 +21,21 @@ namespace OpenAi.Api.V1
         public CompletionsResourceV1(EngineResource parent) : base(parent) { }
 
         /// <summary>
-        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>false</c>. To stream, use <see cref="CreateAsync_EventStream(CompletionRequestV1, Action{ApiResult{CompletionV1}}, Action{int, CompletionV1}, Action)"/> instead
+        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>false</c>. To stream, use <see cref="CreateCompletionAsync_EventStream(CompletionRequestV1, Action{ApiResult{CompletionV1}}, Action{int, CompletionV1}, Action)"/> instead
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public async Task<ApiResult<CompletionV1>> CreateAsync(CompletionRequestV1 request)
+        public async Task<ApiResult<CompletionV1>> CreateCompletionAsync(CompletionRequestV1 request)
         {
             request.stream = false;
             return await PostAsync<CompletionRequestV1, CompletionV1>(request);
         }
         /// <summary>
-        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>false</c>. To stream, use <see cref="CreateCoroutine_EventStream(MonoBehaviour, CompletionRequestV1, Action{ApiResult{CompletionV1}}, Action{int, CompletionV1}, Action)"/> instead
+        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>false</c>. To stream, use <see cref="CreateCompletionCoroutine_EventStream(MonoBehaviour, CompletionRequestV1, Action{ApiResult{CompletionV1}}, Action{int, CompletionV1}, Action)"/> instead
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public Coroutine CreateCoroutine(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onResult)
+        public Coroutine CreateCompletionCoroutine(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onResult)
         {
             request.stream = false;
             return PostCoroutine(mono, request, onResult);
@@ -43,22 +43,22 @@ namespace OpenAi.Api.V1
 
         #region Streaming
         /// <summary>
-        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>true</c>. To stream, use <see cref="CreateAsync(CompletionRequestV1)"/> instead
+        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>true</c>. To stream, use <see cref="CreateCompletionAsync(CompletionRequestV1)"/> instead
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public async Task CreateAsync_EventStream(CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
+        public async Task CreateCompletionAsync_EventStream(CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
         {
             request.stream = true;
             await PostAsync_EventStream(request, onRequestStatus, onPartialResult, onCompletion);
         }
 
         /// <summary>
-        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>true</c>. To stream, use <see cref="CreateCoroutine(MonoBehaviour, CompletionRequestV1, Action{ApiResult{CompletionV1}})"/> instead
+        /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>true</c>. To stream, use <see cref="CreateCompletionCoroutine(MonoBehaviour, CompletionRequestV1, Action{ApiResult{CompletionV1}})"/> instead
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public Coroutine CreateCoroutine_EventStream(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
+        public Coroutine CreateCompletionCoroutine_EventStream(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
         {
             request.stream = true;
             return PostCoroutine_EventStream(mono, request, onRequestStatus, onPartialResult, onCompletion);

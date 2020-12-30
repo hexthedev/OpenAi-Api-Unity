@@ -20,7 +20,7 @@ namespace OpenAi.Api.Test
             OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<EnginesListV1> result = null;
-            yield return api.Engines.ListCoroutine(test, (r) => result = r);
+            yield return api.Engines.ListEnginesCoroutine(test, (r) => result = r);
 
             Assert.IsNotNull(result);
             Assert.That(result.IsSuccess);
@@ -47,7 +47,7 @@ namespace OpenAi.Api.Test
             TestManager test = TestManager.Instance;
             OpenAiApiV1 api = test.CleanAndProvideApi();
 
-            Task<ApiResult<EnginesListV1>> resTask = api.Engines.ListAsync();
+            Task<ApiResult<EnginesListV1>> resTask = api.Engines.ListEnginesAsync();
 
             while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
 
@@ -67,7 +67,7 @@ namespace OpenAi.Api.Test
             OpenAiApiV1 api = test.CleanAndProvideApi();
 
             ApiResult<EngineV1> result = null;
-            yield return api.Engines.Engine("ada").RetrieveCoroutine(test, (r) => result = r);
+            yield return api.Engines.Engine("ada").RetrieveEngineCoroutine(test, (r) => result = r);
 
             Assert.IsNotNull(result);
             Assert.That(result.IsSuccess);
@@ -82,7 +82,7 @@ namespace OpenAi.Api.Test
             TestManager test = TestManager.Instance;
             OpenAiApiV1 api = test.CleanAndProvideApi();
 
-            Task<ApiResult<EngineV1>> resultTask = api.Engines.Engine("ada").RetrieveAsync();
+            Task<ApiResult<EngineV1>> resultTask = api.Engines.Engine("ada").RetrieveEngineAsync();
 
             while (!resultTask.IsCompleted) yield return new WaitForEndOfFrame();
 
@@ -103,7 +103,7 @@ namespace OpenAi.Api.Test
 
             ApiResult<CompletionV1> result = null;
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
-            yield return api.Engines.Engine("ada").Completions.CreateCoroutine(test, req, (r) => result = r);
+            yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
 
             Assert.IsNotNull(result);
             Assert.That(result.IsSuccess);
@@ -119,7 +119,7 @@ namespace OpenAi.Api.Test
             TestManager test = TestManager.Instance;
             OpenAiApiV1 api = test.CleanAndProvideApi();
 
-            Task<ApiResult<CompletionV1>> resTask = api.Engines.Engine("ada").Completions.CreateAsync(
+            Task<ApiResult<CompletionV1>> resTask = api.Engines.Engine("ada").Completions.CreateCompletionAsync(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
             );
 
@@ -143,7 +143,7 @@ namespace OpenAi.Api.Test
             bool isComplete = false;
 
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
-            yield return api.Engines.Engine("ada").Completions.CreateCoroutine_EventStream(
+            yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine_EventStream(
                 test, 
                 req, 
                 (r) => result = r,
@@ -175,7 +175,7 @@ namespace OpenAi.Api.Test
             List<CompletionV1> completions = new List<CompletionV1>();
             bool isComplete = false;
 
-            Task engineTask = api.Engines.Engine("davinci").Completions.CreateAsync_EventStream(
+            Task engineTask = api.Engines.Engine("davinci").Completions.CreateCompletionAsync_EventStream(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8, stream = true },
                 (r) => result = r,
                 (i, c) => completions.Add(c),

@@ -1,7 +1,71 @@
 # OpenAi Api Unity
-A Simple OpenAi API wrapper for Unity. 
+A Simple OpenAI API wrapper for Unity 
 
 ## Quick Start
+
+**Authenticate**:
+Add a file to `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows)
+
+```json
+// auth.json
+{
+  "private_api_key":"<YOUR_KEY>",
+  (optional) "organization":"<YOUR_ORGANIZATION_ID>"
+}
+```
+
+**Gateway**:
+Add the `OpenAiApiGatewayV1` prefab to your scene. Located at `<PATH_TO_PACKAGE>/Runtime/Prefabs`
+
+**Use Api**:
+Reference the gateway singleton in code to access an initalized `OpenAiApiV1` instance. Use this to make api calls. Example below:
+
+```csharp
+//SomeMonoBehavior.cs
+public class SomeMonoBehaviour : MonoBehaviour
+{
+  ...
+  public void DoApiCompletion()
+  {
+    // gets the api object from singleton
+    OpenAiApiV1 api = OpenAiApiGatewayV1.Instance.Api;
+
+    // starts a coroutine that performs the necessary http request
+    // to do a CreateCompletion command see: https://beta.openai.com/docs/api-reference/create-completion
+    api.Engines.Engine("davinci").Completions.CreateCompletionCoroutine(
+      this,
+      new CompletionRequestV1(){
+        prompt = "Sup", 
+        max_tokens = 8
+      },
+      OnCompletionRecieved
+    );
+  }
+
+  public void OnCompletionRecieved(ApiResult<CompletionV1> result)
+  {
+    // All requests return an api result. Check if the request succeeded
+    if (result.IsSuccess)
+    {
+      // Extract the completion
+      CompletionV1 completion = result.Result;
+      
+      // Log each completion to the console
+      foreach(ChoiceV1 choice in completion.choices)
+      {
+          Debug.Log(choice.text);
+      }
+    }
+  }
+  ...
+}
+```
+
+
+
+
+
+
 This wrapper has been designed to follow the [OpenAI API Reference](https://beta.openai.com/docs/api-reference) as closely as possible in syntax. 
 
 Save your [Secret API Key](https://beta.openai.com/docs/developer-quickstart) as the file `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows)

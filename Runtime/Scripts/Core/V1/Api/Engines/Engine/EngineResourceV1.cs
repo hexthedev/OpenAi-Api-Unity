@@ -43,7 +43,7 @@ namespace OpenAi.Api.V1
         /// <param name="mono"></param>
         /// <param name="onResult"></param>
         /// <returns></returns>
-        public async Task<ApiResult<EngineV1>> RetrieveAsync() => await GetAsync<EngineV1>();
+        public async Task<ApiResult<EngineV1>> RetrieveEngineAsync() => await GetAsync<EngineV1>();
 
         /// <summary>
         /// Retrieves an engine instance, providing basic information about the engine such as the owner and availability. <see href="https://beta.openai.com/docs/api-reference/retrieve-engine"/>
@@ -51,6 +51,6 @@ namespace OpenAi.Api.V1
         /// <param name="mono"></param>
         /// <param name="onResult"></param>
         /// <returns></returns>
-        public Coroutine RetrieveCoroutine(MonoBehaviour mono, Action<ApiResult<EngineV1>> onResult) => GetCoroutine(mono, onResult);
+        public Coroutine RetrieveEngineCoroutine(MonoBehaviour mono, Action<ApiResult<EngineV1>> onResult) => GetCoroutine(mono, onResult);
     }
 }
