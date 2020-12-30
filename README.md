@@ -4,8 +4,8 @@ A Simple OpenAI API wrapper for Unity
 This is a community library. I am not officially affiliated with OpenAi.
 
 Big shout out to:
-* @OkGoDoIt: This code base is heavily based on the [OpenAI-API-dotnet Repo](https://github.com/OkGoDoIt/OpenAI-API-dotnet), which is a dotnet wrapper for the OpenAI Api
-* @ivomarel: For the [OpenAI_Unity Repo](https://github.com/ivomarel/OpenAI_Unity)
+* [@OkGoDoIt](https://github.com/OkGoDoIt): This code base is heavily based on the [OpenAI-API-dotnet Repo](https://github.com/OkGoDoIt/OpenAI-API-dotnet), which is a dotnet wrapper for the OpenAI Api
+* [@ivomarel](https://github.com/ivomarel): For the [OpenAI_Unity Repo](https://github.com/ivomarel/OpenAI_Unity)
 
 To report bugs, problems, suggestions please submit [Github Issues](https://github.com/ivomarel/OpenAI_Unity/issues)
 
