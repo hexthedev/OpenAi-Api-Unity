@@ -125,6 +125,8 @@ namespace OpenAi.Json
         /// <param name="dict"></param>
         public void Add(string name, Dictionary<string, int> dict)
         {
+            if (dict == null) return;
+
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
 
