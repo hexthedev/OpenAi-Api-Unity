@@ -23,7 +23,7 @@ namespace OpenAi.Api.V1
             jb.Add("object", obj);
             jb.Add(nameof(created), created);
             jb.Add(nameof(model), model);
-            jb.AddList(nameof(choices), choices);
+            jb.AddArray(nameof(choices), choices);
             jb.EndObject();
 
             return jb.ToString();

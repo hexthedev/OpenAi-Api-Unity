@@ -1,15 +1,14 @@
-using OpenAi.Api;
 using OpenAi.Api.V1;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-using UnityEngine;
-
 namespace OpenAi.Json
 {
+    /// <summary>
+    /// A bare-minimum Json string creation class geared towards creating JSON strings in the OpenAi Api. 
+    /// </summary>
     public class JsonBuilder
     {
         private StringBuilder _sb = new StringBuilder();
@@ -17,15 +16,50 @@ namespace OpenAi.Json
 
         private string _prefix => _shouldAddComma ? "," : "";
 
+        /// <summary>
+        /// Construct builder
+        /// </summary>
         public JsonBuilder() { }
 
+        /// <summary>
+        /// Start object by adding {
+        /// </summary>
         public void StartObject() => _sb.Append("{");
+
+        /// <summary>
+        /// Start object by adding }
+        /// </summary>
         public void EndObject() => _sb.Append("}");
+
+        /// <summary>
+        /// Start list by adding [
+        /// </summary>
         public void StartList() => _sb.Append("[");
+
+        /// <summary>
+        /// Start list by adding ]
+        /// </summary>
         public void EndList() => _sb.Append("]");
 
+        /// <summary>
+        /// If not null, add int to json
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
         public void Add(string name, int? val) => AddSimpleObject(name, val);
+
+        /// <summary>
+        /// If not null, add float to json
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
         public void Add(string name, float? val) => AddSimpleObject(name, val);
+        
+        /// <summary>
+        /// if not null, add bool to json
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
         public void Add(string name, bool? val)
         {
             if (val != null)
@@ -36,6 +70,11 @@ namespace OpenAi.Json
             }
         }
 
+        /// <summary>
+        /// if not null, adds object to json by naively casting val to string
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
         public void AddSimpleObject(string name, object val)
         {
             if (val != null)
@@ -45,6 +84,11 @@ namespace OpenAi.Json
             }
         }
 
+        /// <summary>
+        /// if not null, adds <see cref="StringOrArray"/> to json
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
         public void Add(string name, StringOrArray val)
         {
             if(val != null)
@@ -74,7 +118,34 @@ namespace OpenAi.Json
             }
         }
 
-        public void AddList<T>(string name, T[] value) where T: IJsonable
+        /// <summary>
+        /// Adds a dictionary to json as a json object
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dict"></param>
+        public void Add(string name, Dictionary<string, int> dict)
+        {
+            _sb.Append(_prefix);
+            _sb.Append($"\"{name}\":");
+
+            StartObject();
+            bool isFirst = true;
+            foreach(KeyValuePair<string, int> kv in dict)
+            {
+                if (!isFirst) _sb.Append(",");
+                _sb.Append($"\"{kv.Key}\":{kv.Value}");
+                if(isFirst) isFirst = false;
+            }
+            EndObject();
+        }
+
+        /// <summary>
+        /// Adds adds an array of <see cref="IJsonable"/> objects as a json list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void AddArray<T>(string name, T[] value) where T: IJsonable
         {
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
@@ -91,7 +162,12 @@ namespace OpenAi.Json
             _shouldAddComma = true;
         }
 
-        public void AddList(string name, string[] value)
+        /// <summary>
+        /// Adds an array of strings as a json list
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void AddArray(string name, string[] value)
         {
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
@@ -108,6 +184,10 @@ namespace OpenAi.Json
             _shouldAddComma = true;
         }
 
+        /// <summary>
+        /// Write JsonBuilder value as string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return _sb.ToString();

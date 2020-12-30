@@ -28,7 +28,7 @@ namespace OpenAi.Api.V1
             JsonBuilder jb = new JsonBuilder();
 
             jb.StartObject();
-            jb.AddList(nameof(data), data);
+            jb.AddArray(nameof(data), data);
             jb.Add("object", obj);
             jb.EndObject();
 
