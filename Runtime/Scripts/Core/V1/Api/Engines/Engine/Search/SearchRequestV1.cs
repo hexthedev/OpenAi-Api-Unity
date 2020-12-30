@@ -15,6 +15,7 @@ namespace OpenAi.Api.V1
         public string[] documents;
         public string query;
 
+        /// <inheritdoc/>
         public override void FromJson(JsonObject json)
         {
             if (json.Type != EJsonType.Object) throw new Exception("Must be an object");
@@ -37,6 +38,7 @@ namespace OpenAi.Api.V1
             }
         }
 
+        /// <inheritdoc/>
         public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();

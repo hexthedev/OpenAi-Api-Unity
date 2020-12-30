@@ -63,7 +63,7 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Number between 0 and 1 that penalizes new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim. <see href="https://beta.openai.com/docs/api-reference/parameter-details"/>
         /// </summary>
-        public float? frequence_penalty;
+        public float? frequency_penalty;
 
         /// <summary>
         /// Generates best_of completions server-side and returns the "best" (the one with the lowest log probability per token). Results cannot be streamed. When used with n, best_of controls the number of candidate completions and n specifies how many to return – best_of must be greater than n. Note: Because this parameter generates many completions, it can quickly consume your token quota.Use carefully and enure that you have reasonable settings for max_tokens and stop.
@@ -78,11 +78,60 @@ namespace OpenAi.Api.V1
         /// <inheritdoc />
         public override void FromJson(JsonObject json)
         {
-            if (json.Type != EJsonType.Object) throw new Exception("Must be an object");
+            if (json.Type != EJsonType.Object) throw new OpenAiApiException("Deserialization failed, provided json is not an object");
 
+            foreach(JsonObject obj in json.NestedValues)
+            {
+                switch (obj.Name) 
+                {
+                    case nameof(prompt):
+                        prompt = new StringOrArray();
+                        prompt.FromJson(obj);
+                        break;
+                    case nameof(max_tokens):
+                        max_tokens = int.Parse(obj.StringValue);
+                        break;
+                    case nameof(temperature):
+                        temperature = float.Parse(obj.StringValue);
+                        break;
+                    case nameof(top_p):
+                        top_p = float.Parse(obj.StringValue);
+                        break;
+                    case nameof(n):
+                        n = int.Parse(obj.StringValue);
+                        break;
+                    case nameof(stream):
+                        stream = bool.Parse(obj.StringValue);
+                        break;
+                    case nameof(logprobs):
+                        logprobs = int.Parse(obj.StringValue);
+                        break;
+                    case nameof(echo):
+                        echo = bool.Parse(obj.StringValue);
+                        break;
+                    case nameof(stop):
+                        stop = new StringOrArray();
+                        stop.FromJson(obj);
+                        break;
+                    case nameof(presences_penalty):
+                        presences_penalty = float.Parse(obj.StringValue);
+                        break;
+                    case nameof(frequency_penalty):
+                        frequency_penalty = float.Parse(obj.StringValue);
+                        break;
+                    case nameof(best_of):
+                        best_of = int.Parse(obj.StringValue);
+                        break;
+                    case nameof(logit_bias):
+                        logit_bias = new Dictionary<string, int>();
 
-
-
+                        foreach(JsonObject child in obj.NestedValues)
+                        {
+                            logit_bias.Add(child.Name, int.Parse(child.StringValue));
+                        }
+                        break;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -101,7 +150,7 @@ namespace OpenAi.Api.V1
             jb.Add(nameof(echo), echo);
             jb.Add(nameof(stop), stop);
             jb.Add(nameof(presences_penalty), presences_penalty);
-            jb.Add(nameof(frequence_penalty), frequence_penalty);
+            jb.Add(nameof(frequency_penalty), frequency_penalty);
             jb.Add(nameof(best_of), best_of);
             jb.Add(nameof(logit_bias), logit_bias);
             jb.EndObject();
