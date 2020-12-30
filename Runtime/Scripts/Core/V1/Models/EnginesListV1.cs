@@ -2,11 +2,22 @@
 
 namespace OpenAi.Api.V1
 {
+    /// <summary>
+    /// A list of engines. <see cref="https://beta.openai.com/docs/api-reference/list-engines"/>
+    /// </summary>
     public class EnginesListV1 : AModelV1
     {
+        /// <summary>
+        /// The list of engines
+        /// </summary>
         public EngineV1[] data;
+
+        /// <summary>
+        /// The obj type (list)
+        /// </summary>
         public string obj;
 
+        /// <inheritdoc/>
         public override void FromJson(JsonObject json)
         {
             foreach (JsonObject jo in json.NestedValues)
@@ -23,6 +34,7 @@ namespace OpenAi.Api.V1
             }
         }
 
+        /// <inheritdoc/>
         public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();

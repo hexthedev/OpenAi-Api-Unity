@@ -13,6 +13,10 @@ namespace OpenAi.Api.V1
         /// Up to 200 documents to search over, provided as a list of strings. The maximum document length(in tokens) is 2034 minus the number of tokens in the query.
         /// </summary>
         public string[] documents;
+
+        /// <summary>
+        /// Query to search against the documents.
+        /// </summary>
         public string query;
 
         /// <inheritdoc/>
