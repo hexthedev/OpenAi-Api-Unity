@@ -1,4 +1,3 @@
-
 using OpenAi.Json;
 
 namespace OpenAi.Api.V1

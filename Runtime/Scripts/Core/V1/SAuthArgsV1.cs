@@ -4,11 +4,22 @@ using System;
 
 namespace OpenAi.Api.V1
 {
+    /// <summary>
+    /// Authentication arguments used to authenticate each api call to OpenAI
+    /// </summary>
     public struct SAuthArgsV1 : IJsonable
     {
+        /// <summary>
+        /// The private api key found at <see href="https://beta.openai.com/docs/developer-quickstart"/>
+        /// </summary>
         public string private_api_key;
+
+        /// <summary>
+        /// The organization id, used by individuals in multiple organizations to determine the quota to use
+        /// </summary>
         public string organization;
 
+        /// <inheritdoc/>
         public void FromJson(JsonObject jsonObj)
         {
             if (jsonObj.Type != EJsonType.Object) throw new Exception("Must be an object");
@@ -27,6 +38,7 @@ namespace OpenAi.Api.V1
             }
         }
 
+        /// <inheritdoc/>
         public string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();

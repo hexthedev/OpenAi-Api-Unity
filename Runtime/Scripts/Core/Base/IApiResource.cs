@@ -9,12 +9,12 @@ namespace OpenAi.Api.V1
     public interface IApiResource
     {
         /// <summary>
-        /// The parent reosurce object.
+        /// The parent resource object. Null if root.
         /// </summary>
         IApiResource ParentResource { get; }
 
         /// <summary>
-        /// The endpoint of the resource.
+        /// The url endpoint of the resource.
         /// </summary>
         string Endpoint { get; }
 
@@ -24,7 +24,7 @@ namespace OpenAi.Api.V1
         string Url { get; }
 
         /// <summary>
-        /// Construct to the endpoint by passing a string builder to parents
+        /// Populate a string builder with the full endpoint by passing string builder to parent
         /// </summary>
         /// <param name="sb"></param>
         void ConstructEndpoint(StringBuilder sb);
