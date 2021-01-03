@@ -1,5 +1,7 @@
 ﻿using UnityEditor;
 
+using UnityEngine;
+
 using static OpenAi.Api.V1.SOAuthArgsV1;
 
 namespace OpenAi.Api.V1
@@ -10,18 +12,20 @@ namespace OpenAi.Api.V1
         SerializedProperty AuthType;
         SerializedProperty PrivateApiKey;
         SerializedProperty Organization;
-
-
         void OnEnable()
         {
             AuthType = serializedObject.FindProperty("AuthType");
             PrivateApiKey = serializedObject.FindProperty("PrivateApiKey");
             Organization = serializedObject.FindProperty("Organization");
         }
-
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Script", MonoScript.FromScriptableObject((SOAuthArgsV1)target), typeof(SOAuthArgsV1), false);
+            GUI.enabled = true;
+            EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(AuthType);
 
