@@ -51,14 +51,14 @@ namespace OpenAi.Api.V1
             );
         }
 
-        private string HandleResponse(ApiResult<CompletionV1> result, Action<string> response)
+        private void HandleResponse(ApiResult<CompletionV1> result, Action<string> response)
         {
             if (result.IsSuccess)
             {
-                return result.Result.choices[0].text;
+                response(result.Result.choices[0].text);
             }
 
-            return null;
+            response(null);
         }
     }
 }
