@@ -14,9 +14,9 @@ If anyone want to contribute, [Pull Requests](https://github.com/hexthedev/OpenA
 ## Overview
 This is a simple OpenAI API wrapper that implements the api calls found in the [OpenAI Api Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
 
-The intention is that the syntax follows the docs as closely as possible. For example, the api call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("{engine_id}").Completions.CreateCompletionCoroutine`.
+The intention is that the syntax follows the docs as closely as possible. For example, the api call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("engine_id}").Completions.CreateCompletionCoroutine`
 
-To Learn more:
+To learn more:
 1. Read the Quick Start section below to see a basic example of how to use the wrapper
 2. Refer to the [Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation) for a more detailed explanation of the library
 
@@ -28,7 +28,7 @@ To Learn more:
 Go to the Unity Package Manager (`Window > Package Manager`), and click the `+` icon in the top left hand corner. Choose `Add package from git URL...` and provide the url `https://github.com/hexthedev/OpenAi-Api-Unity`.
 
 **Unity Package:**
-Go to https://github.com/hexthedev/OpenAi-Api-Unity/releases and download the desired release. once downloaded, open the file an follow the instructions to import it into Unity. 
+Go to https://github.com/hexthedev/OpenAi-Api-Unity/releases and download the desired release. once downloaded, open the file and follow the instructions to import it into Unity. 
 
 **Git Submodule**:
 For more advanced git users, you can simply add this repo as a submodule in your assets folder. This is especially useful if you want to edit, change and version the `OpenAi Api Unity` code.
@@ -52,9 +52,12 @@ Make a completion
 ```csharp
 OpenAiCompleterV1.Instance.Complete(
   "hey", 
-  (r) => {Debug.Log(r)} 
+  (r) => {Debug.Log(r)}, 
+  (e) => Debug.LogError($"OpenAi Api Completion Error: StatusCode: {e.StatusCode}")
 );
 ```
+
+The completion will take some time, since it's a request response to a server.
 
 # What Next
 The above quick start is an extremly simple way to use the `OpenAi Api Unity` library. For more advanced use cases, refer to the [OpenAi Api Unity Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation)

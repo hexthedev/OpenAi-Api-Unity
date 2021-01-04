@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 
 using UnityEngine;
 
@@ -38,7 +39,7 @@ namespace OpenAi.Api.V1
             _engine = _gateway.Api.Engines.Engine(EngineId);
         }
 
-        public void Complete(string prompt, Action<string> response)
+        public void Complete(string prompt, Action<string> onResponse, Action<HttpResponseMessage> onError)
         {
             _engine.Completions.CreateCompletionCoroutine(
                 this, 
@@ -47,18 +48,22 @@ namespace OpenAi.Api.V1
                     prompt = prompt,
                     max_tokens = 64
                 },
-                (r) => HandleResponse(r, response)
+                (r) => HandleResponse(r, onResponse, onError)
             );
         }
 
-        private void HandleResponse(ApiResult<CompletionV1> result, Action<string> response)
+        private void HandleResponse(ApiResult<CompletionV1> result, Action<string> onResponse, Action<HttpResponseMessage> onError)
         {
             if (result.IsSuccess)
             {
-                response(result.Result.choices[0].text);
+                onResponse(result.Result.choices[0].text);
+            } 
+            else
+            {
+                onError(result.HttpResponse);
             }
 
-            response(null);
+            onResponse(null);
         }
     }
 }
