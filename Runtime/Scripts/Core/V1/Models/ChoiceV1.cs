@@ -1,15 +1,32 @@
 using OpenAi.Json;
 
 using System;
-using UnityEngine;
 
 namespace OpenAi.Api.V1
 {
+    /// <summary>
+    /// A single choice returned by the OpenAi Api completion endpoint
+    /// </summary>
     public class ChoiceV1 : AModelV1
     {
+        /// <summary>
+        /// The returned text
+        /// </summary>
         public string text;
+
+        /// <summary>
+        /// the index of the choice
+        /// </summary>
         public int index;
+
+        /// <summary>
+        /// The log probabilities
+        /// </summary>
         public string logprobs;
+
+        /// <summary>
+        /// The reason the engine ended the completion
+        /// </summary>
         public string finish_reason;
 
         /// <inheritdoc />

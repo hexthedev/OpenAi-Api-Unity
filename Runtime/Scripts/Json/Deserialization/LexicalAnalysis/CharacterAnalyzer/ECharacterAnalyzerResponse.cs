@@ -6,36 +6,39 @@ using System.Threading.Tasks;
 
 namespace OpenAi.Json
 {
+    /// <summary>
+    /// Possible character analysis results that can occur during deserailization
+    /// </summary>
     public enum ECharacterAnalyzerResponse
     {
         /// <summary>
         /// This character alone is a token and should be added directly
         /// </summary>
-        TOKEN,
+        Token,
 
         /// <summary>
         /// This character should be included in a token that is being generated
         /// </summary>
-        INCLUDE_CHARACTER,
+        IncludeCharacter,
 
         /// <summary>
         /// Using \ as anchor, include escape character by skipping next character
         /// </summary>
-        INCLUDE_ESCAPE_CHARACTER,
+        IncludeEscapeCharacter,
 
         /// <summary>
         /// This character should be excluded from token generation
         /// </summary>
-        EXCLUDE_CHARACTER,
+        ExcludeCharacter,
 
         /// <summary>
         /// This character requires the engament of another analyzer, provided in out ICharacterAnalyzer
         /// </summary>
-        ENGAGE_CHARACTER,
+        EngageCharacter,
 
         /// <summary>
         /// This characher requires the release of the current analyzer and reversion to the last used analyzer
         /// </summary>
-        RELEASE_CHARACTER
+        ReleaseCharacter
     }
 }

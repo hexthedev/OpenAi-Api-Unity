@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using OpenAi.Json;
+
+using System.Collections.Generic;
 
 namespace OpenAi.Api.V1
 {
@@ -22,6 +24,7 @@ namespace OpenAi.Api.V1
             }
         }
 
+
         /// <summary>
         /// Resolves the StringOrArray to the appropriate type
         /// </summary>
@@ -31,6 +34,26 @@ namespace OpenAi.Api.V1
             if (_elements == null || _elements.Count == 0) return null;
             if (_elements.Count == 1) return _elements[0];
             return _elements.ToArray();
+        }
+        
+        /// <summary>
+        /// Popualte based on json object
+        /// </summary>
+        public void FromJson(JsonObject json)
+        {
+            if(json.Type == EJsonType.List)
+            {
+                _elements = new List<string>();
+                foreach(JsonObject obj in json.NestedValues)
+                {
+                    _elements.Add(obj.StringValue);
+                }
+            } 
+            else if(json.Type == EJsonType.Value)
+            {
+                _elements = new List<string>();
+                _elements.Add(json.StringValue);
+            }
         }
 
         /// <summary>

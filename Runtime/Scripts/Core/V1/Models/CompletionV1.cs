@@ -5,12 +5,34 @@ using System.Text;
 
 namespace OpenAi.Api.V1
 {
+    /// <summary>
+    /// The response to completion request
+    /// </summary>
     public class CompletionV1 : AModelV1
     {
+        /// <summary>
+        /// the id of the competion
+        /// </summary>
         public string id;
+
+        /// <summary>
+        /// The object type (text_completion)
+        /// </summary>
         public string obj;
+
+        /// <summary>
+        /// The created time as Unix epoch
+        /// </summary>
         public int created;
+
+        /// <summary>
+        /// The model used to create the completion
+        /// </summary>
         public string model;
+
+        /// <summary>
+        /// The choices returned by the completion
+        /// </summary>
         public ChoiceV1[] choices;
 
         /// <inheritdoc />
@@ -23,7 +45,7 @@ namespace OpenAi.Api.V1
             jb.Add("object", obj);
             jb.Add(nameof(created), created);
             jb.Add(nameof(model), model);
-            jb.AddList(nameof(choices), choices);
+            jb.AddArray(nameof(choices), choices);
             jb.EndObject();
 
             return jb.ToString();

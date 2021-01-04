@@ -1,7 +1,8 @@
 {
     "name": "openai.api.unity.editor",
-    "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:762faf06f60fab647b9b71ae958fdf20"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -3,8 +3,8 @@
 namespace OpenAi.Api.V1
 {
     /// <summary>
-    /// Implementation of Singleton for MonoBehavious that insures only a single instance
-    /// of the Monobehaviour exists in the scene, and that instance is not destroyed
+    /// Implementation of Singleton for <see cref="MonoBehaviour"/> that insures only a single instance
+    /// of the <see cref="MonoBehaviour"/> exists in the scene, and that instance is not destroyed
     /// between scene loads
     /// </summary>
     /// <typeparam name="T">The type of the subclass.</typeparam>

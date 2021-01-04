@@ -26,9 +26,8 @@ namespace OpenAi.Api.V1
         /// <inheritdoc />
         public abstract string Endpoint { get; }
 
+        /// <inheritdoc />
         public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
-
-        public void PopulateAuthHeaders(HttpRequestMessage message) => ParentResource.PopulateAuthHeaders(message);
 
         /// <inheritdoc />
         public string Url
@@ -59,18 +58,25 @@ namespace OpenAi.Api.V1
 
         #region GET
         /// <summary>
-        /// Performs an asyncronous get request
+        /// Implements an async get request
         /// </summary>
-        /// <param name="request"></param>
+        /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
-        public async Task<ApiResult<TResponse>> GetAsync<TResponse>()
+        protected async Task<ApiResult<TResponse>> GetAsync<TResponse>()
             where TResponse : AModelV1, new()
         {
             HttpResponseMessage response = await GetRequestAsync();
             return await PackResultAsync<TResponse>(response);
         }
 
-        public Coroutine GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
+        /// <summary>
+        /// Implements a get request as a Coroutine
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="mono"></param>
+        /// <param name="onResult"></param>
+        /// <returns></returns>
+        protected Coroutine GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
             where TResponse : AModelV1, new()
         {
             return mono.StartCoroutine(GetRoutine());
@@ -93,18 +99,30 @@ namespace OpenAi.Api.V1
 
         #region POST
         /// <summary>
-        /// Performs an asyncronous post request
+        /// Implements a async post request
         /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(TRequest request)
+        protected async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(TRequest request)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
             HttpResponseMessage response = await PostRequestAsync(request);
             return await PackResultAsync<TResponse>(response);
         }
-        public Coroutine PostCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onResult)
+
+        /// <summary>
+        /// Implements a post request as a coroutine
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="mono"></param>
+        /// <param name="request"></param>
+        /// <param name="onResult"></param>
+        /// <returns></returns>
+        protected Coroutine PostCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onResult)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
@@ -126,11 +144,16 @@ namespace OpenAi.Api.V1
 
         #region POST Event Stream
         /// <summary>
-        /// PostAsync receiving a text stream in return. The text stream will stream back an entire object as the text is generated. 
+        /// Implements an async post request, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
         /// </summary>
-        /// <param name="request">The request to send to the API.  This does not fall back to default values specified in <see cref="DefaultCompletionRequestArgs"/>.</param>
-        /// <param name="onPartialResult">An action to be called as each new result arrives, which includes the index of the result in the overall result set.</param>
-        public async Task PostAsync_EventStream<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="request"></param>
+        /// <param name="onRequestStatus"></param>
+        /// <param name="onPartialResult"></param>
+        /// <param name="onCompletion"></param>
+        /// <returns></returns>
+        protected async Task PostAsync_EventStream<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
@@ -142,7 +165,18 @@ namespace OpenAi.Api.V1
             if (response.IsSuccessStatusCode) await ReadEventStreamAsync(response, onPartialResult, onCompletion);
         }
 
-        public Coroutine PostCoroutine_EventStream<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
+        /// <summary>
+        /// Implements an post request as a coroutine, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="mono"></param>
+        /// <param name="request"></param>
+        /// <param name="onRequestStatus"></param>
+        /// <param name="onPartialResult"></param>
+        /// <param name="onCompletion"></param>
+        /// <returns></returns>
+        protected Coroutine PostCoroutine_EventStream<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
@@ -164,7 +198,6 @@ namespace OpenAi.Api.V1
             }
         }
         #endregion
-
 
         private HttpClient PrepareClient()
         {

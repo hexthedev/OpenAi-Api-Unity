@@ -3,11 +3,19 @@ using System.Collections.Generic;
 
 namespace OpenAi.Json
 {
+    /// <summary>
+    /// Parses arrays of json tokens and outputs <see cref="JsonObject"/>
+    /// </summary>
     public static class JsonSyntaxAnalyzer
     {
+        /// <summary>
+        /// Parse an array of json tokens
+        /// </summary>
+        /// <param name="syntax">array of tokens</param>
+        /// <returns><see cref="JsonObject"/> representation of deserialized object</returns>
         public static JsonObject Parse(string[] syntax)
         {
-            if (syntax == null || syntax.Length < 2) throw new Exception("Failed to parse");
+            if (syntax == null || syntax.Length < 2) throw new OpenAiJsonException("Failed to parse syntax. Either null, or length < 2");
 
             JsonObject obj = new JsonObject();
 
@@ -23,10 +31,10 @@ namespace OpenAi.Json
                     return obj;
             }
 
-            throw new Exception("Failed to parse");
+            throw new OpenAiJsonException("Failed to parse. Unknown error");
         }
 
-        public static int ParseObject(JsonObject parent, string[] syntax, int index)
+        private static int ParseObject(JsonObject parent, string[] syntax, int index)
         {
             int i = index;
             for (; i<syntax.Length; i++)
@@ -34,10 +42,10 @@ namespace OpenAi.Json
                 i = ParseValue(parent, syntax, i);
                 if (syntax[i] == "}") return i + 1;
             }
-            throw new Exception("Failed to parse");
+            throw new OpenAiJsonException($"Failed to parse object at token { syntax[i] }");
         }
 
-        public static int ParseList(JsonObject parent, string[] syntax, int index)
+        private static int ParseList(JsonObject parent, string[] syntax, int index)
         {
             int i = index;
             for (; i < syntax.Length; i++)
@@ -45,13 +53,13 @@ namespace OpenAi.Json
                 i = ParseListValue(parent, syntax, i);
                 if (syntax[i] == "]") return i + 1;
             }
-            throw new Exception("Failed to parse");
+            throw new OpenAiJsonException($"Failed to parse list at token { syntax[i] }");
         }
 
-        public static int ParseValue(JsonObject parent, string[] syntax, int index)
+        private static int ParseValue(JsonObject parent, string[] syntax, int index)
         {
             // Validate
-            if (syntax[index + 1] != ":") throw new Exception("Failed to parse");
+            if (syntax[index + 1] != ":") throw new OpenAiJsonException($"Failed to value at token { syntax[index] } because it is not preceeded by a :, prceeded by { syntax[index+1] }");
 
             JsonObject val = new JsonObject();
             val.Name = syntax[index];
