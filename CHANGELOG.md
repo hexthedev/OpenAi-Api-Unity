@@ -1,0 +1,1 @@
+* There was an issue with prompts that had escape characters in the strings. Fixed this with an extra pass over inner strings of jsons that writes out the escape characters properly. https://github.com/hexthedev/OpenAi-Api-Unity/issues/7
