@@ -210,7 +210,10 @@ namespace OpenAi.Api.V1
             where TRequest : AModelV1, new()
         {
             HttpClient client = PrepareClient();
-            StringContent stringContent = new StringContent(request.ToJson(), Encoding.UTF8, "application/json");
+
+            string content = request.ToJson();
+            StringContent stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+
             HttpResponseMessage response = await client.PostAsync(Url, stringContent);
             return response;
         }

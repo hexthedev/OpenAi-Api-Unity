@@ -71,6 +71,20 @@ namespace OpenAi.Json
         }
 
         /// <summary>
+        /// if not null, add string to json
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="val"></param>
+        public void Add(string name, string val)
+        {
+            if (val != null)
+            {
+                _sb.Append($"{_prefix}\"{name}\":{GetJsonString(val)}");
+                _shouldAddComma = true;
+            }
+        }
+
+        /// <summary>
         /// if not null, adds object to json by naively casting val to string
         /// </summary>
         /// <param name="name"></param>
@@ -99,13 +113,13 @@ namespace OpenAi.Json
                 switch (valActual)
                 {
                     case string s:
-                        valString = $"\"{s}\"";
+                        valString = GetJsonString(s);
                         break;
                     case string[] a:
                         string[] arr = new string[a.Length];
                         for(int i = 0; i<a.Length; i++)
                         {
-                            arr[i] = $"\"{a[i]}\"";
+                            arr[i] = GetJsonString(a[i]);
                         }
                         valString = $"[{string.Join(",", arr)}]";
                         break;
@@ -178,7 +192,7 @@ namespace OpenAi.Json
             string[] strings = new string[value.Length];
             for (int i = 0; i < value.Length; i++)
             {
-                strings[i] = $"\"{value[i]}\"";
+                strings[i] = GetJsonString(value[i]);
             }
             _sb.Append(string.Join(",", strings));
             EndList();
@@ -193,6 +207,37 @@ namespace OpenAi.Json
         public override string ToString()
         {
             return _sb.ToString();
+        }
+
+        private string GetJsonString(string s) => $"\"{ProcessString(s)}\"";
+
+        private string ProcessString(string json)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for(int i = 0; i<json.Length; i++)
+            {
+                sb.Append(ProcessJsonStringCharacter(json[i]));
+            }
+
+            return sb.ToString();
+        }
+
+        private string ProcessJsonStringCharacter(char character)
+        {
+            switch (character) 
+            { 
+                case '\a': return "\\a";
+                case '\b': return "\\b";
+                case '\t': return "\\t";
+                case '\r': return "\\r";
+                case '\v': return "\\v";
+                case '\f': return "\\f";
+                case '\n': return "\\n";
+                case '\\': return "\\\\";
+            }
+
+            return $"{character}";
         }
     }
 }
