@@ -235,6 +235,7 @@ namespace OpenAi.Json
                 case '\f': return "\\f";
                 case '\n': return "\\n";
                 case '\\': return "\\\\";
+                case '\"': return "\\\"";
             }
 
             return $"{character}";
