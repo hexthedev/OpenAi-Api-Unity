@@ -1,3 +1,4 @@
+using OpenAi.Api;
 using OpenAi.Api.V1;
 
 using System;
@@ -23,10 +24,16 @@ namespace OpenAi.Unity.V1
         public SOAuthArgsV1 Auth;
 
         /// <summary>
+        /// Arguments used to configure the engine when sending a completion
+        /// </summary>
+        [Tooltip("Arguments used to configure the completion")]
+        public SOCompletionArgsV1 Args;
+
+        /// <summary>
         /// The id of the engine to use
         /// </summary>
         [Tooltip("The id of the engine to use")]
-        public string EngineId;
+        public EEngineName Engine;
 
         public void Start()
         {
@@ -38,20 +45,17 @@ namespace OpenAi.Unity.V1
                 _gateway.InitializeApi();
             }
 
-            _engine = _gateway.Api.Engines.Engine(EngineId);
+            _engine = _gateway.Api.Engines.Engine(UTEEngineName.GetEngineName(Engine));
         }
 
         public void Complete(string prompt, Action<string> onResponse, Action<HttpResponseMessage> onError)
         {
-            _engine.Completions.CreateCompletionCoroutine(
-                this, 
-                new CompletionRequestV1() 
-                { 
-                    prompt = prompt,
-                    max_tokens = 64
-                },
-                (r) => HandleResponse(r, onResponse, onError)
-            );
+            CompletionRequestV1 request = Args ? 
+                new CompletionRequestV1() { max_tokens = 64 } : 
+                Args.AsCompletionRequest();
+
+            request.prompt = prompt;
+            _engine.Completions.CreateCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
         }
 
         private void HandleResponse(ApiResult<CompletionV1> result, Action<string> onResponse, Action<HttpResponseMessage> onError)

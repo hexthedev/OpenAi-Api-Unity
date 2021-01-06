@@ -16,7 +16,7 @@ namespace OpenAi.Unity.V1
     /// <remarks>
     /// Projects pushed to public reposities should not use the String authentication type, as the private key will be exposed to the public. 
     /// </remarks>
-    [CreateAssetMenu(fileName = "AuthArgsV1", menuName = "OpenAi/Api/AuthArgsV1")]
+    [CreateAssetMenu(fileName = "AuthArgsV1", menuName = "OpenAi/Unity/V1/AuthArgs")]
     public class SOAuthArgsV1 : ScriptableObject
     {
         /// <summary>
