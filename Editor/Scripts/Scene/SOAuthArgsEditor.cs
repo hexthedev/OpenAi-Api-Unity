@@ -2,9 +2,9 @@
 
 using UnityEngine;
 
-using static OpenAi.Api.V1.SOAuthArgsV1;
+using static OpenAi.Api.Unity.V1.SOAuthArgsV1;
 
-namespace OpenAi.Api.V1
+namespace OpenAi.Api.Unity.V1
 {
     [CustomEditor(typeof(SOAuthArgsV1))]
     public class OpenAiApiAuthArgsEditor : Editor

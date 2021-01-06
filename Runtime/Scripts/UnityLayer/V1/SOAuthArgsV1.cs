@@ -1,3 +1,4 @@
+using OpenAi.Api.V1;
 using OpenAi.Json;
 
 using System;
@@ -6,7 +7,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace OpenAi.Api.V1
+namespace OpenAi.Api.Unity.V1
 {
     /// <summary>
     /// The Authentication arguments required to authenticate an OpenAI Api request.

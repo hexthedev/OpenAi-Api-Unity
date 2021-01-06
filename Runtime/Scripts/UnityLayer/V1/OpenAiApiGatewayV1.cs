@@ -1,6 +1,8 @@
+using OpenAi.Api.V1;
+
 using UnityEngine;
 
-namespace OpenAi.Api.V1
+namespace OpenAi.Api.Unity.V1
 {
     /// <summary>
     /// A singleton that handles the inialization of an OpenAiApiV1 object and provides access to it. For the <see cref="Api"/> to function

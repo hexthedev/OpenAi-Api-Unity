@@ -1,9 +1,11 @@
+using OpenAi.Api.V1;
+
 using System;
 using System.Net.Http;
 
 using UnityEngine;
 
-namespace OpenAi.Api.V1
+namespace OpenAi.Api.Unity.V1
 {
     /// <summary>
     /// Automatically handles setting up OpenAiApi for simple completions with 1 engine. Exposes a simple method to allow users to perform completions
