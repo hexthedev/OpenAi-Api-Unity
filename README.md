@@ -52,7 +52,7 @@ Make a completion
 ```csharp
 OpenAiCompleterV1.Instance.Complete(
   "hey", 
-  (r) => {Debug.Log(r)}, 
+  (r) => {Debug.Log(r); }, 
   (e) => Debug.LogError($"OpenAi Api Completion Error: StatusCode: {e.StatusCode}")
 );
 ```
