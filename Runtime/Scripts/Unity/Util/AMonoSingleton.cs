@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OpenAi.Api.Unity
+namespace OpenAi.Unity
 {
     /// <summary>
     /// Implementation of Singleton for <see cref="MonoBehaviour"/> that insures only a single instance

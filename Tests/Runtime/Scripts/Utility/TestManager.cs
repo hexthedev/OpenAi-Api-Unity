@@ -1,5 +1,5 @@
-﻿using OpenAi.Api.Unity;
-using OpenAi.Api.Unity.V1;
+﻿using OpenAi.Unity;
+using OpenAi.Unity.V1;
 using OpenAi.Api.V1;
 
 using UnityEngine;

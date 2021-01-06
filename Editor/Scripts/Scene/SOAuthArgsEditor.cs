@@ -1,8 +1,10 @@
-﻿using UnityEditor;
+﻿using OpenAi.Unity.V1;
+
+using UnityEditor;
 
 using UnityEngine;
 
-using static OpenAi.Api.Unity.V1.SOAuthArgsV1;
+using static OpenAi.Unity.V1.SOAuthArgsV1;
 
 namespace OpenAi.Api.Unity.V1
 {
