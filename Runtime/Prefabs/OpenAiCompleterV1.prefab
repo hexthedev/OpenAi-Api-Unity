@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Auth: {fileID: 11400000, guid: 6d0ce71886a13d44a9693a5e31c0a754, type: 2}
-  EngineId: ada
+  Args: {fileID: 11400000, guid: 672d04ddb1f852449bbdd712933b43f8, type: 2}
+  Engine: 6

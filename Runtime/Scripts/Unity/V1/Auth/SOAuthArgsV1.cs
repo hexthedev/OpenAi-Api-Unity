@@ -1,3 +1,5 @@
+using OpenAi.Api;
+using OpenAi.Api.V1;
 using OpenAi.Json;
 
 using System;
@@ -6,7 +8,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace OpenAi.Api.V1
+namespace OpenAi.Unity.V1
 {
     /// <summary>
     /// The Authentication arguments required to authenticate an OpenAI Api request.
@@ -14,7 +16,7 @@ namespace OpenAi.Api.V1
     /// <remarks>
     /// Projects pushed to public reposities should not use the String authentication type, as the private key will be exposed to the public. 
     /// </remarks>
-    [CreateAssetMenu(fileName = "AuthArgsV1", menuName = "OpenAi/Api/AuthArgsV1")]
+    [CreateAssetMenu(fileName = "AuthArgsV1", menuName = "OpenAi/Unity/V1/AuthArgs")]
     public class SOAuthArgsV1 : ScriptableObject
     {
         /// <summary>
