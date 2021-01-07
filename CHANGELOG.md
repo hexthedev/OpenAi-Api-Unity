@@ -1,1 +1,4 @@
-* The \" escape character was not properly processed for json string. This has been fixed in the JSON Builder https://github.com/hexthedev/OpenAi-Api-Unity/issues/13
+* https://github.com/hexthedev/OpenAi-Api-Unity/issues/4
+* https://github.com/hexthedev/OpenAi-Api-Unity/issues/5
+* https://github.com/hexthedev/OpenAi-Api-Unity/issues/8
+* https://github.com/hexthedev/OpenAi-Api-Unity/issues/12

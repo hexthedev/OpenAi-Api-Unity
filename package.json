@@ -1,6 +1,6 @@
 {
     "name": "com.openai.api.unity",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "displayName": "OpenAi Api Unity",
     "description": "An OpenAi Api for the Unity Engine",
     "unity": "2019.4",
