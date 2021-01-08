@@ -60,12 +60,20 @@ namespace OpenAi.Api.V1
         /// Implicitly make a StringOrArray from a string
         /// </summary>
         /// <param name="str"></param>
-        public static implicit operator StringOrArray(string str) => new StringOrArray(str);
+        public static implicit operator StringOrArray(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return null;
+            return new StringOrArray(str);
+        }
 
         /// <summary>
         /// Implicitly make a StringOrArray from a string array
         /// </summary>
         /// <param name="str"></param>
-        public static implicit operator StringOrArray(string[] strings) => new StringOrArray(strings);
+        public static implicit operator StringOrArray(string[] strings)
+        {
+            if (strings == null) return null;
+            return new StringOrArray(strings);
+        }
     }
 }
