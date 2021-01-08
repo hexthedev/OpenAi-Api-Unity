@@ -20,6 +20,14 @@ To learn more:
 1. Read the Quick Start section below to see a basic example of how to use the wrapper
 2. Refer to the [Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation) for a more detailed explanation of the library
 
+### A Word on Testing
+I've tested the list below. Testing for all other usecases will come with time, if I still decide to use OpenAI Beta API in Unity for projects
+* Editor scripts and editor windows using async versions of API calls
+* Coroutine api calls in Play Mode
+  * I have not tested builds, but should work since it's really just Native C#. Any issues will likely be platform related. 
+* Unit Tested basic usecases and any issue I found along the way, to ensure stability
+* Only tested on a Windows machine. If Linux/Mac authentication dosen't work as expected, please let me know. 
+
 # Quick Start
 
 ## Install
