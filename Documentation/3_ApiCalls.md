@@ -69,36 +69,23 @@ Coroutine functions require a MonoBehaviour and callbacks. The basic signature l
 For play time scripts, using the Coroutine flow is recommended for using the API. The Coroutine implementations run the API request as a task, and check the tasks completion every frame. 
 
 ```csharp
-// MyMono.cs
-using OpenAi.Api.V1;
+# ExampleMono.cs
 using OpenAi.Unity.V1;
 
 using UnityEngine;
 
-public class MyMono : MonoBehaviour
+public class Example : MonoBehaviour
 {
-    public bool DoThing = false;
-
     public void DoApiCompletion()
     {
-        OpenAiApiV1 api = OpenAiApiGatewayV1.Instance.Api;
+        Debug.Log("Performing Completion in Play Mode");
 
-        api.Engines.Engine("davinci").Completions.CreateCompletionCoroutine(
-            this,
-            new CompletionRequestV1() { prompt = "test", max_tokens = 8 },
-            (r) => Debug.Log(r.IsSuccess)
+        OpenAiCompleterV1.Instance.Complete(
+            "prompt",
+            s => Debug.Log(s),
+            e => Debug.LogError(e.StatusCode)
         );
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (DoThing)
-        {
-            DoApiCompletion();
-            DoThing = false;
-        }
-    } 
 }
 ```
 
@@ -116,9 +103,6 @@ using UnityEngine;
 
 public class MyEditor : EditorWindow
 {
-    OpenAiApiV1 api;
-    Object auth = null;
-
     [MenuItem("MyMenu/MyEditor")]
     public static void ShowWindow()
     {
@@ -127,16 +111,13 @@ public class MyEditor : EditorWindow
 
     async void OnGUI()
     {
-        auth = EditorGUILayout.ObjectField("AuthArgs", auth, typeof(SOAuthArgsV1), false);
+        SOAuthArgsV1 auth = ScriptableObject.CreateInstance<SOAuthArgsV1>();
+        OpenAiApiV1 api = new OpenAiApiV1(auth.ResolveAuth());
 
-        if (GUILayout.Button("Initalize"))
+        if (api != null && GUILayout.Button("Do Completion"))
         {
-            SOAuthArgsV1 authArgs = auth as SOAuthArgsV1;
-            api = new OpenAiApiV1(authArgs.ResolveAuth());
-        }
+            Debug.Log("Performing Completion in Editor Time");
 
-        if (api != null && GUILayout.Button("Do Call"))
-        {
             ApiResult<CompletionV1> comp = await api.Engines.Engine("davinci").Completions.CreateCompletionAsync(
                 new CompletionRequestV1()
                 {
@@ -146,6 +127,7 @@ public class MyEditor : EditorWindow
             );
 
             Debug.Log(comp.IsSuccess);
+            Debug.Log(comp.Result.choices[0].text);
         }
     }
 }
