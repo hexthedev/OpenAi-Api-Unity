@@ -33,11 +33,14 @@ namespace OpenAi.Unity.V1
         /// The id of the engine to use
         /// </summary>
         [Tooltip("The id of the engine to use")]
-        public EEngineName Engine;
+        public EEngineName Engine = EEngineName.davinci;
 
         public void Start()
         {
             _gateway = OpenAiApiGatewayV1.Instance;
+
+            if (Auth == null) Auth = ScriptableObject.CreateInstance<SOAuthArgsV1>();
+            if (Args == null) Args = ScriptableObject.CreateInstance<SOCompletionArgsV1>();
 
             if (!_gateway.IsInitialized) 
             {
@@ -48,14 +51,14 @@ namespace OpenAi.Unity.V1
             _engine = _gateway.Api.Engines.Engine(UTEEngineName.GetEngineName(Engine));
         }
 
-        public void Complete(string prompt, Action<string> onResponse, Action<HttpResponseMessage> onError)
+        public Coroutine Complete(string prompt, Action<string> onResponse, Action<HttpResponseMessage> onError)
         {
-            CompletionRequestV1 request = Args ? 
+            CompletionRequestV1 request = Args == null ? 
                 new CompletionRequestV1() { max_tokens = 64 } : 
                 Args.AsCompletionRequest();
 
             request.prompt = prompt;
-            _engine.Completions.CreateCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
+            return _engine.Completions.CreateCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
         }
 
         private void HandleResponse(ApiResult<CompletionV1> result, Action<string> onResponse, Action<HttpResponseMessage> onError)
@@ -63,13 +66,13 @@ namespace OpenAi.Unity.V1
             if (result.IsSuccess)
             {
                 onResponse(result.Result.choices[0].text);
+                return;
             } 
             else
             {
                 onError(result.HttpResponse);
+                return;
             }
-
-            onResponse(null);
         }
     }
 }

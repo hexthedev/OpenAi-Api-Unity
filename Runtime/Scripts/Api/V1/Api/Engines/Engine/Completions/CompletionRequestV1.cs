@@ -58,7 +58,7 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Number between 0 and 1 that penalizes new tokens based on whether they appear in the text so far. Increases the model's likelihood to talk about new topics. <see href="https://beta.openai.com/docs/api-reference/parameter-details"/>
         /// </summary>
-        public float? presences_penalty;
+        public float? presence_penalty;
 
         /// <summary>
         /// Number between 0 and 1 that penalizes new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim. <see href="https://beta.openai.com/docs/api-reference/parameter-details"/>
@@ -113,8 +113,8 @@ namespace OpenAi.Api.V1
                         stop = new StringOrArray();
                         stop.FromJson(obj);
                         break;
-                    case nameof(presences_penalty):
-                        presences_penalty = float.Parse(obj.StringValue);
+                    case nameof(presence_penalty):
+                        presence_penalty = float.Parse(obj.StringValue);
                         break;
                     case nameof(frequency_penalty):
                         frequency_penalty = float.Parse(obj.StringValue);
@@ -149,7 +149,7 @@ namespace OpenAi.Api.V1
             jb.Add(nameof(logprobs), logprobs);
             jb.Add(nameof(echo), echo);
             jb.Add(nameof(stop), stop);
-            jb.Add(nameof(presences_penalty), presences_penalty);
+            jb.Add(nameof(presence_penalty), presence_penalty);
             jb.Add(nameof(frequency_penalty), frequency_penalty);
             jb.Add(nameof(best_of), best_of);
             jb.Add(nameof(logit_bias), logit_bias);

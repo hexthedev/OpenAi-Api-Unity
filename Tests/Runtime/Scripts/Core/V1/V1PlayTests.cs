@@ -13,6 +13,8 @@ namespace OpenAi.Api.Test
 {
     public class V1PlayTests
     {
+
+        #region Engines Requests
         [UnityTest]
         public IEnumerator EnginesListCoroutine()
         {
@@ -59,7 +61,9 @@ namespace OpenAi.Api.Test
             Assert.IsNotNull(res.Result);
             Assert.IsNotEmpty(res.Result.data);
         }
+        #endregion
 
+        #region Engine Requests
         [UnityTest]
         public IEnumerator EngineRetrieveCoroutine()
         {
@@ -93,6 +97,77 @@ namespace OpenAi.Api.Test
 
             Assert.IsNotNull(result.Result);
             Assert.That(result.Result.id == "ada");
+        }
+        #endregion
+
+        #region Completion Requests
+        [UnityTest]
+        public IEnumerator Completions_TestAllRequestParamsString()
+        {
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
+
+            ApiResult<CompletionV1> result = null;
+            
+            CompletionRequestV1 req = new CompletionRequestV1() { 
+                prompt = "hello", 
+                best_of = 1,
+                echo = false,
+                frequency_penalty = 0,
+                presence_penalty = 0,
+                logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
+                stop = "###",
+                logprobs = 0,
+                stream = false, 
+                max_tokens = 8,
+                n = 1,
+                temperature = 0,
+                top_p = 1
+            };
+
+            yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.IsSuccess);
+
+            Assert.IsNotNull(result.Result);
+            Assert.IsNotEmpty(result.Result.choices);
+            Assert.That(result.Result.choices.Length > 0);
+        }
+
+        [UnityTest]
+        public IEnumerator Completions_TestAllRequestParamsArray()
+        {
+            TestManager test = TestManager.Instance;
+            OpenAiApiV1 api = test.CleanAndProvideApi();
+
+            ApiResult<CompletionV1> result = null;
+
+            CompletionRequestV1 req = new CompletionRequestV1()
+            {
+                prompt = new string[] { "prompt1", "prompt2" },
+                best_of = 1,
+                echo = false,
+                frequency_penalty = 0,
+                presence_penalty = 0,
+                logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
+                stop = new string[] { "stop1", "stop2" },
+                logprobs = 0,
+                stream = false,
+                max_tokens = 8,
+                n = 1,
+                temperature = 0,
+                top_p = 1
+            };
+
+            yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.IsSuccess);
+
+            Assert.IsNotNull(result.Result);
+            Assert.IsNotEmpty(result.Result.choices);
+            Assert.That(result.Result.choices.Length > 0);
         }
 
         [UnityTest]
@@ -191,7 +266,9 @@ namespace OpenAi.Api.Test
 
             Assert.That(completions.Count > 0);
         }
+        #endregion
 
+        #region Search Requests
         [UnityTest]
         public IEnumerator SearchSearchCoroutine()
         {
@@ -231,5 +308,6 @@ namespace OpenAi.Api.Test
             Assert.IsNotEmpty(res.Result.data);
             Assert.That(res.Result.data.Length == 2);
         }
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace OpenAi.Api.V1.Test
             };
 
             string json = crm.ToJson();
-            string expected = "{\"echo\":True,\"stop\":[\"\n\",\"a\"]}";
+            string expected = "{\"echo\":true,\"stop\":[\"\\n\",\"a\"]}";
 
             Assert.That(json == expected);
         } 
