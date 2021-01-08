@@ -53,16 +53,42 @@ Add a file to `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.j
 ```
 
 ## Add Singleton to Scene
-Add the `OpenAiCompleterV1` prefab to your scene. Located at `<PATH_TO_PACKAGE>/Runtime/Prefabs`
+Add the `OpenAiCompleterV1` prefab to your scene using the menu item `OpenAi > V1 > CreateCompleter`
 
 ## Make Completion
-Make a completion
+Make a completion monobehaviour
 ```csharp
-OpenAiCompleterV1.Instance.Complete(
-  "hey", 
-  (r) => {Debug.Log(r); }, 
-  (e) => Debug.LogError($"OpenAi Api Completion Error: StatusCode: {e.StatusCode}")
-);
+# Example.cs
+# If you add this to a gameobject and start play mode,
+# clicking the DoThing check box in the inspector will run the completion.
+# After clicking the checkbox, the checkbox will not show a check mark.
+# Wait, and look at the console. If you spam the checkmark, multiple requests will be made
+using OpenAi.Unity.V1;
+using UnityEngine;
+
+public class Example : MonoBehaviour
+{
+    public bool DoThing = false;
+
+    public void DoApiCompletion()
+    {
+        OpenAiCompleterV1.Instance.Complete(
+            "prompt",
+            s => Debug.Log(s),
+            e => Debug.LogError(e.StatusCode)
+        );
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (DoThing)
+        {
+            DoApiCompletion();
+            DoThing = false;
+        }
+    } 
+}
 ```
 
 The completion will take some time, since it's a request response to a server.

@@ -8,17 +8,21 @@ https://api.openai.com/v1/engines/davinci/completions
 
 You can read more about the details of these api calls using the [OpenAi Api Reference](https://beta.openai.com/docs/api-reference)
 
-The `OpenAi Api Unity` library implements these Api calls using build in C# `HttpClient` class and a custom Json Serailizer/Deserializer. 
+The `OpenAi Api Unity` library implements these Api calls using built-in C# `HttpClient` class and a custom Json Serailizer/Deserializer. 
 
 HTTP requests cannot occur syncronously without causing the thread to pause. This is not ideal, so all api calls are implemented as `async` functions and as Coroutines. 
 
 # MonoBehaviours
 The `OpenAiApiGatewayV1` is a prefab and `MonoBehaviour` singleton that allows any script in a Unity scene to access the api. This Monobehaviour simply controls the initalization of an `OpenAiApiV1` object, which actually houses the api logic. 
 
+You can add an `OpenAiApiGatewayV1` to the current scene using the menu item `OpenAi > V1 > CreateGateway`
+
 You don't have to use the `OpenAiApiGatewayV1` prefab to access the api. This is simply one way that the `OpenAiApiV1` can be initialized. A custom `MonoBehaviour` can be written easily, it just needs to create the `OpenAiApiV1` object with valid authentication args. 
 
 ## Completer
 The `OpenAiApiCompleterV1` is a simpler class that automatically initalizes the `OpenAiApiV1` object with use for a single engine, and provides the `Complete()` method to allow simple completions. 
+
+You can add an `OpenAiApiGatewayV1` to the current scene using the menu item `OpenAi > V1 > CreateCompleter`
 
 # API Implementation
 As much as possible, the syntax for performing a call using `OpenAi Api Unity` follows the same struct as the api calls found in the [OpenAi Api Reference](https://beta.openai.com/docs/api-reference). 
