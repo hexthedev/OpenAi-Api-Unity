@@ -61,7 +61,91 @@ Async functions use `async/await` syntax to return an `ApiResult`. The signature
 
 Coroutine functions require a MonoBehaviour and callbacks. The basic signature looks like this `Coroutine {ApiCall}Coroutine(MonoBehaviour mono, {RequestType} request, Action<ApiResult<{ResultType}>> onResult)`. 
 
-In general, `async/await` syntax is easier to understand, but isn't easy to use in Unity natively. Coroutines, are a much more Unity out-of-the-box implementation. Unless you know what you're doing, I'd suggest using the Coroutine implementation. 
+### Play Time Scripting
+For play time scripts, using the Coroutine flow is recommended for using the API. The Coroutine implementations run the API request as a task, and check the tasks completion every frame. 
+
+```csharp
+// MyMono.cs
+using OpenAi.Api.V1;
+using OpenAi.Unity.V1;
+
+using UnityEngine;
+
+public class MyMono : MonoBehaviour
+{
+    public bool DoThing = false;
+
+    public void DoApiCompletion()
+    {
+        OpenAiApiV1 api = OpenAiApiGatewayV1.Instance.Api;
+
+        api.Engines.Engine("davinci").Completions.CreateCompletionCoroutine(
+            this,
+            new CompletionRequestV1() { prompt = "test", max_tokens = 8 },
+            (r) => Debug.Log(r.IsSuccess)
+        );
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (DoThing)
+        {
+            DoApiCompletion();
+            DoThing = false;
+        }
+    } 
+}
+```
+
+### Editor scripts
+For editor scripts, like custom editor windows or custom menu items, `async/await` syntax is supported nicely. Running menu items as `async` functions then useing the Async implementations of API calls is recommended in editor.  
+
+```csharp
+// MyEditor.cs
+using OpenAi.Api.V1;
+using OpenAi.Unity.V1;
+
+using UnityEditor;
+
+using UnityEngine;
+
+public class MyEditor : EditorWindow
+{
+    OpenAiApiV1 api;
+    Object auth = null;
+
+    [MenuItem("MyMenu/MyEditor")]
+    public static void ShowWindow()
+    {
+        EditorWindow.GetWindow(typeof(MyEditor));
+    }
+
+    async void OnGUI()
+    {
+        auth = EditorGUILayout.ObjectField("AuthArgs", auth, typeof(SOAuthArgsV1), false);
+
+        if (GUILayout.Button("Initalize"))
+        {
+            SOAuthArgsV1 authArgs = auth as SOAuthArgsV1;
+            api = new OpenAiApiV1(authArgs.ResolveAuth());
+        }
+
+        if (api != null && GUILayout.Button("Do Call"))
+        {
+            ApiResult<CompletionV1> comp = await api.Engines.Engine("davinci").Completions.CreateCompletionAsync(
+                new CompletionRequestV1()
+                {
+                    prompt = "test",
+                    max_tokens = 8
+                }
+            );
+
+            Debug.Log(comp.IsSuccess);
+        }
+    }
+}
+```
 
 ## ApiResult
 The `ApiResult` class is returned to encapsulate any exception that occurs during the request. There are many reasons api requests might fail, so the `ApiResult` exists so that any error can be expected, or at the very least a successful request can be verified. 
