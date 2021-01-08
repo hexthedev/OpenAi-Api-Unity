@@ -20,13 +20,14 @@ To learn more:
 1. Read the Quick Start section below to see a basic example of how to use the wrapper
 2. Refer to the [Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation) for a more detailed explanation of the library
 
-### A Word on Testing
-I've tested the list below. Testing for all other usecases will come with time, if I still decide to use OpenAI Beta API in Unity for projects
+### What is and isn't tested
+I've tested the list below. Testing for all other usecases will come with time
 * Editor scripts and editor windows using async versions of API calls
 * Coroutine api calls in Play Mode
   * I have not tested builds, but should work since it's really just Native C#. Any issues will likely be platform related. 
 * Unit Tested basic usecases and any issue I found along the way, to ensure stability
 * Only tested on a Windows machine. If Linux/Mac authentication dosen't work as expected, please let me know. 
+* I do not have an orgnaization, I have not been able to test the organization key functionality during authentication
 
 # Quick Start
 
@@ -42,13 +43,21 @@ Go to https://github.com/hexthedev/OpenAi-Api-Unity/releases and download the de
 For more advanced git users, you can simply add this repo as a submodule in your assets folder. This is especially useful if you want to edit, change and version the `OpenAi Api Unity` code.
 
 ## Authenticate
-Add a file to `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows)
+Add a file to the path `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows)
 
+if you only have an api key, the `auth.json` should look like this
+```json
+{
+  "private_api_key":"<YOUR_KEY>"
+}
+```
+
+If you have an orgnaization key, the `auth.json` should look like this
 ```json
 // auth.json
 {
   "private_api_key":"<YOUR_KEY>",
-  (optional) "organization":"<YOUR_ORGANIZATION_ID>"
+  "organization":"<YOUR_ORGANIZATION_ID>"
 }
 ```
 
