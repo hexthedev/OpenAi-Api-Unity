@@ -72,7 +72,7 @@ jobs:
         with:
           tag_name: v${{ steps.versioner.outputs.version }}
           release_name: Release v${{ steps.versioner.outputs.version }}
-          body_path: ./ignore/changelog
+          body_path: CHANGELOG.md
           draft: false
           prerelease: true
           commitish : ${{steps.head_sha_new.outputs.sha}}
