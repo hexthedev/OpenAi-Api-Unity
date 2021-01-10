@@ -1,7 +1,7 @@
 # Gets the PR associated with a commit and then writes all of the commit messages to a changelog
-# sys.argv[0] = reponame
-# sys.argv[1] = SHA key of commit to test
-# sys.argv[2] = path to change log
+# sys.argv[1] = reponame
+# sys.argv[2] = SHA key of commit to test
+# sys.argv[3] = path to change log
 
 import json
 import sys
