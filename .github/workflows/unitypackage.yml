@@ -44,7 +44,7 @@ jobs:
 
       # Create the changleog using the commit sha and grabbing the commit messages
       - name: Run a changelog creator
-        run: python ./.github/scripts/prChangelog_NoAuth.py $GITHUB_ACTOR ${{ secrets.PAT }} ${{ github.event.repository.name }} ${{steps.head_sha.outputs.sha}} ./CHANGELOG.md
+        run: python ./.github/scripts/prChangelog_NoAuth.py ${{ github.event.repository.name }} ${{steps.head_sha.outputs.sha}} ./CHANGELOG.md
 
       # Commit the changes to the repo
       - name: Do git commit
