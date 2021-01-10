@@ -1,0 +1,78 @@
+name: unitypackage
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - './CHANGELOG.md'
+      - './package.json'
+
+env:
+  VAR_NAME: value
+
+jobs:
+  build_job:
+    name: Build Job
+    runs-on: ubuntu-20.04
+
+    steps:
+      # ----- DEPENDENCIES -----
+      # Install the pip dependencies
+      - name: Install Dependencies
+        run: pip install requests
+
+      # ----- CHECKOUT -----
+      # Checks out a copy of your repository on the ubuntu-latest 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # ----- WORK -----
+      # Update a version in some json
+      - name: Run a test python script version update
+        run: |
+          export BUMPED_VERSION=`python ./.github/scripts/versionUpdater.py ./package.json`
+          echo "::set-output name=version::$BUMPED_VERSION"
+        id: versioner
+
+      # Get the SHA of the current git head
+      - name: Output SHA Head # Note: You can pass command sup through stdout
+        run: |
+          export CUR_SHA=`git rev-parse HEAD`
+          echo "::set-output name=sha::$CUR_SHA"
+        id: head_sha
+
+      # Create the changleog using the commit sha and grabbing the commit messages
+      - name: Run a changelog creator
+        run: python ./.github/scripts/prChangelog.py $GITHUB_ACTOR ${{ secrets.PAT }} ${{ github.event.repository.name }} ${{steps.head_sha.outputs.sha}} ./CHANGELOG.md
+
+      # Commit the changes to the repo
+      - name: Do git commit
+        run: |
+          git config user.name hexthedev
+          git config user.email jamesmccafferty@live.ca
+          git add .
+          git commit -m "Github Actions Commit"
+          git push
+
+      # ----- RELEASE -----
+      # Get the SHA of the current HEAD (after the commit)
+      - name: Output SHA Head # Note: You can pass command sup through stdout
+        run: |
+          export CUR_SHA=`git rev-parse HEAD`
+          echo "::set-output name=sha::$CUR_SHA"
+        id: head_sha_new    
+
+      # Make a Release at the commit
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{ steps.versioner.outputs.version }}
+          release_name: Release v${{ steps.versioner.outputs.version }}
+          body_path: ./ignore/changelog
+          draft: false
+          prerelease: true
+          commitish : ${{steps.head_sha_new.outputs.sha}}
