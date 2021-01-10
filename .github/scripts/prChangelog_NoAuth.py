@@ -29,8 +29,7 @@ pulls_json = json.loads(pulls_req.text)
 # Follow the commits link and get the commit messages in order
 commits_url = pulls_json[0]["_links"]["commits"]["href"] 
 commits_headers = {
-    'User-Agent' : 'hexthedev',
-    'Authorization' : 'Basic aGV4dGhlZGV2OjhmMTVhOGE1YWIzY2E4YmFjYTQ0ODVhOTY2OGIwNWM4MGE4M2EwMzE='
+    'User-Agent' : 'hexthedev'
 }
 
 commits_req = requests.get(commits_url, headers = commits_headers)
