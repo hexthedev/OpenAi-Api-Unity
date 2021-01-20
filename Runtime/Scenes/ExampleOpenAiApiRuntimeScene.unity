@@ -190,7 +190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: Enter Prompt Here
 --- !u!222 &21594511
 CanvasRenderer:
   m_ObjectHideFlags: 0

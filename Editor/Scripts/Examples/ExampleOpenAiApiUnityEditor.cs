@@ -12,7 +12,7 @@ namespace OpenAi.Examples
 {
     public class ExampleOpenAiApiUnityEditor : EditorWindow
     {
-        private string _input = "input";
+        private string _input = "Enter Prompt here";
 
         private string _output;
 
