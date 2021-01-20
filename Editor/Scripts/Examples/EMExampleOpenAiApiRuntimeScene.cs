@@ -23,6 +23,11 @@ public static class ExampleOpenAiApiRuntimeScene
             return;
         }
 
-        EditorSceneManager.OpenScene(path);
+        string newScenePath = $"Assets/{cSceneName}.unity";
+        AssetDatabase.CopyAsset(path, newScenePath);
+        EditorSceneManager.OpenScene(newScenePath);
+
+        AssetDatabase.Refresh();
+        Selection.activeObject = AssetDatabase.LoadAssetAtPath(newScenePath, typeof(Object));
     }
 }
