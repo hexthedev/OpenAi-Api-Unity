@@ -61,90 +61,16 @@ If you have an orgnaization key, the `auth.json` should look like this
 ```
 
 ## Editor Script
-Example of editor-script completion (in an editor menu) below
-
-### Make Completion Menu Item
-```csharp
-// MyEditor.cs
-using OpenAi.Api.V1;
-using OpenAi.Unity.V1;
-
-using UnityEditor;
-
-using UnityEngine;
-
-public class MyEditor : EditorWindow
-{
-    [MenuItem("MyMenu/MyEditor")]
-    public static void ShowWindow()
-    {
-        EditorWindow.GetWindow(typeof(MyEditor));
-    }
-
-    async void OnGUI()
-    {
-        SOAuthArgsV1 auth = ScriptableObject.CreateInstance<SOAuthArgsV1>();
-        OpenAiApiV1 api = new OpenAiApiV1(auth.ResolveAuth());
-
-        if (api != null && GUILayout.Button("Do Completion"))
-        {
-            Debug.Log("Performing Completion in Editor Time");
-
-            ApiResult<CompletionV1> comp = await api.Engines.Engine("davinci").Completions.CreateCompletionAsync(
-                new CompletionRequestV1()
-                {
-                    prompt = "test",
-                    max_tokens = 8
-                }
-            );
-
-            Debug.Log(comp.IsSuccess);
-            Debug.Log(comp.Result.choices[0].text);
-        }
-    }
-}
-```
-
-### Use Menu Item
-Go to `MyMenu/MyEditor` and click `DoCompletion`
-
-### Console
-Check the console for output, it'll take a second to complete.
+To see an example of a completion in an editor script:
+  * From the top bar to to `OpenAi > Examples > Completion In Editor Window`.
+  * To see the code, Click the `Code` reference at the top of the window. 
 
 ## Play Script
-Example of play-time completions (during a game) below
-
-### Add Singleton to Scene
-Add the `OpenAiCompleterV1` prefab to your scene using the menu item `OpenAi > V1 > CreateCompleter`
-
-### Make Completion
-Make a completion monobehaviour
-```csharp
-# ExampleMono.cs
-using OpenAi.Unity.V1;
-
-using UnityEngine;
-
-public class Example : MonoBehaviour
-{
-    public void DoApiCompletion()
-    {
-        Debug.Log("Performing Completion in Play Mode");
-
-        OpenAiCompleterV1.Instance.Complete(
-            "prompt",
-            s => Debug.Log(s),
-            e => Debug.LogError(e.StatusCode)
-        );
-    }
-}
-```
-
-### Call the completion
-You'll need to add a button to your scene, or some trigger that calls `DoApiCompletion` on `ExampleMono`. 
-
-### Test in Play mode
-Press `Play`. Test the completion based on your button/trigger implementation.  The completion will take some time, since it's a request response to a server, But once complete the request will show up. 
+To see an example of a completion at Runtime:
+  * If you're working on a scene, save the scene you are working on
+  * From the top bar to to `OpenAi > Examples > Completion At Runtime`
+  * Look at the `CompletionExample` object in the hierarchy and check out the code in `ExampleOpenAiApiRuntime`
+  * Press play and run the scene
 
 # What Next
 The above quick start is an extremly simple way to use the `OpenAi Api Unity` library. For more advanced use cases, refer to the [OpenAi Api Unity Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation)

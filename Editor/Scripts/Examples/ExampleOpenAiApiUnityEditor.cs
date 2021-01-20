@@ -24,6 +24,10 @@ namespace OpenAi.Examples
 
         void OnGUI()
         {
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Code:", MonoScript.FromScriptableObject(this), typeof(ScriptableObject), false);
+            GUI.enabled = true;
+
             SOAuthArgsV1 auth = ScriptableObject.CreateInstance<SOAuthArgsV1>();
             OpenAiApiV1 api = new OpenAiApiV1(auth.ResolveAuth());
 
