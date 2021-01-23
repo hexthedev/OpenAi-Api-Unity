@@ -28,5 +28,10 @@ namespace OpenAi.Examples
                 e => Output.text = $"ERROR: StatusCode: {e.StatusCode}"
             );
         }
+
+        public void QuitApp()
+        {
+            Application.Quit();
+        }
     }
 }
