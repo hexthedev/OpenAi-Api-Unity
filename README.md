@@ -31,6 +31,8 @@ I've tested the list below. Testing for all other usecases will come with time
 
 # Quick Start
 
+See video: https://youtu.be/Ju-i0sxsX7E
+
 ## Install
 
 **Unity Package Manager (Recommended):**
