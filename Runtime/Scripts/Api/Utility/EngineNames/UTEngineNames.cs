@@ -9,7 +9,7 @@
         public const string curie = "curie";
         public const string cursing_filter_v6 = "cursing-filter-v6";
         public const string davinci = "davinci";
-        public const string instruct_curie_beta = "instruct-curie-beta";
-        public const string instruct_davinci_beta = "instruct-davinci-beta";
+        public const string instruct_curie_beta = "curie-instruct-beta";
+        public const string instruct_davinci_beta = "davinci-instruct-beta";
     }
 }
