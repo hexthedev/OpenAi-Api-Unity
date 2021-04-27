@@ -1,5 +1,6 @@
-using System.Net.Http;
 using System.Text;
+
+using UnityEngine.Networking;
 
 namespace OpenAi.Api.V1
 {
@@ -33,6 +34,6 @@ namespace OpenAi.Api.V1
         /// Populates a <see cref="HttpClient"/> with the appropriate auth headers
         /// </summary>
         /// <returns></returns>
-        void PopulateAuthHeaders(HttpClient client);
+        void PopulateAuthHeaders(UnityWebRequest client);
     }
 }

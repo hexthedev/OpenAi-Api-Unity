@@ -4,9 +4,9 @@ using OpenAi.Api.V1;
 using OpenAi.Unity.V1;
 
 using System.Collections;
-using System.Net.Http;
 
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.TestTools;
 
 namespace OpenAi.Api.Test
@@ -45,14 +45,14 @@ namespace OpenAi.Api.Test
             
             int count = 0;
             string res = null;
-            HttpResponseMessage err = null;
+            UnityWebRequest err = null;
             yield return OpenAiCompleterV1.Instance.Complete(
                 "test", extractRes, extractErr
             );
 
             int count2 = count;
             string res2 = res;
-            HttpResponseMessage err2 = err;
+            UnityWebRequest err2 = err;
 
             Assert.IsNotNull(res);
             Assert.IsNull(err);
@@ -64,7 +64,7 @@ namespace OpenAi.Api.Test
                 count++;
             } 
 
-            void extractErr(HttpResponseMessage e)
+            void extractErr(UnityWebRequest e)
             {
                 err = e;
                 count++;

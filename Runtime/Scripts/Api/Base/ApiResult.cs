@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+﻿using UnityEngine.Networking;
 
 namespace OpenAi.Api.V1
 {
@@ -14,9 +14,9 @@ namespace OpenAi.Api.V1
         public bool IsSuccess;
 
         /// <summary>
-        /// The raw HttpResponse received when performing the call
+        /// The completed UnityWebRequest
         /// </summary>
-        public HttpResponseMessage HttpResponse;
+        public UnityWebRequest HttpResponse;
 
         /// <summary>
         /// The deserailized response from the call. Null if no repsonse received or call unsuccessful.

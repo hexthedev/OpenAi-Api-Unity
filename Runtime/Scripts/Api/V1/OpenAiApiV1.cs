@@ -1,6 +1,6 @@
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
+
+using UnityEngine.Networking;
 
 namespace OpenAi.Api.V1
 {
@@ -46,11 +46,11 @@ namespace OpenAi.Api.V1
         }
 
         /// <inheritdoc />
-        public void PopulateAuthHeaders(HttpClient client)
+        public void PopulateAuthHeaders(UnityWebRequest client)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authArgs.private_api_key);
-            client.DefaultRequestHeaders.Add("User-Agent", "hexthedev/openai_api_unity");
-            if (!string.IsNullOrEmpty(_authArgs.organization)) client.DefaultRequestHeaders.Add("OpenAI-Organization", _authArgs.organization);
+            client.SetRequestHeader("Authorization", $"Bearer {_authArgs.private_api_key}");
+            client.SetRequestHeader("User-Agent", $"hexthedev/openai_api_unity");
+            if (!string.IsNullOrEmpty(_authArgs.organization)) client.SetRequestHeader("OpenAI-Organization", _authArgs.organization);
         }
     }
 }
