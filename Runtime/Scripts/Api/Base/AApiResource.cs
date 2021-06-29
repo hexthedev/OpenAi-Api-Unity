@@ -12,9 +12,11 @@ using UnityEngine.Networking;
 namespace OpenAi.Api.V1
 {
     /// <summary>
-    /// A resource
+    /// An api resource represents some api endpoint with a specific function. An 
+    /// example of an api resource is  https://api.openai.com/v1/engines. Each resource
+    /// endpoint can have different functionity based on the HTTP method used (GET, POST, etc.)
+    /// and the parameters provided in the request body. 
     /// </summary>
-    /// <typeparam name="TParent"></typeparam>
     public abstract class AApiResource<TParent> : IApiResource
         where TParent : IApiResource
     {
@@ -41,9 +43,12 @@ namespace OpenAi.Api.V1
         }
 
         /// <summary>
-        /// Create a resource with a parent
+        /// Create a resource with a parent. Depending on how the api is
+        /// architected, parents can provide common pieces of the api endpoints
+        /// to their children. For example, https://api.openai.com/v1 could be
+        /// represented by <see cref="OpenAiApiV1"/> with a child of <see cref="EnginesResource"/>
+        /// to represent https://api.openai.com/v1/engines
         /// </summary>
-        /// <param name="parent"></param>
         public AApiResource(TParent parent)
         {
             ParentResource = parent;
@@ -60,19 +65,16 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Implements an async get request
         /// </summary>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <returns></returns>
         protected async Task<ApiResult<TResponse>> GetAsync<TResponse>()
             where TResponse : AModelV1, new()
         {
             UnityWebRequest response = await GetRequestAsync();
-            return await PackResultAsync<TResponse>(response);
+            return PackResultAsync<TResponse>(response);
         }
 
         /// <summary>
         /// Implements a get request as a Coroutine
         /// </summary>
-        /// <returns></returns>
         protected Coroutine GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
             where TResponse : AModelV1, new()
         {
@@ -84,7 +86,6 @@ namespace OpenAi.Api.V1
                 yield return mono.StartCoroutine(GetRequestCoroutine((res) => response = res));
                 if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
-
                 ApiResult<TResponse> result = PackResponse<TResponse>(response);
 
                 if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
@@ -95,15 +96,14 @@ namespace OpenAi.Api.V1
 
         #region POST
         /// <summary>
-        /// Implements a async post request
+        /// Implements an async post request
         /// </summary>
-        /// <returns></returns>
         protected async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(TRequest request)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
             UnityWebRequest response = await PostRequestAsync(request);
-            return await PackResultAsync<TResponse>(response);
+            return PackResultAsync<TResponse>(response);
         }
 
         /// <summary>
@@ -133,7 +133,6 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Implements an async post request, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
         /// </summary>
-        /// <returns></returns>
         protected async Task PostAsync_EventStream<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
@@ -147,7 +146,7 @@ namespace OpenAi.Api.V1
         }
 
         /// <summary>
-        /// Implements an post request as a coroutine, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
+        /// Implements a post request as a coroutine, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
         /// </summary>
         /// <returns></returns>
         protected Coroutine PostCoroutine_EventStream<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
@@ -181,7 +180,6 @@ namespace OpenAi.Api.V1
             AddJsonToUnityWebRequest(client, request.ToJson());
 
             await client.SendWebRequest();
-
             return client;
         }
 
@@ -224,7 +222,7 @@ namespace OpenAi.Api.V1
                 }
             }
         }
-        private async Task<ApiResult<TResponse>> PackResultAsync<TResponse>(UnityWebRequest response)
+        private ApiResult<TResponse> PackResultAsync<TResponse>(UnityWebRequest response)
             where TResponse : AModelV1, new()
 
         {

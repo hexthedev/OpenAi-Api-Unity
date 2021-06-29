@@ -9,12 +9,12 @@ namespace OpenAi.Api.V1
     public class ApiResult<TResult>
     {
         /// <summary>
-        /// True if the request status is success code
+        /// True if the request status is a success code
         /// </summary>
         public bool IsSuccess;
 
         /// <summary>
-        /// The completed UnityWebRequest
+        /// The completed <see cref="UnityWebRequest"/>
         /// </summary>
         public UnityWebRequest HttpResponse;
 

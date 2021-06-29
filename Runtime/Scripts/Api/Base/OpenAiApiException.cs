@@ -18,9 +18,6 @@ namespace OpenAi.Api
         /// <summary>
         /// Construct with message, optional context and optional inner exception
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="context"></param>
-        /// <param name="innerException"></param>
         public OpenAiApiException(string message, Object context = null,  Exception innerException = null) : base(message, innerException)
         {
             Context = context;

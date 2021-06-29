@@ -6,7 +6,7 @@ namespace OpenAi.Api.V1
 {
     /// <summary>
     /// Entry point for all api calls to the OpenAi Api. Read the docs at <see href="https://beta.openai.com/docs/api-reference"/>.
-    /// Api calls are managed using resource objects, which contain various calls that that can be performed on that resource. 
+    /// Api calls are managed using resource objects, which contain various calls that can be performed on that resource. 
     /// For example, <see cref="https://beta.openai.com/docs/api-reference/list-engines"/> is the documentation for the list engines
     /// api call. This is a GET request at https://api.openai.com/v1/engines. To make this call with the <see cref="OpenAiApiV1"/> object,
     /// the syntax is <c>OpenAiApiV1.Engines.List()</c>
