@@ -9,12 +9,12 @@ Big shout out to:
 
 To report bugs, problems, suggestions please submit [Github Issues](https://github.com/hexthedev/OpenAi-Api-Unity/issues)
 
-If anyone want to contribute, [Pull Requests](https://github.com/hexthedev/OpenAi-Api-Unity/pulls) are welcome
+If anyone wants to contribute, [Pull Requests](https://github.com/hexthedev/OpenAi-Api-Unity/pulls) are welcome
 
 ## Overview
 This is a simple OpenAI API wrapper that implements the api calls found in the [OpenAI Api Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
 
-The intention is that the syntax follows the docs as closely as possible. For example, the api call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("engine_id}").Completions.CreateCompletionCoroutine`
+The syntax follows the docs as closely as possible. For example, the api call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("<engine_id>").Completions.CreateCompletionCoroutine`
 
 To learn more:
 1. Read the Quick Start section below to see a basic example of how to use the wrapper
@@ -70,7 +70,7 @@ To see an example of a completion in an editor script:
 ## Play Script
 To see an example of a completion at Runtime:
   * If you're working on a scene, save the scene you are working on
-  * From the top bar to to `OpenAi > Examples > Completion At Runtime`
+  * From the top bar click `OpenAi > Examples > Completion At Runtime`
   * Look at the `CompletionExample` object in the hierarchy and check out the code in `ExampleOpenAiApiRuntime`
   * Press play and run the scene
 
