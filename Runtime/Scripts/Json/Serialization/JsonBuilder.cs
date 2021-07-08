@@ -52,8 +52,6 @@ namespace OpenAi.Json
         /// <summary>
         /// If not null, add float to json
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="val"></param>
         public void Add(string name, float? val)
         {
             if (val != null)
@@ -67,8 +65,6 @@ namespace OpenAi.Json
         /// <summary>
         /// if not null, add bool to json
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="val"></param>
         public void Add(string name, bool? val)
         {
             if (val != null)

@@ -13,7 +13,7 @@ namespace OpenAi.Api.V1
         /// <inheritdoc />
         public abstract string ToJson();
 
-        public T[] ArrayFromJson<T>(JsonObject parent) where T : AModelV1, new()
+        public static T[] ArrayFromJson<T>(JsonObject parent) where T : AModelV1, new()
         {
             T[] newArray = new T[parent.NestedValues.Count];
 
