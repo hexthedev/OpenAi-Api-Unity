@@ -24,10 +24,9 @@ namespace OpenAi.Api.V1
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns classification result</returns>
-        public async Task<ApiResult<CompletionV1>> ClassificationAsync(CompletionRequestV1 request)
+        public async Task<ApiResult<ClassificationV1>> ClassificationAsync(ClassificationRequestV1 request)
         {
-            request.stream = false;
-            return await PostAsync<CompletionRequestV1, CompletionV1>(request);
+            return await PostAsync<ClassificationRequestV1, ClassificationV1>(request);
         }
 
         /// <summary>
@@ -35,9 +34,8 @@ namespace OpenAi.Api.V1
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns classification result</returns>
-        public Coroutine ClassificationCoroutine(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onResult)
+        public Coroutine ClassificationCoroutine(MonoBehaviour mono, ClassificationRequestV1 request, Action<ApiResult<ClassificationV1>> onResult)
         {
-            request.stream = false;
             return PostCoroutine(mono, request, onResult);
         }
     }
