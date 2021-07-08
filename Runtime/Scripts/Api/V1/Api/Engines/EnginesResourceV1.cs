@@ -24,19 +24,16 @@ namespace OpenAi.Api.V1
         /// <see href="https://beta.openai.com/docs/api-reference/retrieve-engine"/>
         /// </summary>
         /// <param name="engineId">The ID of the engine to use for this request</param>
-        /// <returns></returns>
         public EngineResource Engine(string engineId) => new EngineResource(this, engineId);
 
         /// <summary>
         /// Lists the currently available engines, and provides basic information about each one such as the owner and availability. <see href="https://beta.openai.com/docs/api-reference/list-engines"/>
         /// </summary>
-        /// <returns></returns>
         public async Task<ApiResult<EnginesListV1>> ListEnginesAsync() => await GetAsync<EnginesListV1>();
 
         /// <summary>
         /// Lists the currently available engines, and provides basic information about each one such as the owner and availability. <see href="https://beta.openai.com/docs/api-reference/list-engines"/>
         /// </summary>
-        /// <returns></returns>
         public Coroutine ListEnginesCoroutine(MonoBehaviour mono, Action<ApiResult<EnginesListV1>> onResult) => GetCoroutine(mono, onResult);
     }
 }
