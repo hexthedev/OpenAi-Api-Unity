@@ -2,6 +2,7 @@ using OpenAi.Api.V1;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OpenAi.Json
@@ -53,7 +54,15 @@ namespace OpenAi.Json
         /// </summary>
         /// <param name="name"></param>
         /// <param name="val"></param>
-        public void Add(string name, float? val) => AddSimpleObject(name, val);
+        public void Add(string name, float? val)
+        {
+            if (val != null)
+            {
+                float value = (float)val;
+                _sb.Append($"{_prefix}\"{name}\":{value.ToString(CultureInfo.InvariantCulture)}");
+                _shouldAddComma = true;
+            }
+        }
         
         /// <summary>
         /// if not null, add bool to json
