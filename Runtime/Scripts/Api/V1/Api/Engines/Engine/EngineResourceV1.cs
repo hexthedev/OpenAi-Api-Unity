@@ -8,7 +8,7 @@ namespace OpenAi.Api.V1
     /// <summary>
     /// Resource related to a specific engine. <see href="https://beta.openai.com/docs/api-reference/retrieve-engine"/>
     /// </summary>
-    public class EngineResource : AApiResource<EnginesResource>
+    public class EngineResourceV1 : AApiResource<EnginesResourceV1>
     {
         private string _endpoint;
 
@@ -29,7 +29,7 @@ namespace OpenAi.Api.V1
         /// Construct an engine resource with parent and engineId
         /// </summary>
         /// <param name="engineId">The ID of the engine to use for this request</param>
-        public EngineResource(EnginesResource parent, string engineId) : base(parent)
+        public EngineResourceV1(EnginesResourceV1 parent, string engineId) : base(parent)
         {
             _endpoint = $"/{engineId}";
             Completions = new CompletionsResourceV1(this);

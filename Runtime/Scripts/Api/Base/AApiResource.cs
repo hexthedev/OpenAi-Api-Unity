@@ -46,7 +46,7 @@ namespace OpenAi.Api.V1
         /// Create a resource with a parent. Depending on how the api is
         /// architected, parents can provide common pieces of the api endpoints
         /// to their children. For example, https://api.openai.com/v1 could be
-        /// represented by <see cref="OpenAiApiV1"/> with a child of <see cref="EnginesResource"/>
+        /// represented by <see cref="OpenAiApiV1"/> with a child of <see cref="EnginesResourceV1"/>
         /// to represent https://api.openai.com/v1/engines
         /// </summary>
         public AApiResource(TParent parent)

@@ -8,7 +8,7 @@ namespace OpenAi.Api.V1
     /// <summary>
     /// Answers the specified question using the provided documents and examples. The endpoint first searches over provided documents or files to find relevant context.The relevant context is combined with the provided examples and question to create the prompt for completion. <see cref="https://beta.openai.com/docs/api-reference/answers/create#answers/create-examples"/>
     /// </summary>
-    public class AnswersResourceV1 : AApiResource<EngineResource>
+    public class AnswersResourceV1 : AApiResource<EngineResourceV1>
     {
         /// <inheritdoc/>
         public override string Endpoint => "/answers";
@@ -17,7 +17,7 @@ namespace OpenAi.Api.V1
         /// Construct with parent
         /// </summary>
         /// <param name="parent"></param>
-        public AnswersResourceV1(EngineResource parent) : base(parent) { }
+        public AnswersResourceV1(EngineResourceV1 parent) : base(parent) { }
 
         /// <summary>
         /// Answers the specified question using the provided documents and examples. The endpoint first searches over provided documents or files to find relevant context.The relevant context is combined with the provided examples and question to create the prompt for completion. <see cref="https://beta.openai.com/docs/api-reference/answers/create#answers/create-examples"/>

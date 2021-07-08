@@ -27,7 +27,7 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// The Engines resources. <see href="https://beta.openai.com/docs/api-reference/list-engines"/> 
         /// </summary>
-        public EnginesResource Engines { get; private set; }
+        public EnginesResourceV1 Engines { get; private set; }
 
         /// <summary>
         /// Construct an <see cref="OpenAiApiV1"/> with the provided auth args.
@@ -36,7 +36,7 @@ namespace OpenAi.Api.V1
         public OpenAiApiV1(SAuthArgsV1 authArgs)
         {
             _authArgs = authArgs;
-            Engines = new EnginesResource(this);
+            Engines = new EnginesResourceV1(this);
         }
 
         /// <inheritdoc />

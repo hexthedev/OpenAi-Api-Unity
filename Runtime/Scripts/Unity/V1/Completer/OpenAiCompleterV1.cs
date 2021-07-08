@@ -15,7 +15,7 @@ namespace OpenAi.Unity.V1
     {
         OpenAiApiGatewayV1 _gateway = null;
 
-        EngineResource _engine = null;
+        EngineResourceV1 _engine = null;
 
         /// <summary>
         /// The auth arguments used to authenticate the api. Should not be changed after initalization. Once the <see cref="Api"/> is initalized it must be cleared and initialized again if any changes are made to this property
