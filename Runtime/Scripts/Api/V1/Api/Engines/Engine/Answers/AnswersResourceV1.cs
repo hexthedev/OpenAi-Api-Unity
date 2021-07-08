@@ -24,7 +24,7 @@ namespace OpenAi.Api.V1
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns classification result</returns>
-        public async Task<ApiResult<AnswerV1>> AnswerAsync(AnswerRequestV1 request)
+        public async Task<ApiResult<AnswerV1>> CreateAnswerAsync(AnswerRequestV1 request)
         {
             return await PostAsync<AnswerRequestV1, AnswerV1>(request);
         }
@@ -34,7 +34,7 @@ namespace OpenAi.Api.V1
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns classification result</returns>
-        public Coroutine AnswerCoroutine(MonoBehaviour mono, AnswerRequestV1 request, Action<ApiResult<AnswerV1>> onResult)
+        public Coroutine CreateAnswerCoroutine(MonoBehaviour mono, AnswerRequestV1 request, Action<ApiResult<AnswerV1>> onResult)
         {
             return PostCoroutine(mono, request, onResult);
         }
