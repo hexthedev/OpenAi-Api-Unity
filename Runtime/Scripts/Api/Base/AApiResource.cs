@@ -218,6 +218,7 @@ namespace OpenAi.Api.V1
         private async Task<UnityWebRequest> GetRequestAsync()
         {
             UnityWebRequest client = UnityWebRequest.Get(Url);
+            ParentResource.PopulateAuthHeaders(client);
             await client.SendWebRequest();
             return client;
         }
@@ -225,6 +226,7 @@ namespace OpenAi.Api.V1
         private async Task<UnityWebRequest> DeleteRequestAsync()
         {
             UnityWebRequest client = UnityWebRequest.Delete(Url);
+            ParentResource.PopulateAuthHeaders(client);
             await client.SendWebRequest();
             return client;
         }
