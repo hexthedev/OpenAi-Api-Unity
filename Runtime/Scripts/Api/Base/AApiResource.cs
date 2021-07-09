@@ -69,7 +69,7 @@ namespace OpenAi.Api.V1
             where TResponse : AModelV1, new()
         {
             UnityWebRequest response = await GetRequestAsync();
-            return PackResultAsync<TResponse>(response);
+            return PackResult<TResponse>(response);
         }
 
         /// <summary>
@@ -86,9 +86,40 @@ namespace OpenAi.Api.V1
                 yield return mono.StartCoroutine(GetRequestCoroutine((res) => response = res));
                 if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
-                ApiResult<TResponse> result = PackResponse<TResponse>(response);
+                ApiResult<TResponse> result = PackResult<TResponse>(response);
 
                 if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
+                else onResult(result);
+            }
+        }
+        #endregion
+
+        #region DELETE
+        /// <summary>
+        /// Implements an async get request
+        /// </summary>
+        protected async Task<ApiResult> DeleteAsync()
+        {
+            UnityWebRequest response = await DeleteRequestAsync();
+            return PackResult_RequestOnly(response);
+        }
+
+        /// <summary>
+        /// Implements a get request as a Coroutine
+        /// </summary>
+        protected Coroutine DeleteCoroutine(MonoBehaviour mono, Action<ApiResult> onResult)
+        {
+            return mono.StartCoroutine(DeleteRoutine());
+
+            IEnumerator DeleteRoutine()
+            {
+                UnityWebRequest response = null;
+                yield return mono.StartCoroutine(DeleteRequestCoroutine((res) => response = res));
+                if (response == null) onResult(new ApiResult() { IsSuccess = false });
+
+                ApiResult result = PackResult_RequestOnly(response);
+
+                if (result == null) onResult(new ApiResult() { IsSuccess = false });
                 else onResult(result);
             }
         }
@@ -103,7 +134,7 @@ namespace OpenAi.Api.V1
             where TResponse : AModelV1, new()
         {
             UnityWebRequest response = await PostRequestAsync(request);
-            return PackResultAsync<TResponse>(response);
+            return PackResult<TResponse>(response);
         }
 
         /// <summary>
@@ -122,7 +153,7 @@ namespace OpenAi.Api.V1
                 yield return mono.StartCoroutine(PostRequestCoroutine(request, (res) => response = res));
                 if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
-                ApiResult<TResponse> result = PackResponse<TResponse>(response);
+                ApiResult<TResponse> result = PackResult<TResponse>(response);
                 if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
                 else onResult(result);
             }
@@ -171,6 +202,7 @@ namespace OpenAi.Api.V1
             }
         }
         #endregion
+
         private async Task<UnityWebRequest> PostRequestAsync<TRequest>(TRequest request)
             where TRequest : AModelV1, new()
         {
@@ -186,6 +218,13 @@ namespace OpenAi.Api.V1
         private async Task<UnityWebRequest> GetRequestAsync()
         {
             UnityWebRequest client = UnityWebRequest.Get(Url);
+            await client.SendWebRequest();
+            return client;
+        }
+
+        private async Task<UnityWebRequest> DeleteRequestAsync()
+        {
+            UnityWebRequest client = UnityWebRequest.Delete(Url);
             await client.SendWebRequest();
             return client;
         }
@@ -222,24 +261,6 @@ namespace OpenAi.Api.V1
                 }
             }
         }
-        private ApiResult<TResponse> PackResultAsync<TResponse>(UnityWebRequest response)
-            where TResponse : AModelV1, new()
-
-        {
-            ApiResult<TResponse> result = new ApiResult<TResponse>()
-            {
-                IsSuccess = response.result == UnityWebRequest.Result.Success,
-                HttpResponse = response
-            };
-
-            if (result.IsSuccess)
-            {
-                string resultAsString = response.downloadHandler.text;
-                result.Result = UnpackResponseObject<TResponse>(resultAsString);
-            }
-
-            return result;
-        }
 
         private IEnumerator PostRequestCoroutine<TRequest>(TRequest request, Action<UnityWebRequest> onResponse)
             where TRequest : AModelV1, new()
@@ -258,7 +279,16 @@ namespace OpenAi.Api.V1
             onResponse(response);
         }
 
-        private ApiResult<TResponse> PackResponse<TResponse>(UnityWebRequest response)
+        private IEnumerator DeleteRequestCoroutine(Action<UnityWebRequest> onResponse)
+        {
+            Task<UnityWebRequest> responseTask = DeleteRequestAsync();
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            UnityWebRequest response = responseTask.Result;
+            onResponse(response);
+        }
+
+
+        private ApiResult<TResponse> PackResult<TResponse>(UnityWebRequest response)
             where TResponse : AModelV1, new()
         {
             ApiResult<TResponse> result = new ApiResult<TResponse>()
@@ -272,6 +302,17 @@ namespace OpenAi.Api.V1
                 string resultAsString = response.downloadHandler.text;
                 result.Result = UnpackResponseObject<TResponse>(resultAsString);
             }
+
+            return result;
+        }
+
+        private ApiResult PackResult_RequestOnly(UnityWebRequest response)
+        {
+            ApiResult result = new ApiResult()
+            {
+                IsSuccess = response.result == UnityWebRequest.Result.Success,
+                HttpResponse = response
+            };
 
             return result;
         }
