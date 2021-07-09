@@ -30,6 +30,11 @@ namespace OpenAi.Api.V1
         public EnginesResourceV1 Engines { get; private set; }
 
         /// <summary>
+        /// The Files resources. <see href="https://beta.openai.com/docs/api-reference/files"/> 
+        /// </summary>
+        public FilesResourceV1 Files { get; private set; }
+
+        /// <summary>
         /// Construct an <see cref="OpenAiApiV1"/> with the provided auth args.
         /// </summary>
         /// <param name="authArgs"></param>
@@ -37,6 +42,7 @@ namespace OpenAi.Api.V1
         {
             _authArgs = authArgs;
             Engines = new EnginesResourceV1(this);
+            Files = new FilesResourceV1(this);
         }
 
         /// <inheritdoc />
