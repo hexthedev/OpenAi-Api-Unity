@@ -366,5 +366,45 @@ namespace OpenAi.Api.Test
         }
         #endregion
 
+        #region Answer Requests
+        private AnswerRequestV1 _AnswerRequest_BareMinimum = new AnswerRequestV1()
+        {
+            model = "ada",
+            question = "How awesome is James",
+            examples = new QuestionAnswerPairV1[] { new QuestionAnswerPairV1() { answer = "Very", question = "How awesome is Meghana"} },
+            examples_context = "Awesomness"
+        };
+
+        [UnityTest]
+        public IEnumerator Answer_CreateCoroutine()
+        {
+            ApiResult<AnswerV1> result = null;
+            yield return api.Answers.CreateAnswerCoroutine(test, _AnswerRequest_BareMinimum, (r) => result = r);
+            Assert.That(Answer_BasicTest(result));
+        }
+
+        [UnityTest]
+        public IEnumerator Answer_CreateAsync()
+        {
+            Task<ApiResult<AnswerV1>> resTask = api.Answers.CreateAnswerAsync(_AnswerRequest_BareMinimum);
+            while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
+            ApiResult<AnswerV1> res = resTask.Result;
+            Assert.That(Answer_BasicTest(res));
+        }
+
+        public bool Answer_BasicTest(ApiResult<AnswerV1> result)
+        {
+            if (!test.TestApiResultHasResponse(result)) return false;
+
+            bool doesResultAnswerExist = !string.IsNullOrEmpty(result.Result.completion);
+            test.LogTest("Does non empty Answer exist", doesResultAnswerExist);
+
+            bool doesResultLabelExist = result.Result.answers != null && result.Result.answers.Length > 0;
+            test.LogTest("Does non empty label exist", doesResultLabelExist);
+
+            return doesResultAnswerExist && doesResultLabelExist;
+        }
+        #endregion
+
     }
 }
