@@ -21,33 +21,29 @@ namespace OpenAi.Api.V1
         /// </summary>
         public string label;
 
+        public LabeledExampleV1(string example, string label)
+        {
+            this.example = example == null ? "" : example;
+            this.label = label == null ? "" : label;
+        }
+
+        public LabeledExampleV1() { }
+
         /// <inheritdoc/>
         public override void FromJson(JsonObject json)
         {
-            foreach (JsonObject jo in json.NestedValues)
-            {
-                switch (jo.Name)
-                {
-                    case nameof(example):
-                        example = jo.StringValue;
-                        break;
-                    case nameof(label):
-                        label = jo.StringValue;
-                        break;
-                }
-            }
+            if (json.NestedValues.Count != 2) 
+                throw new OpenAiJsonException($"Received badly formated LabeledExampleV1 array");
+
+            example = json.NestedValues[0].StringValue;
+            label = json.NestedValues[1].StringValue;
         }
 
         /// <inheritdoc/>
         public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();
-
-            jb.StartObject();
-            jb.Add(nameof(example), example);
-            jb.Add(nameof(label), label);
-            jb.EndObject();
-
+            jb.AddArray(new string[] { example, label });
             return jb.ToString();
         }
     }

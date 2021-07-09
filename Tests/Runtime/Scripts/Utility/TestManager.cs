@@ -44,7 +44,7 @@ namespace OpenAi.Api.Test
             if (!resultIsNotNull) return false;
 
             bool resultIsSuccess = result.IsSuccess;
-            LogTest("Result is success", resultIsNotNull);
+            LogTest("Result is success", resultIsSuccess);
             return resultIsNotNull && resultIsSuccess;
         }
 

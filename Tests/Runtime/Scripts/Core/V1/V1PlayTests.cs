@@ -103,9 +103,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator Completions_TestAllRequestParamsString()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
             
             CompletionRequestV1 req = new CompletionRequestV1() { 
@@ -137,9 +134,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator Completions_TestAllRequestParamsArray()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
 
             CompletionRequestV1 req = new CompletionRequestV1()
@@ -172,9 +166,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
@@ -189,9 +180,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateAsync()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             Task<ApiResult<CompletionV1>> resTask = api.Engines.Engine("ada").Completions.CreateCompletionAsync(
                 new CompletionRequestV1() { prompt = "hello", max_tokens = 8 }
             );
@@ -206,9 +194,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateCoroutine_EventStream()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
             List<CompletionV1> partials = new List<CompletionV1>();
             bool isComplete = false;
@@ -242,9 +227,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator CompletionsCreateAsync_EventStream()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
             List<CompletionV1> completions = new List<CompletionV1>();
             bool isComplete = false;
@@ -273,9 +255,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator SearchSearchCoroutine()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<SearchListV1> result = null;
             SearchRequestV1 req = new SearchRequestV1() { documents = new string[] { "doc1", "doc2" }, query = "is this a doc"};
             yield return api.Engines.Engine("ada").Search.SearchCoroutine(test, req, (r) => result = r);
@@ -294,9 +273,6 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator SearchSearchAsync()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             Task<ApiResult<SearchListV1>> resTask = api.Engines.Engine("davinci").Search.SearchAsync(
                 new SearchRequestV1() { documents = new string[] { "Hey baby", "I am a robot" }, query = "query?" }
             );
@@ -316,5 +292,79 @@ namespace OpenAi.Api.Test
             Assert.That(dataIsNotNull && dataReturnedwithCorrectLength);
         }
         #endregion
+
+        #region Classification Requests
+        private ClassificationRequestV1 _classificationRequest_BareMinimum = new ClassificationRequestV1()
+        {
+            model = "ada", 
+            query = "James is a hero", 
+            labels = new string[] { "Positive", "Negative" },
+            examples = new LabeledExampleV1[] {
+                new LabeledExampleV1("James really is a hero", "Positive")
+            }
+        };
+
+
+        [UnityTest]
+        public IEnumerator Classification_TestAllRequestParamsString()
+        {
+            ApiResult<ClassificationV1> result = null;
+
+            ClassificationRequestV1 req = new ClassificationRequestV1()
+            {
+                model = "ada",
+                query = "James",
+                examples = new LabeledExampleV1[]
+                {
+                    new LabeledExampleV1() { label = "hero", example = "James, Jacob" },
+                    new LabeledExampleV1() { label = "villan", example = "Magneto, Lex Luther" },
+                },
+                temperature = 0.7f,
+                logprobs = 10,
+                max_examples = 3,
+                logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
+                return_prompt = true,
+                return_metadata = true
+            };
+
+            yield return api.Classifications.CreateClassificationCoroutine(test, req, (r) => result = r);
+
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+            bool doesResultLabelExist = !string.IsNullOrEmpty(result.Result.label);
+            test.LogTest("Does non empty label exist", doesResultLabelExist);
+            Assert.That(doesResultLabelExist);
+        }
+
+        [UnityTest]
+        public IEnumerator Classification_CreateCoroutine()
+        {
+            ApiResult<ClassificationV1> result = null;
+            yield return api.Classifications.CreateClassificationCoroutine(test, _classificationRequest_BareMinimum, (r) => result = r);
+            Assert.That(Classification_BasicTest(result));
+        }
+
+        [UnityTest]
+        public IEnumerator Classification_CreateAsync()
+        {
+            Task<ApiResult<ClassificationV1>> resTask = api.Classifications.CreateClassificationAsync(_classificationRequest_BareMinimum);
+            while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
+            ApiResult<ClassificationV1> res = resTask.Result;
+            Assert.That(Classification_BasicTest(res));
+        }
+
+        public bool Classification_BasicTest(ApiResult<ClassificationV1> result)
+        {
+            if (!test.TestApiResultHasResponse(result)) return false;
+
+            bool doesResultClassificationExist = !string.IsNullOrEmpty(result.Result.completion);
+            test.LogTest("Does non empty classification exist", doesResultClassificationExist);
+
+            bool doesResultLabelExist = !string.IsNullOrEmpty(result.Result.label);
+            test.LogTest("Does non empty label exist", doesResultLabelExist);
+
+            return doesResultClassificationExist && doesResultLabelExist;
+        }
+        #endregion
+
     }
 }

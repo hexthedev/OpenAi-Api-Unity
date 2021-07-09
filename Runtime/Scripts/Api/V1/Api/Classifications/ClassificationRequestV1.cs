@@ -149,7 +149,7 @@ namespace OpenAi.Api.V1
             jb.Add(nameof(logit_bias), logit_bias);
             jb.Add(nameof(return_prompt), return_prompt);
             jb.Add(nameof(return_metadata), return_metadata);
-            jb.Add(nameof(expand), expand);
+            jb.AddArray(nameof(expand), expand);
             jb.EndObject();
 
             return jb.ToString();

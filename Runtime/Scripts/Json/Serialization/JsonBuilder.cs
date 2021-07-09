@@ -168,6 +168,8 @@ namespace OpenAi.Json
         /// <param name="value"></param>
         public void AddArray<T>(string name, T[] value) where T: IJsonable
         {
+            if (value == null) return;
+
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
 
@@ -190,6 +192,8 @@ namespace OpenAi.Json
         /// <param name="value"></param>
         public void AddArray(string name, string[] value)
         {
+            if (value == null) return;
+
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
 
@@ -203,6 +207,21 @@ namespace OpenAi.Json
             EndList();
 
             _shouldAddComma = true;
+        }
+
+        /// <summary>
+        /// Adds an array to the json without applying a name. This is used for nested arrays
+        /// </summary>
+        public void AddArray(string[] values)
+        {
+            StartList();
+            string[] strings = new string[values.Length];
+            for (int i = 0; i < values.Length; i++)
+            {
+                strings[i] = GetJsonString(values[i]);
+            }
+            _sb.Append(string.Join(",", strings));
+            EndList();
         }
 
         /// <summary>
