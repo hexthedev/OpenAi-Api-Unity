@@ -13,23 +13,27 @@ namespace OpenAi.Api.Test
 {
     public class V1PlayTests
     {
+        private TestManager test;
+        private OpenAiApiV1 api;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup() => test = TestManager.Instance;
+        
+        [SetUp]
+        public void SetUp() => api = test.CleanAndProvideApi();
 
         #region Engines Requests
         [UnityTest]
         public IEnumerator EnginesListCoroutine()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<EnginesListV1> result = null;
             yield return api.Engines.ListEnginesCoroutine(test, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
-            
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotEmpty(result.Result.data);
-            
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+
+            bool isDataNotEmpty = result.Result.data != null;
+            test.LogTest("Data is not empty", isDataNotEmpty);
+                        
             bool containsAda = false;
             foreach(EngineV1 engine in result.Result.data)
             {
@@ -39,27 +43,26 @@ namespace OpenAi.Api.Test
                     break;
                 }
             }
+            test.LogTest("Engine id contains \"ada\"", containsAda);
 
-            Assert.That(containsAda);
+            Assert.That(isDataNotEmpty && containsAda);
         }
 
         [UnityTest]
         public IEnumerator EnginesListAsync()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             Task<ApiResult<EnginesListV1>> resTask = api.Engines.ListEnginesAsync();
 
             while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
 
             ApiResult<EnginesListV1> res = resTask.Result;
 
-            Assert.IsNotNull(res);
-            Assert.That(res.IsSuccess);
+            if (!test.TestApiResultHasResponse(res)) Assert.That(false);
 
-            Assert.IsNotNull(res.Result);
-            Assert.IsNotEmpty(res.Result.data);
+            bool isResultDataNotEmpty = res.Result.data != null && res.Result.data.Length > 0;
+            test.LogTest("Result data is not empty", isResultDataNotEmpty);
+
+            Assert.That(isResultDataNotEmpty);
         }
         #endregion
 
@@ -67,36 +70,32 @@ namespace OpenAi.Api.Test
         [UnityTest]
         public IEnumerator EngineRetrieveCoroutine()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<EngineV1> result = null;
             yield return api.Engines.Engine("ada").RetrieveEngineCoroutine(test, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
-            Assert.IsNotNull(result.Result);
-            Assert.That(result.Result.id == "ada");
+            bool isResultIdAda = result.Result.id == "ada";
+            test.LogTest("The result id is ada", isResultIdAda);
+
+            Assert.That(isResultIdAda);
         }
 
         [UnityTest]
         public IEnumerator EngineRetrieveAsync()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             Task<ApiResult<EngineV1>> resultTask = api.Engines.Engine("ada").RetrieveEngineAsync();
 
             while (!resultTask.IsCompleted) yield return new WaitForEndOfFrame();
 
             ApiResult<EngineV1> result = resultTask.Result;
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsSuccess);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
-            Assert.IsNotNull(result.Result);
-            Assert.That(result.Result.id == "ada");
+            bool isResultIdAda = result.Result.id == "ada";
+            test.LogTest("The result id is ada", isResultIdAda);
+
+            Assert.That(isResultIdAda);
         }
         #endregion
 
@@ -127,12 +126,12 @@ namespace OpenAi.Api.Test
 
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotEmpty(result.Result.choices);
-            Assert.That(result.Result.choices.Length > 0);
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
+
+            Assert.That(doesResultObjectExist);
         }
 
         [UnityTest]
@@ -162,12 +161,12 @@ namespace OpenAi.Api.Test
 
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotEmpty(result.Result.choices);
-            Assert.That(result.Result.choices.Length > 0);
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
+
+            Assert.That(doesResultObjectExist);
         }
 
         [UnityTest]
@@ -180,12 +179,11 @@ namespace OpenAi.Api.Test
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(test, req, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
 
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotEmpty(result.Result.choices);
-            Assert.That(result.Result.choices.Length > 0);
+            Assert.That(doesResultObjectExist);
         }
 
         [UnityTest]
@@ -202,9 +200,7 @@ namespace OpenAi.Api.Test
 
             ApiResult<CompletionV1> res = resTask.Result;
 
-            Assert.IsNotNull(res);
-            Assert.That(res.IsSuccess);
-            Assert.IsNotNull(res.Result);
+            Assert.That(test.TestApiResultHasResponse(res));
         }
 
         [UnityTest]
@@ -233,11 +229,14 @@ namespace OpenAi.Api.Test
                 yield return new WaitForEndOfFrame();
             }
 
-            Assert.That(isComplete);
+            test.LogTest("Stream was completed", isComplete);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
-            Assert.IsNotEmpty(partials);
+            if (!test.TestApiResultSuccess(result)) Assert.That(false);
+
+            bool partialsNotEmpty = partials != null && partials.Count > 0;
+            test.LogTest("Partial reponses were received", partialsNotEmpty);
+
+            Assert.That(isComplete && partialsNotEmpty);
         }
 
         [UnityTest]
@@ -259,12 +258,14 @@ namespace OpenAi.Api.Test
 
             while (!engineTask.IsCompleted) yield return new WaitForEndOfFrame();
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
+            test.LogTest("Stream was completed", isComplete);
 
-            Assert.That(isComplete);
+            if (!test.TestApiResultSuccess(result)) Assert.That(false);
 
-            Assert.That(completions.Count > 0);
+            bool completionsNotEmpty = completions != null && completions.Count > 0;
+            test.LogTest("Partial reponses were received", completionsNotEmpty);
+
+            Assert.That(isComplete && completionsNotEmpty);
         }
         #endregion
 
@@ -279,11 +280,15 @@ namespace OpenAi.Api.Test
             SearchRequestV1 req = new SearchRequestV1() { documents = new string[] { "doc1", "doc2" }, query = "is this a doc"};
             yield return api.Engines.Engine("ada").Search.SearchCoroutine(test, req, (r) => result = r);
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotEmpty(result.Result.data);
-            Assert.That(result.Result.data.Length == 2);
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+
+            bool dataIsNotNull = result.Result.data != null;
+            test.LogTest("Data is not null", dataIsNotNull);
+
+            bool dataReturnedwithCorrectLength = result.Result.data.Length == 2;
+            test.LogTest("Data returned with correct length", dataReturnedwithCorrectLength);
+
+            Assert.That(dataIsNotNull && dataReturnedwithCorrectLength);
         }
 
         [UnityTest]
@@ -300,13 +305,15 @@ namespace OpenAi.Api.Test
 
             ApiResult<SearchListV1> res = resTask.Result;
 
-            Assert.IsNotNull(res);
-            Assert.That(res.IsSuccess);
+            if (!test.TestApiResultHasResponse(res)) Assert.That(false);
 
-            Assert.IsNotNull(res.Result);
+            bool dataIsNotNull = res.Result.data != null;
+            test.LogTest("Data is not null", dataIsNotNull);
 
-            Assert.IsNotEmpty(res.Result.data);
-            Assert.That(res.Result.data.Length == 2);
+            bool dataReturnedwithCorrectLength = res.Result.data.Length == 2;
+            test.LogTest("Data returned with correct length", dataReturnedwithCorrectLength);
+
+            Assert.That(dataIsNotNull && dataReturnedwithCorrectLength);
         }
         #endregion
     }

@@ -13,14 +13,20 @@ namespace OpenAi.Api.Test
 {
     public class V1BugTests
     {
+        private TestManager test;
+        private OpenAiApiV1 api;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup() => test = TestManager.Instance;
+
+        [SetUp]
+        public void SetUp() => api = test.CleanAndProvideApi();
+
         [UnityTest]
         // Issue: https://github.com/hexthedev/OpenAi-Api-Unity/issues/7
         // Prompts weren't working with escape characters
         public IEnumerator Issue007_EscapeCharacterBug()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             ApiResult<CompletionV1> result = null;
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine(
                 test, 
@@ -28,9 +34,7 @@ namespace OpenAi.Api.Test
                 (r) => result = r
             );
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
-            Assert.IsNotNull(result.Result);
+            Assert.That(test.TestApiResultHasResponse(result));
         }
 
         [UnityTest]
@@ -38,8 +42,6 @@ namespace OpenAi.Api.Test
         // For some reason the completer is logging twice
         public IEnumerator Issue010_CompleterLoggingTwice()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
             OpenAiCompleterV1 comp = OpenAiCompleterV1.Instance;
             yield return new WaitForEndOfFrame();
             
@@ -54,9 +56,16 @@ namespace OpenAi.Api.Test
             string res2 = res;
             UnityWebRequest err2 = err;
 
-            Assert.IsNotNull(res);
-            Assert.IsNull(err);
-            Assert.That(count == 1);
+            bool resIsNotNull = res != null;
+            test.LogTest("A response was received by the first request", resIsNotNull);
+
+            bool errIsNull = err == null;
+            test.LogTest("The web request is null", errIsNull);
+
+            bool only1requestHappened = count == 1;
+            test.LogTest("Only 1 request happened", only1requestHappened);
+
+            Assert.That(resIsNotNull && errIsNull && only1requestHappened);
 
             void extractRes(string r)
             {
@@ -76,9 +85,6 @@ namespace OpenAi.Api.Test
         // Prompts weren't working multiline strings
         public IEnumerator Issue013_MultilineStringBug()
         {
-            TestManager test = TestManager.Instance;
-            OpenAiApiV1 api = test.CleanAndProvideApi();
-
             string multiprompt = @"test
 ""Are these an isse""
 <how about these />
@@ -91,9 +97,7 @@ namespace OpenAi.Api.Test
                 (r) => result = r
             );
 
-            Assert.IsNotNull(result);
-            Assert.That(result.IsSuccess);
-            Assert.IsNotNull(result.Result);
+            Assert.That(test.TestApiResultHasResponse(result));
         }
     }
 }
