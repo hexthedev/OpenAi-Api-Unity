@@ -21,33 +21,29 @@ namespace OpenAi.Api.V1
         /// </summary>
         public string answer;
 
+        public QuestionAnswerPairV1(string question, string answer)
+        {
+            this.question = question == null ? "" : question;
+            this.answer = answer == null ? "" : answer;
+        }
+
+        public QuestionAnswerPairV1() { }
+
         /// <inheritdoc/>
         public override void FromJson(JsonObject json)
         {
-            foreach (JsonObject jo in json.NestedValues)
-            {
-                switch (jo.Name)
-                {
-                    case nameof(question):
-                        question = jo.StringValue;
-                        break;
-                    case nameof(answer):
-                        answer = jo.StringValue;
-                        break;
-                }
-            }
+            if (json.NestedValues.Count != 2)
+                throw new OpenAiJsonException($"Received badly formated {nameof(QuestionAnswerPairV1)} array");
+
+            question = json.NestedValues[0].StringValue;
+            answer = json.NestedValues[1].StringValue;
         }
 
         /// <inheritdoc/>
         public override string ToJson()
         {
             JsonBuilder jb = new JsonBuilder();
-
-            jb.StartObject();
-            jb.Add(nameof(question), question);
-            jb.Add(nameof(answer), answer);
-            jb.EndObject();
-
+            jb.AddArray(new string[] { question, answer });
             return jb.ToString();
         }
     }

@@ -371,7 +371,13 @@ namespace OpenAi.Api.Test
         {
             model = "ada",
             question = "How awesome is James",
-            examples = new QuestionAnswerPairV1[] { new QuestionAnswerPairV1() { answer = "Very", question = "How awesome is Meghana"} },
+            documents = new string[] { 
+                "Meghana does a lot of things that makes her really awesome.", 
+                "James tries to be awesome, but isn't quite there yet." 
+            },
+            examples = new QuestionAnswerPairV1[] { 
+                new QuestionAnswerPairV1() { answer = "Very", question = "How awesome is Meghana"} 
+            },
             examples_context = "Awesomness"
         };
 
@@ -379,6 +385,7 @@ namespace OpenAi.Api.Test
         public IEnumerator Answer_CreateCoroutine()
         {
             ApiResult<AnswerV1> result = null;
+            Debug.Log(_AnswerRequest_BareMinimum.ToJson());
             yield return api.Answers.CreateAnswerCoroutine(test, _AnswerRequest_BareMinimum, (r) => result = r);
             Assert.That(Answer_BasicTest(result));
         }
