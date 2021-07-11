@@ -3,18 +3,20 @@ using OpenAi.Json;
 using System;
 using System.Collections;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace OpenAi.Api.V1
 {
     /// <summary>
-    /// A resource
+    /// An api resource represents some api endpoint with a specific function. An 
+    /// example of an api resource is  https://api.openai.com/v1/engines. Each resource
+    /// endpoint can have different functionity based on the HTTP method used (GET, POST, etc.)
+    /// and the parameters provided in the request body. 
     /// </summary>
-    /// <typeparam name="TParent"></typeparam>
     public abstract class AApiResource<TParent> : IApiResource
         where TParent : IApiResource
     {
@@ -27,7 +29,7 @@ namespace OpenAi.Api.V1
         public abstract string Endpoint { get; }
 
         /// <inheritdoc />
-        public void PopulateAuthHeaders(HttpClient client) => ParentResource.PopulateAuthHeaders(client);
+        public void PopulateAuthHeaders(UnityWebRequest client) => ParentResource.PopulateAuthHeaders(client);
 
         /// <inheritdoc />
         public string Url
@@ -41,9 +43,12 @@ namespace OpenAi.Api.V1
         }
 
         /// <summary>
-        /// Create a resource with a parent
+        /// Create a resource with a parent. Depending on how the api is
+        /// architected, parents can provide common pieces of the api endpoints
+        /// to their children. For example, https://api.openai.com/v1 could be
+        /// represented by <see cref="OpenAiApiV1"/> with a child of <see cref="EnginesResourceV1"/>
+        /// to represent https://api.openai.com/v1/engines
         /// </summary>
-        /// <param name="parent"></param>
         public AApiResource(TParent parent)
         {
             ParentResource = parent;
@@ -60,22 +65,16 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Implements an async get request
         /// </summary>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <returns></returns>
         protected async Task<ApiResult<TResponse>> GetAsync<TResponse>()
             where TResponse : AModelV1, new()
         {
-            HttpResponseMessage response = await GetRequestAsync();
-            return await PackResultAsync<TResponse>(response);
+            UnityWebRequest response = await GetRequestAsync();
+            return PackResult<TResponse>(response);
         }
 
         /// <summary>
         /// Implements a get request as a Coroutine
         /// </summary>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="mono"></param>
-        /// <param name="onResult"></param>
-        /// <returns></returns>
         protected Coroutine GetCoroutine<TResponse>(MonoBehaviour mono, Action<ApiResult<TResponse>> onResult)
             where TResponse : AModelV1, new()
         {
@@ -83,13 +82,11 @@ namespace OpenAi.Api.V1
 
             IEnumerator GetRoutine()
             {
-                HttpResponseMessage response = null;
+                UnityWebRequest response = null;
                 yield return mono.StartCoroutine(GetRequestCoroutine((res) => response = res));
                 if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
-
-                ApiResult<TResponse> result = null;
-                yield return mono.StartCoroutine(PackResponseCoroutine<TResponse>(response, (res) => result = res));
+                ApiResult<TResponse> result = PackResult<TResponse>(response);
 
                 if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
                 else onResult(result);
@@ -97,30 +94,52 @@ namespace OpenAi.Api.V1
         }
         #endregion
 
+        #region DELETE
+        /// <summary>
+        /// Implements an async get request
+        /// </summary>
+        protected async Task<ApiResult> DeleteAsync()
+        {
+            UnityWebRequest response = await DeleteRequestAsync();
+            return PackResult_RequestOnly(response);
+        }
+
+        /// <summary>
+        /// Implements a get request as a Coroutine
+        /// </summary>
+        protected Coroutine DeleteCoroutine(MonoBehaviour mono, Action<ApiResult> onResult)
+        {
+            return mono.StartCoroutine(DeleteRoutine());
+
+            IEnumerator DeleteRoutine()
+            {
+                UnityWebRequest response = null;
+                yield return mono.StartCoroutine(DeleteRequestCoroutine((res) => response = res));
+                if (response == null) onResult(new ApiResult() { IsSuccess = false });
+
+                ApiResult result = PackResult_RequestOnly(response);
+
+                if (result == null) onResult(new ApiResult() { IsSuccess = false });
+                else onResult(result);
+            }
+        }
+        #endregion
+
         #region POST
         /// <summary>
-        /// Implements a async post request
+        /// Implements an async post request
         /// </summary>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="request"></param>
-        /// <returns></returns>
         protected async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(TRequest request)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
-            HttpResponseMessage response = await PostRequestAsync(request);
-            return await PackResultAsync<TResponse>(response);
+            UnityWebRequest response = await PostRequestAsync(request);
+            return PackResult<TResponse>(response);
         }
 
         /// <summary>
         /// Implements a post request as a coroutine
         /// </summary>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="mono"></param>
-        /// <param name="request"></param>
-        /// <param name="onResult"></param>
         /// <returns></returns>
         protected Coroutine PostCoroutine<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onResult)
             where TRequest : AModelV1, new()
@@ -130,12 +149,11 @@ namespace OpenAi.Api.V1
 
             IEnumerator PostRoutine()
             {
-                HttpResponseMessage response = null;
+                UnityWebRequest response = null;
                 yield return mono.StartCoroutine(PostRequestCoroutine(request, (res) => response = res));
                 if (response == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
 
-                ApiResult<TResponse> result = null;
-                yield return mono.StartCoroutine(PackResponseCoroutine<TResponse>(response, (res) => result = res));
+                ApiResult<TResponse> result = PackResult<TResponse>(response);
                 if (result == null) onResult(new ApiResult<TResponse>() { IsSuccess = false });
                 else onResult(result);
             }
@@ -146,35 +164,21 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// Implements an async post request, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
         /// </summary>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="request"></param>
-        /// <param name="onRequestStatus"></param>
-        /// <param name="onPartialResult"></param>
-        /// <param name="onCompletion"></param>
-        /// <returns></returns>
         protected async Task PostAsync_EventStream<TRequest, TResponse>(TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
             where TResponse : AModelV1, new()
         {
-            HttpResponseMessage response = await PostRequestAsync(request);
+            UnityWebRequest response = await PostRequestAsync(request);
             
-            ApiResult<TResponse> status = new ApiResult<TResponse>() { IsSuccess = response.IsSuccessStatusCode, HttpResponse = response };
+            ApiResult<TResponse> status = new ApiResult<TResponse>() { IsSuccess = response.result == UnityWebRequest.Result.Success, HttpResponse = response };
             onRequestStatus(status);
             
-            if (response.IsSuccessStatusCode) await ReadEventStreamAsync(response, onPartialResult, onCompletion);
+            if (response.result == UnityWebRequest.Result.Success) await ReadEventStreamAsync(response, onPartialResult, onCompletion);
         }
 
         /// <summary>
-        /// Implements an post request as a coroutine, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
+        /// Implements a post request as a coroutine, with the reception method as event streams <see href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format"/>
         /// </summary>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="mono"></param>
-        /// <param name="request"></param>
-        /// <param name="onRequestStatus"></param>
-        /// <param name="onPartialResult"></param>
-        /// <param name="onCompletion"></param>
         /// <returns></returns>
         protected Coroutine PostCoroutine_EventStream<TRequest, TResponse>(MonoBehaviour mono, TRequest request, Action<ApiResult<TResponse>> onRequestStatus, Action<int, TResponse> onPartialResult, Action onCompletion = null)
             where TRequest : AModelV1, new()
@@ -184,13 +188,13 @@ namespace OpenAi.Api.V1
 
             IEnumerator PostEventStreamRoutine()
             {
-                HttpResponseMessage response = null;
+                UnityWebRequest response = null;
                 yield return mono.StartCoroutine(PostRequestCoroutine(request, (res) => response = res));
 
                 if (response == null) onRequestStatus(new ApiResult<TResponse>() { IsSuccess = false });
-                else onRequestStatus(new ApiResult<TResponse>() { IsSuccess = response.IsSuccessStatusCode, HttpResponse = response });
+                else onRequestStatus(new ApiResult<TResponse>() { IsSuccess = response.result == UnityWebRequest.Result.Success, HttpResponse = response });
 
-                if (response != null && response.IsSuccessStatusCode)
+                if (response != null && response.result == UnityWebRequest.Result.Success)
                 {
                     Task ReadStreamTask = ReadEventStreamAsync(response, onPartialResult, onCompletion);
                     while (!ReadStreamTask.IsCompleted) yield return new WaitForEndOfFrame();
@@ -199,36 +203,38 @@ namespace OpenAi.Api.V1
         }
         #endregion
 
-        private HttpClient PrepareClient()
+        private async Task<UnityWebRequest> PostRequestAsync<TRequest>(TRequest request)
+            where TRequest : AModelV1, new()
         {
-            HttpClient client = new HttpClient();
+            UnityWebRequest client = UnityWebRequest.Post(Url, string.Empty);
             ParentResource.PopulateAuthHeaders(client);
+
+            AddJsonToUnityWebRequest(client, request.ToJson());
+
+            await client.SendWebRequest();
             return client;
         }
 
-        private async Task<HttpResponseMessage> PostRequestAsync<TRequest>(TRequest request)
-            where TRequest : AModelV1, new()
+        private async Task<UnityWebRequest> GetRequestAsync()
         {
-            HttpClient client = PrepareClient();
-
-            string content = request.ToJson();
-            StringContent stringContent = new StringContent(content, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PostAsync(Url, stringContent);
-            return response;
+            UnityWebRequest client = UnityWebRequest.Get(Url);
+            ParentResource.PopulateAuthHeaders(client);
+            await client.SendWebRequest();
+            return client;
         }
 
-        private async Task<HttpResponseMessage> GetRequestAsync()
+        private async Task<UnityWebRequest> DeleteRequestAsync()
         {
-            HttpClient client = PrepareClient();
-            HttpResponseMessage response = await client.GetAsync(Url);
-            return response;
+            UnityWebRequest client = UnityWebRequest.Delete(Url);
+            ParentResource.PopulateAuthHeaders(client);
+            await client.SendWebRequest();
+            return client;
         }
 
-        private async Task ReadEventStreamAsync<TResponse>(HttpResponseMessage response, Action<int, TResponse> onPartialResult, Action onCompletion)
+        private async Task ReadEventStreamAsync<TResponse>(UnityWebRequest response, Action<int, TResponse> onPartialResult, Action onCompletion)
             where TResponse : AModelV1, new()
         {
-            using (Stream stream = await response.Content.ReadAsStreamAsync())
+            using (Stream stream = new MemoryStream(response.downloadHandler.data))
             {
                 int index = 0;
 
@@ -257,61 +263,68 @@ namespace OpenAi.Api.V1
                 }
             }
         }
-        private async Task<ApiResult<TResponse>> PackResultAsync<TResponse>(HttpResponseMessage response)
-            where TResponse : AModelV1, new()
 
+        private IEnumerator PostRequestCoroutine<TRequest>(TRequest request, Action<UnityWebRequest> onResponse)
+            where TRequest : AModelV1, new()
+        {
+            Task<UnityWebRequest> responseTask = PostRequestAsync(request);
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            UnityWebRequest response = responseTask.Result;
+            onResponse(response);
+        }
+
+        private IEnumerator GetRequestCoroutine(Action<UnityWebRequest> onResponse)
+        {
+            Task<UnityWebRequest> responseTask = GetRequestAsync();
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            UnityWebRequest response = responseTask.Result;
+            onResponse(response);
+        }
+
+        private IEnumerator DeleteRequestCoroutine(Action<UnityWebRequest> onResponse)
+        {
+            Task<UnityWebRequest> responseTask = DeleteRequestAsync();
+            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
+            UnityWebRequest response = responseTask.Result;
+            onResponse(response);
+        }
+
+
+        private ApiResult<TResponse> PackResult<TResponse>(UnityWebRequest response)
+            where TResponse : AModelV1, new()
         {
             ApiResult<TResponse> result = new ApiResult<TResponse>()
             {
-                IsSuccess = response.IsSuccessStatusCode,
+                IsSuccess = response.result == UnityWebRequest.Result.Success,
                 HttpResponse = response
             };
 
             if (result.IsSuccess)
             {
-                string resultAsString = await response.Content.ReadAsStringAsync();
+                string resultAsString = response.downloadHandler.text;
                 result.Result = UnpackResponseObject<TResponse>(resultAsString);
             }
 
             return result;
         }
 
-        private IEnumerator PostRequestCoroutine<TRequest>(TRequest request, Action<HttpResponseMessage> onResponse)
-            where TRequest : AModelV1, new()
+        private ApiResult PackResult_RequestOnly(UnityWebRequest response)
         {
-            Task<HttpResponseMessage> responseTask = PostRequestAsync(request);
-            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
-            HttpResponseMessage response = responseTask.Result;
-            onResponse(response);
-        }
-
-        private IEnumerator GetRequestCoroutine(Action<HttpResponseMessage> onResponse)
-        {
-            Task<HttpResponseMessage> responseTask = GetRequestAsync();
-            while (!responseTask.IsCompleted) yield return new WaitForEndOfFrame();
-            HttpResponseMessage response = responseTask.Result;
-            onResponse(response);
-        }
-
-        private IEnumerator PackResponseCoroutine<TResponse>(HttpResponseMessage response, Action<ApiResult<TResponse>> onResponse)
-            where TResponse : AModelV1, new()
-        {
-            ApiResult<TResponse> result = new ApiResult<TResponse>()
+            ApiResult result = new ApiResult()
             {
-                IsSuccess = response.IsSuccessStatusCode,
+                IsSuccess = response.result == UnityWebRequest.Result.Success,
                 HttpResponse = response
             };
 
-            if (result.IsSuccess)
-            {
-                Task<string> resultAsStringTask = response.Content.ReadAsStringAsync();
-                while (!resultAsStringTask.IsCompleted) yield return new WaitForEndOfFrame();
+            return result;
+        }
 
-                string resultAsString = resultAsStringTask.Result;
-                result.Result = UnpackResponseObject<TResponse>(resultAsString);
-            }
-
-            onResponse(result);
+        private void AddJsonToUnityWebRequest(UnityWebRequest client, string json)
+        {
+            client.SetRequestHeader("Content-Type", "application/json");
+            client.uploadHandler = new UploadHandlerRaw(
+                Encoding.UTF8.GetBytes(json)
+            );
         }
 
         private TModel UnpackResponseObject<TModel>(string content)

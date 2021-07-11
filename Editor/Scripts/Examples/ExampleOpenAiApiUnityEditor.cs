@@ -65,7 +65,7 @@ namespace OpenAi.Examples
             }
             else
             {
-                _output = $"ERROR: StatusCode={comp.HttpResponse.StatusCode}";
+                _output = $"ERROR: StatusCode={comp.HttpResponse.responseCode} - {comp.HttpResponse.error}";
             }
         }
     }

@@ -1,7 +1,7 @@
 # Context
 The `OpenAi Api` is currently in beta. In order to get access you need a private api key which is aquired by signing up for the beta at the [OpenAi Api Website](https://beta.openai.com/). When accepted you'll be able to access your api key on the [Developer QuickStart Page](https://beta.openai.com/docs/developer-quickstart)
 
-Individuals that are part of an organization can also use a organization key. I'm not sure where this is found, as I do not have one. The organization key is used when individuals are using api quotas from multiple organizations, and they want to specify which quota to use. 
+Individuals that are part of an organization can also use an organization key. I'm not sure where this is found, as I do not have one. The organization key is used when individuals are using api quotas from multiple organizations, and they want to specify which quota to use. 
 
 # Authenticating in OpenAi Api Unity
 Authentication info is entered in the `SOAuthArgsV1` object. This Scriptble Object is a required input for all API prefabs. 

@@ -25,7 +25,7 @@ namespace OpenAi.Examples
             OpenAiCompleterV1.Instance.Complete(
                 text,
                 s => Output.text = s,
-                e => Output.text = $"ERROR: StatusCode: {e.StatusCode}"
+                e => Output.text = $"ERROR: StatusCode: {e.responseCode} - {e.error}"
             );
         }
 

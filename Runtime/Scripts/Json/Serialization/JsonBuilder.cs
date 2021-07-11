@@ -2,6 +2,7 @@ using OpenAi.Api.V1;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OpenAi.Json
@@ -51,15 +52,19 @@ namespace OpenAi.Json
         /// <summary>
         /// If not null, add float to json
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="val"></param>
-        public void Add(string name, float? val) => AddSimpleObject(name, val);
+        public void Add(string name, float? val)
+        {
+            if (val != null)
+            {
+                float value = (float)val;
+                _sb.Append($"{_prefix}\"{name}\":{value.ToString(CultureInfo.InvariantCulture)}");
+                _shouldAddComma = true;
+            }
+        }
         
         /// <summary>
         /// if not null, add bool to json
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="val"></param>
         public void Add(string name, bool? val)
         {
             if (val != null)
@@ -163,6 +168,8 @@ namespace OpenAi.Json
         /// <param name="value"></param>
         public void AddArray<T>(string name, T[] value) where T: IJsonable
         {
+            if (value == null) return;
+
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
 
@@ -185,6 +192,8 @@ namespace OpenAi.Json
         /// <param name="value"></param>
         public void AddArray(string name, string[] value)
         {
+            if (value == null) return;
+
             _sb.Append(_prefix);
             _sb.Append($"\"{name}\":");
 
@@ -198,6 +207,21 @@ namespace OpenAi.Json
             EndList();
 
             _shouldAddComma = true;
+        }
+
+        /// <summary>
+        /// Adds an array to the json without applying a name. This is used for nested arrays
+        /// </summary>
+        public void AddArray(string[] values)
+        {
+            StartList();
+            string[] strings = new string[values.Length];
+            for (int i = 0; i < values.Length; i++)
+            {
+                strings[i] = GetJsonString(values[i]);
+            }
+            _sb.Append(string.Join(",", strings));
+            EndList();
         }
 
         /// <summary>

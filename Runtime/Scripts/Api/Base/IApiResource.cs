@@ -1,5 +1,6 @@
-using System.Net.Http;
 using System.Text;
+
+using UnityEngine.Networking;
 
 namespace OpenAi.Api.V1
 {
@@ -24,15 +25,17 @@ namespace OpenAi.Api.V1
         string Url { get; }
 
         /// <summary>
-        /// Populate a string builder with the full endpoint by passing string builder to parent
+        /// The endpoint is constructed by passing a <see cref="StringBuilder"/> up
+        /// the tree until the parent is reached. The Parent then adds it's portion
+        /// of the endpoint. The first child contributes it's portion, and so on. Until
+        /// the whole endpoint is created.
         /// </summary>
-        /// <param name="sb"></param>
         void ConstructEndpoint(StringBuilder sb);
 
         /// <summary>
-        /// Populates a <see cref="HttpClient"/> with the appropriate auth headers
+        /// Populates a <see cref="UnityWebRequest"/> with the appropriate auth headers
         /// </summary>
         /// <returns></returns>
-        void PopulateAuthHeaders(HttpClient client);
+        void PopulateAuthHeaders(UnityWebRequest client);
     }
 }

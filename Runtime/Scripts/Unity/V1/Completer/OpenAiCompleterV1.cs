@@ -2,9 +2,9 @@ using OpenAi.Api;
 using OpenAi.Api.V1;
 
 using System;
-using System.Net.Http;
 
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace OpenAi.Unity.V1
 {
@@ -15,7 +15,7 @@ namespace OpenAi.Unity.V1
     {
         OpenAiApiGatewayV1 _gateway = null;
 
-        EngineResource _engine = null;
+        EngineResourceV1 _engine = null;
 
         /// <summary>
         /// The auth arguments used to authenticate the api. Should not be changed after initalization. Once the <see cref="Api"/> is initalized it must be cleared and initialized again if any changes are made to this property
@@ -51,7 +51,7 @@ namespace OpenAi.Unity.V1
             _engine = _gateway.Api.Engines.Engine(UTEEngineName.GetEngineName(Engine));
         }
 
-        public Coroutine Complete(string prompt, Action<string> onResponse, Action<HttpResponseMessage> onError)
+        public Coroutine Complete(string prompt, Action<string> onResponse, Action<UnityWebRequest> onError)
         {
             CompletionRequestV1 request = Args == null ? 
                 new CompletionRequestV1() { max_tokens = 64 } : 
@@ -61,7 +61,7 @@ namespace OpenAi.Unity.V1
             return _engine.Completions.CreateCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
         }
 
-        private void HandleResponse(ApiResult<CompletionV1> result, Action<string> onResponse, Action<HttpResponseMessage> onError)
+        private void HandleResponse(ApiResult<CompletionV1> result, Action<string> onResponse, Action<UnityWebRequest> onError)
         {
             if (result.IsSuccess)
             {

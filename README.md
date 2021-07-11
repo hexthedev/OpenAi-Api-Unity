@@ -1,5 +1,5 @@
 # OpenAi Api Unity
-A Simple OpenAI API wrapper for Unity 
+A simple OpenAI API wrapper for Unity 
 
 This is a community library. I am not officially affiliated with OpenAi.
 
@@ -9,12 +9,26 @@ Big shout out to:
 
 To report bugs, problems, suggestions please submit [Github Issues](https://github.com/hexthedev/OpenAi-Api-Unity/issues)
 
-If anyone want to contribute, [Pull Requests](https://github.com/hexthedev/OpenAi-Api-Unity/pulls) are welcome
+If anyone wants to contribute, [Pull Requests](https://github.com/hexthedev/OpenAi-Api-Unity/pulls) are welcome
+
+## Status
+| Api Call | Implemented | Bare-Minimum Tests | Thourough Tests | 
+| --- | --- | --- | --- |
+| `GET /engines` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `GET /engines/{engine_id}` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `POST /engines/{engine_id}/completions` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `GET /engines/{engine_id}/completions/browser_stream` | :x: | :heavy_minus_sign: | :heavy_minus_sign: |
+| `POST /engines/{engine_id}/search` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
+| `POST /classifications` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
+| `POST /answers` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
+| `GET /files` | :heavy_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
+| `POST /files/{file_id}` | :x: | :heavy_minus_sign: | :heavy_minus_sign: |
+| `GET /files/{file_id}` | :heavy_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
 
 ## Overview
-This is a simple OpenAI API wrapper that implements the api calls found in the [OpenAI Api Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
+This is a simple OpenAI API wrapper that implements the API calls found in the [OpenAI Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
 
-The intention is that the syntax follows the docs as closely as possible. For example, the api call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("engine_id}").Completions.CreateCompletionCoroutine`
+The syntax follows the docs as closely as possible. For example, the API call Create Completion at the endpoint `https://api.openai.com/v1/engines/{engine_id}/completions` is called using `OpenAiApiV1.Engines.Engine("<engine_id>").Completions.CreateCompletionCoroutine`
 
 To learn more:
 1. Read the Quick Start section below to see a basic example of how to use the wrapper
@@ -47,7 +61,7 @@ For more advanced git users, you can simply add this repo as a submodule in your
 ## Authenticate
 Add a file to the path `~/.openai/auth.json` (Linux/Mac) or `%USERPROFILE%/.openai/auth.json` (Windows)
 
-if you only have an api key, the `auth.json` should look like this
+if you only have an API key, the `auth.json` should look like this
 ```json
 {
   "private_api_key":"<YOUR_KEY>"
@@ -70,7 +84,7 @@ To see an example of a completion in an editor script:
 ## Play Script
 To see an example of a completion at Runtime:
   * If you're working on a scene, save the scene you are working on
-  * From the top bar to to `OpenAi > Examples > Completion At Runtime`
+  * From the top bar click `OpenAi > Examples > Completion At Runtime`
   * Look at the `CompletionExample` object in the hierarchy and check out the code in `ExampleOpenAiApiRuntime`
   * Press play and run the scene
 
