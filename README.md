@@ -1,5 +1,5 @@
 # OpenAi Api Unity
-A Simple OpenAI API wrapper for Unity 
+A simple OpenAI API wrapper for Unity 
 
 This is a community library. I am not officially affiliated with OpenAi.
 
@@ -10,6 +10,20 @@ Big shout out to:
 To report bugs, problems, suggestions please submit [Github Issues](https://github.com/hexthedev/OpenAi-Api-Unity/issues)
 
 If anyone wants to contribute, [Pull Requests](https://github.com/hexthedev/OpenAi-Api-Unity/pulls) are welcome
+
+## Status
+| Api Call | Implemented | Bare-Minimum Tests | Thourough Tests | 
+| --- | --- | --- | --- |
+| GET /engines | :heavy_check_mark: | Test | Test |
+| GET /engines/{engine_id} | Test | Test | Test |
+| POST /engines/{engine_id}/completions | Test | Test | Test |
+| GET /engines/{engine_id}/completions/browser_stream | Test | Test | Test |
+| POST /engines/{engine_id}/search | Test | Test | Test |
+| POST /classifications | Test | Test | Test |
+| POST /answers | Test | Test | Test |
+| GET /files | Test | Test | Test |
+| POST /files/{file_id} | Test | Test | Test |
+| GET /files/{file_id} | Test | Test | Test |
 
 ## Overview
 This is a simple OpenAI API wrapper that implements the api calls found in the [OpenAI Api Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
