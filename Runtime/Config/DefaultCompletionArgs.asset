@@ -15,6 +15,10 @@ MonoBehaviour:
   max_tokens: 32
   temperature: 0.7
   top_p: 1
-  stop: 
+  stop:
+  - 
+  - 
+  - 
+  - 
   presences_penalty: 0
   frequency_penalty: 0
