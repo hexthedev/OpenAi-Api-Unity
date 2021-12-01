@@ -212,6 +212,7 @@ namespace OpenAi.Api.V1
             AddJsonToUnityWebRequest(client, request.ToJson());
 
             await client.SendWebRequest();
+            client.uploadHandler.Dispose();
             return client;
         }
 
