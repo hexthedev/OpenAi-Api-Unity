@@ -121,10 +121,14 @@ namespace OpenAi.Json
                         valString = GetJsonString(s);
                         break;
                     case string[] a:
-                        string[] arr = new string[a.Length];
+                        //We send a list because we don't know how many non-null elements we have on the array
+                        List<string> arr = new List<string>();
                         for(int i = 0; i<a.Length; i++)
                         {
-                            arr[i] = GetJsonString(a[i]);
+                            if (a[i] != null)
+                            {
+                                arr.Add(GetJsonString(a[i]));
+                            }
                         }
                         valString = $"[{string.Join(",", arr)}]";
                         break;

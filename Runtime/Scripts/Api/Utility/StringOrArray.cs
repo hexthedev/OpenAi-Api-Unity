@@ -18,8 +18,13 @@ namespace OpenAi.Api.V1
         /// <param name="strings"></param>
         public StringOrArray(params string[] strings)
         {
-            if(strings != null)
+            if (strings != null)
             {
+                //Nullifies the empty strings in the array
+                for (var i = 0; i < strings.Length; i++)
+                {
+                    strings[i] = string.IsNullOrEmpty(strings[i]) ? null : strings[i];
+                }
                 _elements = new List<string>(strings);
             }
         }

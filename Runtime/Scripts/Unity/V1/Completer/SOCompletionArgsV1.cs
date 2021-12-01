@@ -20,7 +20,7 @@ namespace OpenAi.Unity.V1
         public float top_p = 1;
 
         [Tooltip("Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence.")]
-        public string stop;
+        public string[] stop = new string[4];
 
         [Tooltip("Number between 0 and 1 that penalizes new tokens based on whether they appear in the text so far. Increases the model's likelihood to talk about new topics. https://beta.openai.com/docs/api-reference/parameter-details/>")]
         public float presences_penalty = 0;
@@ -35,7 +35,7 @@ namespace OpenAi.Unity.V1
                 max_tokens = max_tokens,
                 temperature = temperature,
                 top_p = top_p,
-                stop = string.IsNullOrEmpty(stop) ? null : stop,
+                stop = stop,
                 frequency_penalty = frequency_penalty
             };
         }
