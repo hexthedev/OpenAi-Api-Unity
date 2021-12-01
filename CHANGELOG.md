@@ -1,1 +1,2 @@
-* Dispose the UnityWebRequest UploadHandler after use, in order to fix a memory leak issue
+* Changed the Completion Arguments scriptable object, to work with string array for the stop sequences
+* removed unnecessary namespace
