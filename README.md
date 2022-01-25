@@ -1,3 +1,5 @@
+**WARNING**: I'm currently not in a position to update this repo and keep up with changes to the OpenAI Api. From my end, I doubt updates will come. However, I will gladly accept pull requests to fix any problems in the code base. If anyone is interested in being a more active maintainer of the repo, please let me know. 
+
 # OpenAi Api Unity
 A simple OpenAI API wrapper for Unity 
 
