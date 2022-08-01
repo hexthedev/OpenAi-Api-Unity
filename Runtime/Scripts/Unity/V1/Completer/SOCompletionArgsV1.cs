@@ -35,7 +35,7 @@ namespace OpenAi.Unity.V1
                 max_tokens = max_tokens,
                 temperature = temperature,
                 top_p = top_p,
-                stop = stop,
+                stop = "\n",
                 frequency_penalty = frequency_penalty
             };
         }
