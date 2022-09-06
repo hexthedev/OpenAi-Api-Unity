@@ -51,7 +51,7 @@ class ApiExample : MonoBehaviour
         api.Engines.Engine("davinci").Completions.CreateCompletionCoroutine(
             this, 
             new CompletionRequestV1() { prompt = "hey", max_tokens = 8},
-            (result) => { Debug.Log(result.Result.choices[0].text) }
+            (result) => { Debug.Log(result.Result.choices[0].text);}
         );
     }
 }
