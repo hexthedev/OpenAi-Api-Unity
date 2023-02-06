@@ -20,7 +20,7 @@
 
             if (char.IsWhiteSpace(c)) return ECharacterAnalyzerResponse.ExcludeCharacter;
 
-            if( c == '{' || c == '}' || c == '[' || c == ']' || c == ',')
+            if( c == '{' || c == '}' || c == '[' || c == ']' || c == ',' || c == ':') // Add ':' as a Token to correctly process numerical values in JSON
             {
                 return ECharacterAnalyzerResponse.Token;
             }
