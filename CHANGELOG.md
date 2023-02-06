@@ -1,3 +1,1 @@
-* Update 3_ApiCalls.md
-
-The ApiExample exemple is missing a ";" to work properly.
+* Add ':' as a Token to correctly process numerical values in JSON
