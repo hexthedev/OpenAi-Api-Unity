@@ -37,13 +37,13 @@ To learn more:
 2. Refer to the [Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation) for a more detailed explanation of the library
 
 ### What is and isn't tested
-I've tested the list below. Testing for all other usecases will come with time
+I've tested the list below. Testing for all other use cases will come with time
 * Editor scripts and editor windows using async versions of API calls
 * Coroutine api calls in Play Mode
   * I have not tested builds, but should work since it's really just Native C#. Any issues will likely be platform related. 
-* Unit Tested basic usecases and any issue I found along the way, to ensure stability
-* Only tested on a Windows machine. If Linux/Mac authentication dosen't work as expected, please let me know. 
-* I do not have an orgnaization, I have not been able to test the organization key functionality during authentication
+* Unit Tested basic use cases and any issue I found along the way, to ensure stability
+* Only tested on a Windows machine. If Linux/Mac authentication doesn't work as expected, please let me know. 
+* I do not have an organization, I have not been able to test the organization key functionality during authentication
 
 # Quick Start
 
@@ -55,7 +55,7 @@ See video: https://youtu.be/Ju-i0sxsX7E
 Go to the Unity Package Manager (`Window > Package Manager`), and click the `+` icon in the top left hand corner. Choose `Add package from git URL...` and provide the url `https://github.com/hexthedev/OpenAi-Api-Unity.git`.
 
 **Unity Package:**
-Go to https://github.com/hexthedev/OpenAi-Api-Unity/releases and download the desired release. once downloaded, open the file and follow the instructions to import it into Unity. 
+Go to https://github.com/hexthedev/OpenAi-Api-Unity/releases and download the desired release. Once downloaded, open the file and follow the instructions to import it into Unity. 
 
 **Git Submodule**:
 For more advanced git users, you can simply add this repo as a submodule in your assets folder. This is especially useful if you want to edit, change and version the `OpenAi Api Unity` code.
@@ -70,7 +70,7 @@ if you only have an API key, the `auth.json` should look like this
 }
 ```
 
-If you have an orgnaization key, the `auth.json` should look like this
+If you have an organization key, the `auth.json` should look like this
 ```json
 {
   "private_api_key":"<YOUR_KEY>",
@@ -91,4 +91,4 @@ To see an example of a completion at Runtime:
   * Press play and run the scene
 
 # What Next
-The above quick start is an extremly simple way to use the `OpenAi Api Unity` library. For more advanced use cases, refer to the [OpenAi Api Unity Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation)
+The above quick start is an extremely simple way to use the `OpenAi Api Unity` library. For more advanced use cases, refer to the [OpenAi Api Unity Documentation](https://github.com/hexthedev/OpenAi-Api-Unity/tree/main/Documentation)
