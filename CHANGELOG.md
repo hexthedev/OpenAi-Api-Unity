@@ -1,1 +1,1 @@
-* Add ':' as a Token to correctly process numerical values in JSON
+* Fix some typos in README
