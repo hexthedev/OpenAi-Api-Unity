@@ -1,1 +1,1 @@
-* Fix some typos in README
+* Fix escaping character not appended correctly
