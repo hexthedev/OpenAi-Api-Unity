@@ -44,7 +44,7 @@ namespace OpenAi.Json
                     case ECharacterAnalyzerResponse.IncludeEscapeCharacter:
                         if (!generatingToken) generatingToken = true;
                         sb.Append(json[i]);
-                        sb.Append(json[i++]);
+                        sb.Append(json[++i]);
                         break;
 
                     case ECharacterAnalyzerResponse.ExcludeCharacter:
