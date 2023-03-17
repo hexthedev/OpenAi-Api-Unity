@@ -1,1 +1,1 @@
-* Fix escaping character not appended correctly
+* Fix spelling error
