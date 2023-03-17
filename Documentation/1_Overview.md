@@ -13,7 +13,7 @@ All api calls are accessible through the `OpenAiApiV1` object. When created, it 
 
 Once you're able to access the `OpenAiApiV1` object, all api calls follow the [OpenAi Api Reference](https://beta.openai.com/docs/api-reference) as closely as possible. For example, the api call `https://api.openai.com/v1/engines/{engine_id}/completions` called Create Completions in the docs is called using the pattern `OpenAiApiV1Instance.Engines.Engine("<engine_id>").Completions.CreateCompletion`. For details [See ApiCalls](https://github.com/hexthedev/OpenAi-Api-Unity/blob/main/Documentation/3_ApiCalls.md)
 
-## Serailization
+## Serialization
 A custom json serializer/deserializer was implemented to remove a dependency on Newtonsoft. This was the make the library more lightweight and to avoid some problems compiling Newtonsoft on some platforms. 
 
 For details [See JsonSerialization](https://github.com/hexthedev/OpenAi-Api-Unity/blob/main/Documentation/4_JsonSerialization.md)
