@@ -45,6 +45,11 @@ namespace OpenAi.Api.V1
         public FilesResourceV1 Files { get; private set; }
 
         /// <summary>
+        /// Chat completions resource. <see href=""/>
+        /// </summary>
+        public ChatCompletionsResourceV1 ChatCompletions { get; set; }
+
+        /// <summary>
         /// Construct an <see cref="OpenAiApiV1"/> with the provided auth args.
         /// </summary>
         /// <param name="authArgs"></param>
@@ -54,6 +59,7 @@ namespace OpenAi.Api.V1
             Engines = new EnginesResourceV1(this);
             Files = new FilesResourceV1(this);
             Classifications = new ClassificationsResourceV1(this);
+            ChatCompletions = new ChatCompletionsResourceV1(this);
             Answers = new AnswersResourceV1(this);
         }
 

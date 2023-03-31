@@ -12,7 +12,8 @@ namespace OpenAi.Api
         cursing_filter_v6,
         davinci,
         instruct_curie_beta,
-        instruct_davinci_beta
+        instruct_davinci_beta,
+        gpt_3_5_turbo
     }
 
     public static class UTEEngineName
@@ -39,6 +40,8 @@ namespace OpenAi.Api
                     return UTEngineNames.instruct_curie_beta;
                 case EEngineName.instruct_davinci_beta:
                     return UTEngineNames.instruct_davinci_beta;
+                case EEngineName.gpt_3_5_turbo:
+                    return UTEngineNames.gpt_3_5_turbo;
             }
 
             throw new ArgumentException($"Invalid enum value provided when getting engine name. Value provided: {name}");

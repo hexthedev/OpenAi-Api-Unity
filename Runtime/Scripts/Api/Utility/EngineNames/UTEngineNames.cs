@@ -11,5 +11,6 @@
         public const string davinci = "davinci";
         public const string instruct_curie_beta = "curie-instruct-beta";
         public const string instruct_davinci_beta = "davinci-instruct-beta";
+        public const string gpt_3_5_turbo = "gpt-3.5-turbo";
     }
 }
