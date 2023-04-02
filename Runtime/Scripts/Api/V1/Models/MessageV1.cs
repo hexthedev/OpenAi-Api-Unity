@@ -16,7 +16,7 @@ namespace OpenAi.Api.V1
         /// <summary>
         /// the message object role
         /// </summary>
-        public MessageRole role;
+        public MessageRole? role;
 
         /// <summary>
         /// the content of the message
@@ -29,7 +29,7 @@ namespace OpenAi.Api.V1
             JsonBuilder jb = new JsonBuilder();
 
             jb.StartObject();
-            jb.Add(nameof(role), role.ToString());
+            if (role != null) jb.Add(nameof(role), role.ToString());
             jb.Add(nameof(content), content);
             jb.EndObject();
 
@@ -46,7 +46,7 @@ namespace OpenAi.Api.V1
                 switch (jo.Name)
                 {
                     case nameof(role):
-                        role = (MessageRole)Enum.Parse(typeof(MessageRole), jo.StringValue);
+                        role = (MessageRole?)Enum.Parse(typeof(MessageRole), jo.StringValue);
                         break;
                     case nameof(content):
                         content = jo.StringValue;

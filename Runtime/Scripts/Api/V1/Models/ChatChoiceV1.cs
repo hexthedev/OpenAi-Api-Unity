@@ -16,6 +16,11 @@ namespace OpenAi.Api.V1
         public MessageV1 message;
 
         /// <summary>
+        /// A portion of the returned message
+        /// </summary>
+        public DeltaV1 delta;
+
+        /// <summary>
         /// the index of the choice
         /// </summary>
         public int index;
@@ -31,7 +36,10 @@ namespace OpenAi.Api.V1
             JsonBuilder jb = new JsonBuilder();
 
             jb.StartObject();
-            jb.Add(nameof(message), message.ToJson());
+            if (message != null) 
+                jb.Add(nameof(message), message.ToJson());
+            else if (delta != null) 
+                jb.Add(nameof(delta), delta.ToJson());
             jb.Add(nameof(index), index);
             jb.Add(nameof(finish_reason), finish_reason);
             jb.EndObject();
@@ -51,6 +59,10 @@ namespace OpenAi.Api.V1
                     case nameof(message):
                         message = new MessageV1();
                         message.FromJson(jo);
+                        break;
+                    case nameof(delta):
+                        delta = new DeltaV1();
+                        delta.FromJson(jo);
                         break;
                     case nameof(index):
                         index = int.Parse(jo.StringValue);

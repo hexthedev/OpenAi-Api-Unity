@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 
 using OpenAi.Api.V1;
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace OpenAi.Api.Test
 
         [OneTimeSetUp]
         public void OneTimeSetup() => test = TestManager.Instance;
-        
+
         [SetUp]
         public void SetUp() => api = test.CleanAndProvideApi();
 
@@ -33,11 +32,11 @@ namespace OpenAi.Api.Test
 
             bool isDataNotEmpty = result.Result.data != null;
             test.LogTest("Data is not empty", isDataNotEmpty);
-                        
+
             bool containsAda = false;
-            foreach(EngineV1 engine in result.Result.data)
+            foreach (EngineV1 engine in result.Result.data)
             {
-                if(engine.id == "ada")
+                if (engine.id == "ada")
                 {
                     containsAda = true;
                     break;
@@ -104,9 +103,10 @@ namespace OpenAi.Api.Test
         public IEnumerator Completions_TestAllRequestParamsString()
         {
             ApiResult<CompletionV1> result = null;
-            
-            CompletionRequestV1 req = new CompletionRequestV1() { 
-                prompt = "hello", 
+
+            CompletionRequestV1 req = new CompletionRequestV1()
+            {
+                prompt = "hello",
                 best_of = 1,
                 echo = false,
                 frequency_penalty = 0,
@@ -114,7 +114,7 @@ namespace OpenAi.Api.Test
                 logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
                 stop = "###",
                 logprobs = 0,
-                stream = false, 
+                stream = false,
                 max_tokens = 8,
                 n = 1,
                 temperature = 0,
@@ -200,15 +200,15 @@ namespace OpenAi.Api.Test
 
             CompletionRequestV1 req = new CompletionRequestV1() { prompt = "hello", n = 8 };
             yield return api.Engines.Engine("ada").Completions.CreateCompletionCoroutine_EventStream(
-                test, 
-                req, 
+                test,
+                req,
                 (r) => result = r,
                 (i, l) => partials.Add(l),
                 () => isComplete = true
             );
 
             float timer = 10f;
-            while (!isComplete)
+            while (!isComplete && timer > 0)
             {
                 timer -= Time.deltaTime;
                 yield return new WaitForEndOfFrame();
@@ -256,7 +256,7 @@ namespace OpenAi.Api.Test
         public IEnumerator SearchSearchCoroutine()
         {
             ApiResult<SearchListV1> result = null;
-            SearchRequestV1 req = new SearchRequestV1() { documents = new string[] { "doc1", "doc2" }, query = "is this a doc"};
+            SearchRequestV1 req = new SearchRequestV1() { documents = new string[] { "doc1", "doc2" }, query = "is this a doc" };
             yield return api.Engines.Engine("ada").Search.SearchCoroutine(test, req, (r) => result = r);
 
             if (!test.TestApiResultHasResponse(result)) Assert.That(false);
@@ -296,8 +296,8 @@ namespace OpenAi.Api.Test
         #region Classification Requests
         private ClassificationRequestV1 _classificationRequest_BareMinimum = new ClassificationRequestV1()
         {
-            model = "ada", 
-            query = "James is a hero", 
+            model = "ada",
+            query = "James is a hero",
             labels = new string[] { "Positive", "Negative" },
             examples = new LabeledExampleV1[] {
                 new LabeledExampleV1("James really is a hero", "Positive")
@@ -371,12 +371,12 @@ namespace OpenAi.Api.Test
         {
             model = "ada",
             question = "How awesome is James",
-            documents = new string[] { 
-                "Meghana does a lot of things that makes her really awesome.", 
-                "James tries to be awesome, but isn't quite there yet." 
+            documents = new string[] {
+                "Meghana does a lot of things that makes her really awesome.",
+                "James tries to be awesome, but isn't quite there yet."
             },
-            examples = new QuestionAnswerPairV1[] { 
-                new QuestionAnswerPairV1() { answer = "Very", question = "How awesome is Meghana"} 
+            examples = new QuestionAnswerPairV1[] {
+                new QuestionAnswerPairV1() { answer = "Very", question = "How awesome is Meghana"}
             },
             examples_context = "Awesomness"
         };
@@ -413,5 +413,255 @@ namespace OpenAi.Api.Test
         }
         #endregion
 
+        #region Chat Completion Requests
+
+        [UnityTest]
+        public IEnumerator ChatCompletions_TestAllRequestParamsString()
+        {
+            ApiResult<ChatCompletionV1> result = null;
+
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                frequency_penalty = 0,
+                presence_penalty = 0,
+                logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
+                stop = "###",
+                stream = false,
+                max_tokens = 8,
+                n = 1,
+                temperature = 0,
+                top_p = 1,
+                user = ""
+            };
+
+            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
+
+            Assert.That(doesResultObjectExist);
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletions_TestAllRequestParamsArray()
+        {
+            ApiResult<ChatCompletionV1> result = null;
+
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                frequency_penalty = 0,
+                presence_penalty = 0,
+                logit_bias = new Dictionary<string, int>() { { "123", -100 }, { "111", 100 } },
+                stop = new string[] { "stop1", "stop2" },
+                stream = false,
+                max_tokens = 8,
+                n = 1,
+                temperature = 0,
+                top_p = 1,
+                user = ""
+            };
+
+            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
+
+            Assert.That(doesResultObjectExist);
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletionsCreateCoroutine()
+        {
+            ApiResult<ChatCompletionV1> result = null;
+
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                n = 8
+            };
+
+            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+            bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
+            test.LogTest("Does non empty result object exist", doesResultObjectExist);
+
+            Assert.That(doesResultObjectExist);
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletionsCreateAsync()
+        {
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                max_tokens = 8
+            };
+
+            Task<ApiResult<ChatCompletionV1>> resTask = api.ChatCompletions.CreateChatCompletionAsync(req);
+
+            while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            ApiResult<ChatCompletionV1> res = resTask.Result;
+
+            Assert.That(test.TestApiResultHasResponse(res));
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletionsCreateCoroutine_EventStream()
+        {
+            ApiResult<ChatCompletionV1> result = null;
+            List<ChatCompletionV1> partials = new List<ChatCompletionV1>();
+            bool isComplete = false;
+
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                max_tokens = 8
+            };
+
+            yield return api.ChatCompletions.CreateChatCompletionCoroutine_EventStream(
+                test,
+                req,
+                (r) => result = r,
+                (i, l) => partials.Add(l),
+                () => isComplete = true
+            );
+
+            float timer = 10f;
+            while (!isComplete && timer > 0)
+            {
+                timer -= Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            test.LogTest("Stream was completed", isComplete);
+
+            if (!test.TestApiResultSuccess(result)) Assert.That(false);
+
+            bool partialsNotEmpty = partials != null && partials.Count > 0;
+            test.LogTest("Partial reponses were received", partialsNotEmpty);
+
+            Assert.That(isComplete && partialsNotEmpty);
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletionsCreateAsync_EventStream()
+        {
+            ApiResult<ChatCompletionV1> result = null;
+            List<ChatCompletionV1> completions = new List<ChatCompletionV1>();
+            bool isComplete = false;
+
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "hello";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages,
+                max_tokens = 8,
+                stream = true
+            };
+
+            Task engineTask = api.ChatCompletions.CreateChatCompletionAsync_EventStream(
+                req,
+                (r) => result = r,
+                (i, c) => completions.Add(c),
+                 () => isComplete = true
+            );
+
+            while (!engineTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            test.LogTest("Stream was completed", isComplete);
+
+            if (!test.TestApiResultSuccess(result)) Assert.That(false);
+
+            bool completionsNotEmpty = completions != null && completions.Count > 0;
+            test.LogTest("Partial reponses were received", completionsNotEmpty);
+
+            Assert.That(isComplete && completionsNotEmpty);
+        }
+
+        [UnityTest]
+        public IEnumerator ChatCompletionsCreateAsync_Multiple()
+        {
+            MessageV1 message = new MessageV1();
+            message.role = MessageV1.MessageRole.system;
+            message.content = "You are Yoda from Star Wars.";
+
+            List<MessageV1> messages = new List<MessageV1>();
+            messages.Add(message);
+
+            message = new MessageV1();
+            message.role = MessageV1.MessageRole.user;
+            message.content = "Is Vader good or evil?";
+            messages.Add(message);
+
+            ChatCompletionRequestV1 req = new ChatCompletionRequestV1()
+            {
+                model = "gpt-3.5-turbo",
+                messages = messages
+            };
+
+            Task<ApiResult<ChatCompletionV1>> resTask = api.ChatCompletions.CreateChatCompletionAsync(req);
+
+            while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            ApiResult<ChatCompletionV1> res = resTask.Result;
+
+            Assert.That(test.TestApiResultHasResponse(res));
+        }
+        #endregion
     }
 }
+

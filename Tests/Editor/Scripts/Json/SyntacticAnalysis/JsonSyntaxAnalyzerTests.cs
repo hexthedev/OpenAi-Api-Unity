@@ -9,6 +9,20 @@ namespace OpenAiApi
     class SyntaxAnalyzerTests
     {
         [Test]
+        public void AnalyzeTestEmptyObject()
+        {
+            string[] syntax = new string[]
+           {
+                "{",  "}"
+           };
+
+            JsonObject obj = JsonSyntaxAnalyzer.Parse(syntax);
+
+            obj.AssertRootIsObject();
+            obj.NestedValues.AssertIsValidJsonObjectArray(0);
+        }
+
+        [Test]
         public void AnalyzeTestSimpleObject()
         {
             string[] syntax = new string[]

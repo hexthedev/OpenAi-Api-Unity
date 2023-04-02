@@ -45,7 +45,7 @@ namespace OpenAi.Api.V1
         public FilesResourceV1 Files { get; private set; }
 
         /// <summary>
-        /// Chat completions resource. <see href=""/>
+        /// Chat completions resource. <see href="https://platform.openai.com/docs/api-reference/chat"/>
         /// </summary>
         public ChatCompletionsResourceV1 ChatCompletions { get; set; }
 

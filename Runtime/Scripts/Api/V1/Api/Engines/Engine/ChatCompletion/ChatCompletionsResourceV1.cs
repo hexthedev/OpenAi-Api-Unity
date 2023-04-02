@@ -44,8 +44,8 @@ namespace OpenAi.Api.V1
         /// This is the main endpoint of the API. Returns the predicted completion for the given prompt, and can also return the probabilities of alternative tokens at each position if requested. <see href="https://beta.openai.com/docs/api-reference/create-completion"/>. Ignores with <c>request.stream</c> parameter and automatically set to <c>true</c>. To stream, use <see cref="CreateCompletionAsync(CompletionRequestV1)"/> instead
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public async Task CreateCompletionAsync_EventStream(CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
+        /// <returns>Asynchronously returns the completion result.  Look in its <see cref="ChatCompletionResult.Choices"/> property for the completions.</returns>
+        public async Task CreateChatCompletionAsync_EventStream(ChatCompletionRequestV1 request, Action<ApiResult<ChatCompletionV1>> onRequestStatus, Action<int, ChatCompletionV1> onPartialResult, Action onCompletion = null)
         {
             request.stream = true;
             await PostAsync_EventStream(request, onRequestStatus, onPartialResult, onCompletion);
@@ -56,7 +56,7 @@ namespace OpenAi.Api.V1
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Asynchronously returns the completion result.  Look in its <see cref="CompletionResult.Choices"/> property for the completions.</returns>
-        public Coroutine CreateCompletionCoroutine_EventStream(MonoBehaviour mono, CompletionRequestV1 request, Action<ApiResult<CompletionV1>> onRequestStatus, Action<int, CompletionV1> onPartialResult, Action onCompletion = null)
+        public Coroutine CreateChatCompletionCoroutine_EventStream(MonoBehaviour mono, ChatCompletionRequestV1 request, Action<ApiResult<ChatCompletionV1>> onRequestStatus, Action<int, ChatCompletionV1> onPartialResult, Action onCompletion = null)
         {
             request.stream = true;
             return PostCoroutine_EventStream(mono, request, onRequestStatus, onPartialResult, onCompletion);

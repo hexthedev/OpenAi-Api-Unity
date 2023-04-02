@@ -36,6 +36,13 @@ namespace OpenAi.Json
 
         private static int ParseObject(JsonObject parent, string[] syntax, int index)
         {
+            // Handle empty object, i.e.: object: {}
+            if (syntax[index] == "}")
+            {
+                parent.NestedValues = new List<JsonObject>();
+                return index + 1;
+            }
+
             int i = index;
             for (; i<syntax.Length; i++)
             {
