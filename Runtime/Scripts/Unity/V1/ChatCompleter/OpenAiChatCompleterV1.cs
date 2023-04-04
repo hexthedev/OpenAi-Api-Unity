@@ -32,7 +32,7 @@ namespace OpenAi.Unity.V1
         /// The id of the model to use
         /// </summary>
         [Tooltip("The id of the model to use")]
-        public EEngineName Model = EEngineName.gpt_3_5_turbo;
+        public EChatModelName Model = EChatModelName.gpt_3_5_turbo;
 
         /// <summary>
         /// The dialogue of chat messages, may be prepopulated
@@ -53,7 +53,7 @@ namespace OpenAi.Unity.V1
                 _gateway.InitializeApi();
             }
 
-            _model = _gateway.Api.ChatCompletions;
+            _model = _gateway.Api.Chat.Completions;
         }
 
         public Coroutine Complete(string prompt, Action<string> onResponse, Action<UnityWebRequest> onError)
@@ -62,7 +62,7 @@ namespace OpenAi.Unity.V1
                new ChatCompletionRequestV1() :
                Args.AsChatCompletionRequest();
 
-            request.model = UTEEngineName.GetEngineName(Model);
+            request.model = UTEChatModelName.GetModelName(Model);
 
             MessageV1 message = new MessageV1();
             message.role = MessageV1.MessageRole.user;

@@ -443,7 +443,7 @@ namespace OpenAi.Api.Test
                 user = ""
             };
 
-            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+            yield return api.Chat.Completions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
 
             if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
@@ -481,7 +481,7 @@ namespace OpenAi.Api.Test
                 user = ""
             };
 
-            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+            yield return api.Chat.Completions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
 
             if (!test.TestApiResultHasResponse(result)) Assert.That(false);
 
@@ -510,7 +510,7 @@ namespace OpenAi.Api.Test
                 n = 8
             };
 
-            yield return api.ChatCompletions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
+            yield return api.Chat.Completions.CreateChatCompletionCoroutine(test, req, (r) => result = r);
 
             if (!test.TestApiResultHasResponse(result)) Assert.That(false);
             bool doesResultObjectExist = result.Result.choices != null && result.Result.choices.Length > 0;
@@ -536,7 +536,7 @@ namespace OpenAi.Api.Test
                 max_tokens = 8
             };
 
-            Task<ApiResult<ChatCompletionV1>> resTask = api.ChatCompletions.CreateChatCompletionAsync(req);
+            Task<ApiResult<ChatCompletionV1>> resTask = api.Chat.Completions.CreateChatCompletionAsync(req);
 
             while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
 
@@ -566,7 +566,7 @@ namespace OpenAi.Api.Test
                 max_tokens = 8
             };
 
-            yield return api.ChatCompletions.CreateChatCompletionCoroutine_EventStream(
+            yield return api.Chat.Completions.CreateChatCompletionCoroutine_EventStream(
                 test,
                 req,
                 (r) => result = r,
@@ -613,7 +613,7 @@ namespace OpenAi.Api.Test
                 stream = true
             };
 
-            Task engineTask = api.ChatCompletions.CreateChatCompletionAsync_EventStream(
+            Task engineTask = api.Chat.Completions.CreateChatCompletionAsync_EventStream(
                 req,
                 (r) => result = r,
                 (i, c) => completions.Add(c),
@@ -653,7 +653,7 @@ namespace OpenAi.Api.Test
                 messages = messages
             };
 
-            Task<ApiResult<ChatCompletionV1>> resTask = api.ChatCompletions.CreateChatCompletionAsync(req);
+            Task<ApiResult<ChatCompletionV1>> resTask = api.Chat.Completions.CreateChatCompletionAsync(req);
 
             while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
 
