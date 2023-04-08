@@ -13,6 +13,9 @@ namespace OpenAi.Unity.V1
         [MenuItem("OpenAi/V1/CreateCompleter")]
         public static void CreateCompleter() => SpawnPrefab("OpenAiCompleterV1");
 
+        [MenuItem("OpenAi/V1/CreateChatCompleter")]
+        public static void CreateChatCompleter() => SpawnPrefab("OpenAiChatCompleterV1");
+
 
         private static void SpawnPrefab(string name)
         {

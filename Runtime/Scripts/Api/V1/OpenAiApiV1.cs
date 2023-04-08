@@ -45,6 +45,11 @@ namespace OpenAi.Api.V1
         public FilesResourceV1 Files { get; private set; }
 
         /// <summary>
+        /// Chat resource. <see href="https://platform.openai.com/docs/api-reference/chat"/>
+        /// </summary>
+        public ChatResourceV1 Chat { get; set; }
+
+        /// <summary>
         /// Construct an <see cref="OpenAiApiV1"/> with the provided auth args.
         /// </summary>
         /// <param name="authArgs"></param>
@@ -54,6 +59,7 @@ namespace OpenAi.Api.V1
             Engines = new EnginesResourceV1(this);
             Files = new FilesResourceV1(this);
             Classifications = new ClassificationsResourceV1(this);
+            Chat = new ChatResourceV1(this);
             Answers = new AnswersResourceV1(this);
         }
 

@@ -8,6 +8,17 @@ namespace OpenAiApi
 {
     public class JsonDeserializerTests
     {
+
+        [Test]
+        public void DeserializeTestEmpty()
+        {
+            string json = "{}";
+            JsonObject obj = JsonDeserializer.FromJson(json);
+
+            obj.AssertRootIsObject();
+            obj.NestedValues.AssertIsValidJsonObjectArray(0);
+        }
+
         [Test]
         public void DeserializeTestBasic()
         {
