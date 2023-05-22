@@ -8,6 +8,7 @@ namespace OpenAi.Api.V1
     /// <summary>
     /// Part of completion response, count of i/o tokens
     /// </summary>
+    [Serializable]
     public class UsageV1 : AModelV1
     {
         /// <summary>

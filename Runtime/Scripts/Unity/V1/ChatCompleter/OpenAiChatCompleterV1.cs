@@ -35,6 +35,12 @@ namespace OpenAi.Unity.V1
         public EChatModelName Model = EChatModelName.gpt_3_5_turbo;
 
         /// <summary>
+        /// Current model usage
+        /// </summary>
+        [Tooltip("Current model usage")]
+        public UsageV1 Usage;
+
+        /// <summary>
         /// The dialogue of chat messages, may be prepopulated
         /// </summary>
         [Tooltip("The dialogue of chat messages, may be prepopulated")]
@@ -84,6 +90,7 @@ namespace OpenAi.Unity.V1
                     dialogue.Add(choice.message);
                 }
 
+                Usage = result.Result.usage;
                 onResponse(dialogue[dialogue.Count - 1].content);
                 return;
             }
