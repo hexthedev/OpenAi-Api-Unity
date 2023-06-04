@@ -21,11 +21,6 @@ namespace OpenAi.Api.V1
         public CompletionsResourceV1 Completions { get; private set; }
 
         /// <summary>
-        /// Search resource. <see href="https://beta.openai.com/docs/api-reference/search"/>
-        /// </summary>
-        public SearchResourceV1 Search { get; private set; }
-
-        /// <summary>
         /// Construct an engine resource with parent and engineId
         /// </summary>
         /// <param name="engineId">The ID of the engine to use for this request</param>
@@ -33,7 +28,6 @@ namespace OpenAi.Api.V1
         {
             _endpoint = $"/{engineId}";
             Completions = new CompletionsResourceV1(this);
-            Search = new SearchResourceV1(this);
         }
 
         /// <summary>
