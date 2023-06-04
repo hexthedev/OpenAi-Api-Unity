@@ -2,22 +2,18 @@
 
 namespace OpenAi.Api
 {
-    public enum EChatModelName
-    {
-        gpt_3_5_turbo,
-        gpt_3_5_turbo_0301
-    }
-
     public static class UTEChatModelName
     {
-        public static string GetModelName(EChatModelName name)
+        public static string GetModelName(EEngineName name)
         {
             switch (name)
             {
-                case EChatModelName.gpt_3_5_turbo:
-                    return UTChatModelNames.gpt_3_5_turbo;
-                case EChatModelName.gpt_3_5_turbo_0301:
-                    return UTChatModelNames.gpt_3_5_turbo_0301;
+                case EEngineName.gpt_35_turbo:
+                    return UTModelNames.gpt_35_turbo;
+                case EEngineName.BETA_gpt_4:
+                    return UTModelNames.BETA_gpt_4;
+                case EEngineName.BETA_gpt_4_32k:
+                    return UTModelNames.BETA_gpt_4_32k;
             }
 
             throw new ArgumentException($"Invalid enum value provided when getting chat model name. Value provided: {name}");

@@ -32,7 +32,7 @@ namespace OpenAi.Unity.V1
         /// The id of the model to use
         /// </summary>
         [Tooltip("The id of the model to use")]
-        public EChatModelName Model = EChatModelName.gpt_3_5_turbo;
+        public EEngineName Model = EEngineName.gpt_35_turbo;
 
         /// <summary>
         /// The dialogue of chat messages, may be prepopulated

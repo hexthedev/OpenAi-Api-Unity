@@ -1,15 +1,24 @@
 ﻿namespace OpenAi.Api
 {
-    public static class UTEngineNames
+    public static class UTModelNames
     {
+        // GPT-3
         public const string ada = "ada";
         public const string babbage = "babbage";
-        public const string content_filter_alpha_c4 = "content-filter-alpha-c4";
-        public const string content_filter_dev = "content-filter-dev";
         public const string curie = "curie";
-        public const string cursing_filter_v6 = "cursing-filter-v6";
         public const string davinci = "davinci";
-        public const string instruct_curie_beta = "curie-instruct-beta";
-        public const string instruct_davinci_beta = "davinci-instruct-beta";
+        public const string text_ada_001 = "text-ada-001";
+        public const string text_babbage_001= "text-babbage-001";
+        public const string text_curie_001= "text-curie-001";
+
+        // GPT 3-5
+        public const string gpt_35_turbo = "gpt-3.5-turbo";
+        public const string text_davinci_003 = "text-davinci-003";
+        public const string text_davinci_002= "text-davinci-002";
+        public const string code_davinci_002 = "code-davinci-002";
+
+        // GPT-4 in beta
+        public const string BETA_gpt_4 = "gpt-4";
+        public const string BETA_gpt_4_32k = "gpt-4-32k";
     }
 }
