@@ -21,8 +21,6 @@ namespace OpenAi.Json
             {
                 throw new OpenAiJsonException($"Attempted to deserialize json to string[] but json object type is not a list. JSON: {json.StringValue}");
             }
-
-            return null;
         }
     }
 }
