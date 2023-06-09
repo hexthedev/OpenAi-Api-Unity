@@ -500,6 +500,50 @@ namespace OpenAi.Api.Test
             Assert.That(test.TestApiResultHasResponse(res));
         }
         #endregion
+
+        #region Images generations
+        [UnityTest]
+        public IEnumerator ImagesGenerationsCoroutine_Url()
+        {
+            ApiResult<ImagesGenerationsV1> result = null;
+            var req = new ImagesGenerationsRequestV1()
+            {
+                prompt = "OpenAI images generations running inside Unity game engine",
+                n = 2,
+                size = ExtensionMethods.IMAGE_SIZE.imsize_256x256,
+                response_format = ExtensionMethods.IMAGE_RESPONSE_FORMAT.url
+            };
+
+            yield return api.Images.Generations.CreateImagesGenerationCoroutine(test, req, r => result = r);
+
+            if (!test.TestApiResultHasResponse(result)) Assert.That(false);
+
+            // 2 images urls
+            Assert.That(result.Result.data != null && result.Result.data.Length == 2);
+            Assert.That(result.Result.data[0].url.ToLowerInvariant().StartsWith("http")
+                && result.Result.data[1].url.ToLowerInvariant().StartsWith("http")
+                );
+        }
+
+        [UnityTest]
+        public IEnumerator ImagesGenerationsAsync_Url()
+        {
+            var req = new ImagesGenerationsRequestV1()
+            {
+                prompt = "OpenAI images generations running inside Unity game engine",
+                n = 2,
+                size = ExtensionMethods.IMAGE_SIZE.imsize_256x256,
+                response_format = ExtensionMethods.IMAGE_RESPONSE_FORMAT.url
+            };
+
+            Task<ApiResult<ImagesGenerationsV1>> resTask = api.Images.Generations.CreateImagesGenerationAsync(req);
+
+            while (!resTask.IsCompleted) yield return new WaitForEndOfFrame();
+
+            var res = resTask.Result;
+            Assert.That(test.TestApiResultHasResponse(res));
+        }
+        #endregion
     }
 }
 

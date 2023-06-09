@@ -24,6 +24,7 @@ If anyone wants to contribute, [Pull Requests](https://github.com/hexthedev/Open
 | `POST /files/{file_id}` | :x: | :heavy_minus_sign: | :heavy_minus_sign: |
 | `GET /files/{file_id}` | :heavy_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
 | `POST /chat/completions` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `POST /images/generations` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Overview
 This is a simple OpenAI API wrapper that implements the API calls found in the [OpenAI Api Reference](https://beta.openai.com/docs/api-reference) as Coroutines and Async functions. 
