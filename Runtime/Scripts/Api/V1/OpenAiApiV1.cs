@@ -30,16 +30,6 @@ namespace OpenAi.Api.V1
         public EnginesResourceV1 Engines { get; private set; }
 
         /// <summary>
-        /// Classifications resource. <see href="https://beta.openai.com/docs/api-reference/classifications"/>
-        /// </summary>
-        public ClassificationsResourceV1 Classifications { get; set; }
-
-        /// <summary>
-        /// Answers resource. <see href="https://beta.openai.com/docs/api-reference/answers"/>
-        /// </summary>
-        public AnswersResourceV1 Answers { get; set; }
-
-        /// <summary>
         /// The Files resources. <see href="https://beta.openai.com/docs/api-reference/files"/> 
         /// </summary>
         public FilesResourceV1 Files { get; private set; }
@@ -58,9 +48,7 @@ namespace OpenAi.Api.V1
             _authArgs = authArgs;
             Engines = new EnginesResourceV1(this);
             Files = new FilesResourceV1(this);
-            Classifications = new ClassificationsResourceV1(this);
             Chat = new ChatResourceV1(this);
-            Answers = new AnswersResourceV1(this);
         }
 
         /// <inheritdoc />

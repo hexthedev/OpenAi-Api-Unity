@@ -15,6 +15,7 @@ namespace OpenAi.Api.Test
             if(_apiGateway != null)
             {
                 Destroy(_apiGateway.gameObject);
+                _apiGateway = null;
             }
             
             _apiGateway = OpenAiApiGatewayV1.Instance;
