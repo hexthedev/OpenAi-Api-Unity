@@ -20,9 +20,6 @@ If anyone wants to contribute, [Pull Requests](https://github.com/hexthedev/Open
 | `GET /engines/{engine_id}` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `POST /engines/{engine_id}/completions` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `GET /engines/{engine_id}/completions/browser_stream` | :x: | :heavy_minus_sign: | :heavy_minus_sign: |
-| `POST /engines/{engine_id}/search` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
-| `POST /classifications` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
-| `POST /answers` | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
 | `GET /files` | :heavy_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
 | `POST /files/{file_id}` | :x: | :heavy_minus_sign: | :heavy_minus_sign: |
 | `GET /files/{file_id}` | :heavy_check_mark: | :heavy_minus_sign: | :heavy_minus_sign: |
