@@ -64,18 +64,22 @@ namespace OpenAi.Unity.V1
 
         public Coroutine Complete(string prompt, Action<string> onResponse, Action<UnityWebRequest> onError)
         {
-            ChatCompletionRequestV1 request = Args == null ?
-               new ChatCompletionRequestV1() :
-               Args.AsChatCompletionRequest();
-
-            request.model = UTEChatModelName.GetModelName(Model);
-
             MessageV1 message = new MessageV1();
             message.role = MessageV1.MessageRole.user;
             message.content = prompt;
 
             dialogue.Add(message);
 
+            return Complete(onResponse, onError);
+        }
+
+        public Coroutine Complete(Action<string> onResponse, Action<UnityWebRequest> onError)
+        {
+            ChatCompletionRequestV1 request = Args == null ?
+               new ChatCompletionRequestV1() :
+               Args.AsChatCompletionRequest();
+
+            request.model = UTEChatModelName.GetModelName(Model);
             request.messages = dialogue;
 
             return _model.CreateChatCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
