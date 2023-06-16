@@ -40,6 +40,11 @@ namespace OpenAi.Api.V1
         public ChatResourceV1 Chat { get; set; }
 
         /// <summary>
+        /// https://platform.openai.com/docs/api-reference/images
+        /// </summary>
+        public ImagesResourceV1 Images { get; protected set; }
+
+        /// <summary>
         /// Construct an <see cref="OpenAiApiV1"/> with the provided auth args.
         /// </summary>
         /// <param name="authArgs"></param>
@@ -49,6 +54,7 @@ namespace OpenAi.Api.V1
             Engines = new EnginesResourceV1(this);
             Files = new FilesResourceV1(this);
             Chat = new ChatResourceV1(this);
+            this.Images = new ImagesResourceV1(this);
         }
 
         /// <inheritdoc />
