@@ -35,6 +35,12 @@ namespace OpenAi.Unity.V1
         public EEngineName Model = EEngineName.gpt_35_turbo;
 
         /// <summary>
+        /// Current model usage
+        /// </summary>
+        [Tooltip("Current model usage")]
+        public UsageV1 Usage;
+
+        /// <summary>
         /// The dialogue of chat messages, may be prepopulated
         /// </summary>
         [Tooltip("The dialogue of chat messages, may be prepopulated")]
@@ -58,18 +64,22 @@ namespace OpenAi.Unity.V1
 
         public Coroutine Complete(string prompt, Action<string> onResponse, Action<UnityWebRequest> onError)
         {
-            ChatCompletionRequestV1 request = Args == null ?
-               new ChatCompletionRequestV1() :
-               Args.AsChatCompletionRequest();
-
-            request.model = UTEChatModelName.GetModelName(Model);
-
             MessageV1 message = new MessageV1();
             message.role = MessageV1.MessageRole.user;
             message.content = prompt;
 
             dialogue.Add(message);
 
+            return Complete(onResponse, onError);
+        }
+
+        public Coroutine Complete(Action<string> onResponse, Action<UnityWebRequest> onError)
+        {
+            ChatCompletionRequestV1 request = Args == null ?
+               new ChatCompletionRequestV1() :
+               Args.AsChatCompletionRequest();
+
+            request.model = UTEChatModelName.GetModelName(Model);
             request.messages = dialogue;
 
             return _model.CreateChatCompletionCoroutine(this, request, (r) => HandleResponse(r, onResponse, onError));
@@ -84,6 +94,7 @@ namespace OpenAi.Unity.V1
                     dialogue.Add(choice.message);
                 }
 
+                Usage = result.Result.usage;
                 onResponse(dialogue[dialogue.Count - 1].content);
                 return;
             }
