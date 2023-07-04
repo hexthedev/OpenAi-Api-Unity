@@ -36,7 +36,7 @@ namespace OpenAi.Examples
             if (api != null && GUILayout.Button("Do Completion"))
             {
                 Debug.Log("Performing Completion in Editor Time");
-                DoEditorTask(api);
+                _ = DoEditorTask(api);
             }
 
             if (!string.IsNullOrEmpty(_output))
@@ -54,7 +54,7 @@ namespace OpenAi.Examples
             ApiResult<CompletionV1> comp = await api.Engines.Engine("davinci").Completions.CreateCompletionAsync(
                     new CompletionRequestV1()
                     {
-                        prompt = "test",
+                        prompt = _input,
                         max_tokens = 8
                     }
                 );
