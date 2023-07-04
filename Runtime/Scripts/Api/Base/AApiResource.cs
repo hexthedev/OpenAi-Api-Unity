@@ -206,7 +206,12 @@ namespace OpenAi.Api.V1
         private async Task<UnityWebRequest> PostRequestAsync<TRequest>(TRequest request)
             where TRequest : AModelV1, new()
         {
-            UnityWebRequest client = UnityWebRequest.PostWwwForm(Url, string.Empty);
+            UnityWebRequest client =
+#if UNITY_2022_2_OR_NEWER
+                UnityWebRequest.PostWwwForm(Url, string.Empty);
+#else
+                UnityWebRequest.Post(Url, string.Empty);
+#endif
             ParentResource.PopulateAuthHeaders(client);
 
             AddJsonToUnityWebRequest(client, request.ToJson());
