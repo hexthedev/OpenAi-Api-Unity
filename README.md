@@ -1,4 +1,4 @@
-**WARNING**: I'm currently not in a position to update this repo and keep up with changes to the OpenAI Api. From my end, I doubt updates will come. However, I will gladly accept pull requests to fix any problems in the code base. If anyone is interested in being a more active maintainer of the repo, please let me know. 
+**WARNING**: This project is officially dead. no updates will come, and as such I moved it to the archived state. If more complete implementation of the current API come to my awareness I will post here. Sadly, I do not have time to take PRs or manage this repo.
 
 # OpenAi Api Unity
 A simple OpenAI API wrapper for Unity 
